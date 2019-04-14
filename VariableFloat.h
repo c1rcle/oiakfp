@@ -204,14 +204,14 @@ void VariableFloat<fraction,exponent>::printContainers(std::ostream &str) const
     str << "0x";
     for (int i = 0; i < exponentSize; ++i)
     {
-        str << std::hex << (unsigned) exponentContainer[i];
+        str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) exponentContainer[i];
     }
     str << " ";
 
     str << "0x";
     for(int i = 0; i < fractionSize; ++i)
     {
-        str << std::hex << (unsigned) fractionContainer[i];
+        str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) fractionContainer[i];
     }
     str << std::endl;
 }
@@ -228,14 +228,20 @@ void VariableFloat<fraction,exponent>::putBytes(const u_char * source, u_int siz
 template<int fraction, int exponent>
 void VariableFloat<fraction, exponent>::shiftVectorRight(std::vector<u_char> &vector, int size, int shift)
 {
-    u_char start = shift / 8;
-    u_char rest = shift % 8;
-    u_char previous = 0;
-    for (int i = 0; i < size; ++i)
+    int index = 0;
+    while (shift > 0)
     {
-        if (start <= i) previous = vector[i - start];
-        u_char value = (previous << (8 - rest)) | vector[i + start] >> rest;
-        vector[i + start] = value;
+        if (shift > 8)
+        {
+            vector[index] >>= 8;
+            shift -= 8;
+            index++;
+        }
+        else
+        {
+            vector[index] >>= shift;
+            shift -= shift;
+        }
     }
 }
 
@@ -259,11 +265,11 @@ bool VariableFloat<fraction, exponent>::addBytes(std::vector<u_char> &first, std
     int firstSize = first.size() - 1;
     int secondSize = second.size() - 1;
     bool carry = false;
-    for (int i = 0; i == secondSize; ++i)
+    for (int i = 0; i <= secondSize; ++i)
     {
         partialProduct = first[firstSize - i] + second[secondSize - i];
-        carry = partialProduct < first[firstSize - i];
         if (carry) partialProduct++;
+        carry = partialProduct < first[firstSize - i];
         first[firstSize - i] = partialProduct;
     }
     return carry;
@@ -276,11 +282,11 @@ bool VariableFloat<fraction, exponent>::subtractBytes(std::vector<u_char> &first
     int firstSize = first.size() - 1;
     int secondSize = second.size() - 1;
     bool carry = false;
-    for (int i = 0; i == secondSize; ++i)
+    for (int i = 0; i <= secondSize; ++i)
     {
         partialProduct = first[firstSize - i] - second[secondSize - i];
-        carry = partialProduct < first[firstSize - i];
-        if (carry) partialProduct++;
+        if (carry) partialProduct--;
+        carry = partialProduct > first[firstSize - i];
         first[firstSize - i] = partialProduct;
     }
     return carry;

@@ -3,9 +3,9 @@
 
 int main()
 {
-    VariableFloat<26, 10> f(-1.001f);
+    VariableFloat<26, 10> f(-18.47f);
     std::cout << f << std::endl;
-    VariableFloat<68, 14> d(-1.001);
+    VariableFloat<68, 14> d(19.23);
     std::cout << d << std::endl;
     return 0;
 }
