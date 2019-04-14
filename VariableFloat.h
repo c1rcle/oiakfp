@@ -144,14 +144,18 @@ VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
     floatExponent >>= FLOAT_FRACTION;
 
     //We need to convert our extracted exponent to template implementation.
-    putBytes(((u_char *)&floatExponent), exponentSize, exponentContainer);
+    int byteCount = exponent >= FLOAT_EXPONENT ? (FLOAT_EXPONENT / 8) + 1 : exponentSize;
+    putBytes(((u_char *)&floatExponent), byteCount, exponentContainer);
+    for (int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.insert(exponentContainer.begin(), 0);
     std::vector<u_char> floatBias = createBiasContainerForExponent(FLOAT_EXPONENT);
     subtractBytes(exponentContainer, floatBias);
     addBytes(exponentContainer, biasContainer);
 
     u_int floatFraction = floatBytes << (FLOAT_EXPONENT + 1);
     floatFraction >>= (FLOAT_EXPONENT + 1);
-    putBytes(((u_char *)&floatFraction), fractionSize, fractionContainer);
+    byteCount = fraction >= FLOAT_FRACTION ? (FLOAT_FRACTION / 8) + 1: fractionSize;
+    putBytes(((u_char *)&floatFraction), byteCount, fractionContainer);
+    for (int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.insert(fractionContainer.begin(), 0);
 
     printf("Float bytes: 0x%X\n", floatBytes);
     printf("Float sign: %d\n", sign);
@@ -172,14 +176,18 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
     doubleExponent >>= DOUBLE_FRACTION;
 
     //We need to convert our extracted exponent to template implementation.
-    putBytes(((u_char *)&doubleExponent), exponentSize, exponentContainer);
+    int byteCount = exponent >= DOUBLE_EXPONENT ? (DOUBLE_EXPONENT / 8) + 1 : exponentSize;
+    putBytes(((u_char *)&doubleExponent), byteCount, exponentContainer);
+    for (int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.insert(exponentContainer.begin(), 0);
     std::vector<u_char> doubleBias = createBiasContainerForExponent(DOUBLE_EXPONENT);
     subtractBytes(exponentContainer, doubleBias);
     addBytes(exponentContainer, biasContainer);
 
     u_int64_t doubleFraction = doubleBytes << (DOUBLE_EXPONENT + 1);
     doubleFraction >>= (DOUBLE_EXPONENT + 1);
-    putBytes(((u_char *)&doubleFraction), fractionSize, fractionContainer);
+    byteCount = fraction >= DOUBLE_FRACTION ? (DOUBLE_FRACTION / 8) + 1: fractionSize;
+    putBytes(((u_char *)&doubleFraction), byteCount, fractionContainer);
+    for (int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.insert(fractionContainer.begin(), 0);
 
     printf("Double bytes: 0x%lX\n", doubleBytes);
     printf("Double sign: %d\n", sign);
