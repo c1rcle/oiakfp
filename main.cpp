@@ -1,13 +1,11 @@
 #include <iostream>
-#include "Float.h"
+#include "VariableFloat.h"
 
 int main()
 {
-    auto * f = new Float<23, 8>(-1.001f);
-    f->printContainers(std::cout);
-    delete f;
-    auto * d = new Float<52, 11>(-1.001);
-    d->printContainers(std::cout);
-    delete d;
+    VariableFloat<26, 10> f(-1.001f);
+    std::cout << f << std::endl;
+    VariableFloat<68, 14> d(-1.001);
+    std::cout << d << std::endl;
     return 0;
 }

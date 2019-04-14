@@ -3,4 +3,4 @@ project(Projekt)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Projekt main.cpp Float.h)
+add_executable(Projekt main.cpp VariableFloat.h)
