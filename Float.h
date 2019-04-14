@@ -4,8 +4,6 @@
 #include <vector>
 #include <iomanip>
 
-void addBytes(u_char * firstContainer, u_char * secondContainer, int size);
-
 //Fraction and exponent are bit counts.
 template<int fraction, int exponent>
 class Float
@@ -19,8 +17,8 @@ private:
     const u_int FLOAT_FRACTION = 23;
 
     //Byte containers for exponent and fraction.
-    u_char * exponentContainer;
-    u_char * fractionContainer;
+    std::vector<u_char> exponentContainer;
+    std::vector<u_char> fractionContainer;
 
     //Size of exponent and fraction in bytes.
     u_int exponentSize;
@@ -33,7 +31,7 @@ private:
     Float();
 
     //Used to copy bytes to a container.
-    void putBytes(const u_char * source, u_int size, u_char * destination);
+    void putBytes(const u_char * source, u_int size, std::vector<u_char> & destination);
 
 public:
 
@@ -78,10 +76,6 @@ Float<fraction,exponent>::Float()
 
     exponentSize = (exponent / 8) + 1;
     fractionSize = (fraction / 8) + 1;
-
-    exponentContainer = new u_char[exponentSize];
-    fractionContainer = new u_char[fractionSize];
-
 }
 
 template<int fraction, int exponent>
@@ -99,8 +93,8 @@ Float<fraction, exponent>::Float(float number) : Float()
     u_int floatFraction = floatBytes << (FLOAT_EXPONENT + 1);
     floatFraction >>= (FLOAT_EXPONENT + 1);
 
-    putBytes(((u_char *)&floatFraction), sizeof(floatFraction), fractionContainer);
-    putBytes(((u_char *)&floatExponent), sizeof(floatExponent), exponentContainer);
+    putBytes(((u_char *)&floatFraction), fractionSize, fractionContainer);
+    putBytes(((u_char *)&floatExponent), exponentSize, exponentContainer);
     printf("Float bytes: 0x%X\n", floatBytes);
     printf("Float sign: %d\n", sign);
     printf("Float exponent: 0x%X\n", floatExponent);
@@ -122,8 +116,8 @@ Float<fraction, exponent>::Float(double number) : Float()
     u_int64_t doubleFraction = doubleBytes << (DOUBLE_EXPONENT + 1);
     doubleFraction >>= (DOUBLE_EXPONENT + 1);
 
-    putBytes(((u_char *)&doubleFraction), sizeof(doubleFraction), fractionContainer);
-    putBytes(((u_char *)&doubleExponent), sizeof(doubleExponent), exponentContainer);
+    putBytes(((u_char *)&doubleFraction), fractionSize, fractionContainer);
+    putBytes(((u_char *)&doubleExponent), exponentSize, exponentContainer);
     printf("Double bytes: 0x%lX\n", doubleBytes);
     printf("Double sign: %d\n", sign);
     printf("Double exponent: 0x%lX\n", doubleExponent);
@@ -132,36 +126,33 @@ Float<fraction, exponent>::Float(double number) : Float()
 
 
 template<int fraction, int exponent>
-Float<fraction,exponent>::~Float()
-{
-    delete[] exponentContainer;
-    delete[] fractionContainer;
-}
+Float<fraction,exponent>::~Float() = default;
 
 template<int fraction, int exponent>
 void Float<fraction,exponent>::printContainers(std::ostream &str)
 {
-    if (sign) str << "-";
-    else str << "+";
+    if (sign) str << "- ";
+    else str << "+ ";
 
+    str << "0x";
     for (int i = 0; i < exponentSize; ++i)
     {
-        str << std::hex << ((*((unsigned int *)&exponentContainer[i])) & 0xFF);
+        str << std::hex << (unsigned) exponentContainer[i];
     }
     str << " ";
-
+    str << "0x";
     for(int i = 0; i < fractionSize; ++i)
     {
-        str << std::hex << ((*((unsigned int *)&fractionContainer[i])) & 0xFF);
+        str << std::hex << (unsigned) fractionContainer[i];
     }
     str << std::endl;
 }
 
 template<int fraction, int exponent>
-void Float<fraction,exponent>::putBytes(const u_char * source, u_int size, u_char * destination)
+void Float<fraction,exponent>::putBytes(const u_char * source, u_int size, std::vector<u_char> & destination)
 {
     for (int i = 0; i < size; ++i)
     {
-        destination[i] = source[i];
+        destination.insert(destination.begin(), source[i]);
     }
 }
