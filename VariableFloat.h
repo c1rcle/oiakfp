@@ -272,15 +272,28 @@ void VariableFloat<fraction, exponent>::shiftVectorRight(std::vector<u_char> &ve
 
     std::cout<<"shift:"<<s1<<" "<<size<<std::endl;
 
+    for(int i=0;i<s1;++i){
+
+        //std::cout<<i<<". dst:"<<vector.size()- i/8 -1<<" b:"<<i%8<<", src: "<<vector.size()- i/8 - byteOffset -1<<" b:"<<(i+bitOffset)%8<<std::endl;
+
+
+        setBit(vector[vector.size()- i/8 -1],i%8, getBit(vector[vector.size()- i/8 - byteOffset -1], (i+bitOffset)%8));
+    }
+
+    for(int i=s1;i<size;++i){
+        setBit(vector[vector.size()- i/8 -1],i%8,0);
+    }
+
+
     /*
      this iteration is correct if Big Endian is used.
     */
-    for(int i=0;i<s1;++i){
+    /*for(int i=0;i<s1;++i){
         setBit(vector[i/8],i%8, getBit(vector[i/8+byteOffset], (i+bitOffset)%8));
     }
 
     for(int i=s1;i<size;++i)
-        setBit(vector[i/8],i%8,0);
+        setBit(vector[i/8],i%8,0);*/
 }
 
 template<int fraction, int exponent>
