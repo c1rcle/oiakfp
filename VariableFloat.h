@@ -37,6 +37,7 @@ private:
 
     /// Private constructor for initializing containers.
     VariableFloat();
+public:
 
     /// Copies bytes to a container.
     /// \param source - source byte array.
@@ -44,11 +45,25 @@ private:
     /// \param destination - destination vector.
     void putBytes(const u_char * source, u_int size, std::vector<u_char> &destination);
 
+    /// Set specified bit value
+    /// \param byte - byte to be set
+    /// \param pos - position in range <0;7>
+    /// \param value - new value
+    ///
+    void setBit(u_char& byte, u_int pos, bool value);
+
+    ///
+    /// \brief getBit get value of specified bit
+    /// \param byte
+    /// \param pos
+    /// \return
+    ///
+    bool getBit(u_char& byte, u_int pos);
+
     /// Shifts a vector of bytes 'shift' times right.
     /// \param vector - vector which contents are going to be shifted.
-    /// \param size - vector byte count.
     /// \param shift - bit shift count.
-    void shiftVectorRight(std::vector<u_char> & vector, int size, int shift);
+    void shiftVectorRight(std::vector<u_char> & vector, int shift);
 
     /// Creates a bias vector for specified bit exponent bit count.
     /// \param customExponent - exponent bit count.
@@ -118,9 +133,9 @@ VariableFloat<fraction,exponent>::VariableFloat()
     exponentSize = (exponent / 8) + 1;
     fractionSize = (fraction / 8) + 1;
 
-    for (int i = 0; i < exponentSize; ++i) biasContainer.push_back(255);
+    for (unsigned int i = 0; i < exponentSize; ++i) biasContainer.push_back(255);
     int shiftCount = exponentSize * 8 - (exponent - 1);
-    shiftVectorRight(biasContainer, exponentSize, shiftCount);
+    shiftVectorRight(biasContainer, shiftCount);
 }
 
 template<int fraction, int exponent>
@@ -146,7 +161,7 @@ VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
     //We need to convert our extracted exponent to template implementation.
     int byteCount = exponent >= FLOAT_EXPONENT ? (FLOAT_EXPONENT / 8) + 1 : exponentSize;
     putBytes(((u_char *)&floatExponent), byteCount, exponentContainer);
-    for (int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.insert(exponentContainer.begin(), 0);
+    for (unsigned int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.insert(exponentContainer.begin(), 0);
     std::vector<u_char> floatBias = createBiasContainerForExponent(FLOAT_EXPONENT);
     subtractBytes(exponentContainer, floatBias);
     addBytes(exponentContainer, biasContainer);
@@ -155,7 +170,7 @@ VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
     floatFraction >>= (FLOAT_EXPONENT + 1);
     byteCount = fraction >= FLOAT_FRACTION ? (FLOAT_FRACTION / 8) + 1: fractionSize;
     putBytes(((u_char *)&floatFraction), byteCount, fractionContainer);
-    for (int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.insert(fractionContainer.begin(), 0);
+    for (unsigned int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.insert(fractionContainer.begin(), 0);
 
     printf("Float bytes: 0x%X\n", floatBytes);
     printf("Float sign: %d\n", sign);
@@ -178,7 +193,7 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
     //We need to convert our extracted exponent to template implementation.
     int byteCount = exponent >= DOUBLE_EXPONENT ? (DOUBLE_EXPONENT / 8) + 1 : exponentSize;
     putBytes(((u_char *)&doubleExponent), byteCount, exponentContainer);
-    for (int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.insert(exponentContainer.begin(), 0);
+    for (unsigned int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.insert(exponentContainer.begin(), 0);
     std::vector<u_char> doubleBias = createBiasContainerForExponent(DOUBLE_EXPONENT);
     subtractBytes(exponentContainer, doubleBias);
     addBytes(exponentContainer, biasContainer);
@@ -187,7 +202,7 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
     doubleFraction >>= (DOUBLE_EXPONENT + 1);
     byteCount = fraction >= DOUBLE_FRACTION ? (DOUBLE_FRACTION / 8) + 1: fractionSize;
     putBytes(((u_char *)&doubleFraction), byteCount, fractionContainer);
-    for (int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.insert(fractionContainer.begin(), 0);
+    for (unsigned int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.insert(fractionContainer.begin(), 0);
 
     printf("Double bytes: 0x%lX\n", doubleBytes);
     printf("Double sign: %d\n", sign);
@@ -202,14 +217,14 @@ void VariableFloat<fraction,exponent>::printContainers(std::ostream &str) const
     else str << "+ ";
 
     str << "0x";
-    for (int i = 0; i < exponentSize; ++i)
+    for (unsigned int i = 0; i < exponentSize; ++i)
     {
         str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) exponentContainer[i];
     }
     str << " ";
 
     str << "0x";
-    for(int i = 0; i < fractionSize; ++i)
+    for(unsigned int i = 0; i < fractionSize; ++i)
     {
         str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) fractionContainer[i];
     }
@@ -219,30 +234,53 @@ void VariableFloat<fraction,exponent>::printContainers(std::ostream &str) const
 template<int fraction, int exponent>
 void VariableFloat<fraction,exponent>::putBytes(const u_char * source, u_int size, std::vector<u_char> &destination)
 {
-    for (int i = 0; i < size; ++i)
+    for (unsigned int i = 0; i < size; ++i)
     {
         destination.insert(destination.begin(), source[i]);
     }
 }
 
 template<int fraction, int exponent>
-void VariableFloat<fraction, exponent>::shiftVectorRight(std::vector<u_char> &vector, int size, int shift)
+void VariableFloat<fraction,exponent>::setBit(u_char &byte, u_int pos, bool value)
 {
-    int index = 0;
-    while (shift > 0)
-    {
-        if (shift > 8)
-        {
-            vector[index] >>= 8;
-            shift -= 8;
-            index++;
-        }
-        else
-        {
-            vector[index] >>= shift;
-            shift -= shift;
-        }
+    char mask = 1;
+    mask <<= pos;
+
+    //std::cout<<std::hex<<(unsigned)mask<<std::endl;
+
+    if(value){
+        byte|=mask;
+    }else{
+        byte&=(~mask);
     }
+}
+
+template<int fraction, int exponent>
+bool VariableFloat<fraction, exponent>::getBit(u_char &byte, u_int pos)
+{
+    return (byte >> pos) & 0x1;
+}
+
+template<int fraction, int exponent>
+void VariableFloat<fraction, exponent>::shiftVectorRight(std::vector<u_char> &vector, int shift)
+{
+    int byteOffset = shift / 8;
+    int bitOffset = shift % 8;
+
+    int size = (unsigned)vector.size()*8;
+    int s1 = size - shift;
+
+    std::cout<<"shift:"<<s1<<" "<<size<<std::endl;
+
+    /*
+     this iteration is correct if Big Endian is used.
+    */
+    for(int i=0;i<s1;++i){
+        setBit(vector[i/8],i%8, getBit(vector[i/8+byteOffset], (i+bitOffset)%8));
+    }
+
+    for(int i=s1;i<size;++i)
+        setBit(vector[i/8],i%8,0);
 }
 
 template<int fraction, int exponent>
@@ -254,7 +292,7 @@ std::vector<u_char> VariableFloat<fraction, exponent>::createBiasContainerForExp
     for (int i = 0; i < customExponentSize; ++i) customBias.push_back(255);
 
     int shiftCount = customExponentSize * 8 - (customExponent - 1);
-    shiftVectorRight(customBias, customExponentSize, shiftCount);
+    shiftVectorRight(customBias, shiftCount);
     return customBias;
 }
 
