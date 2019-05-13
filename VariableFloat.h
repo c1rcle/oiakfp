@@ -209,6 +209,8 @@ VariableFloat<fraction, exponent>::VariableFloat(bool sign, std::string exponent
     for (unsigned int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.insert(exponentContainer.begin(), 0);
     ByteArray::addBytes(exponentContainer, biasContainer);
     fractionContainer = hexStringToBytes(fractionRep);
+    byteCount = fractionContainer.size();
+    for (unsigned int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.push_back(0);
 }
 
 template<int fraction, int exponent>
