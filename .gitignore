@@ -5,6 +5,8 @@
 *.o
 *.obj
 
+Debug/oiakfp
+
 # Precompiled Headers
 *.gch
 *.pch
