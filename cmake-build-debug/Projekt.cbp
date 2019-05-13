@@ -84,6 +84,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.cpp">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.h">
+			<Option target="Projekt"/>
+		</Unit>
 		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h">
 			<Option target="Projekt"/>
 		</Unit>

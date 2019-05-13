@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/Projekt.dir/main.cpp.o"
+  "CMakeFiles/Projekt.dir/ByteArray.cpp.o"
   "Projekt.pdb"
   "Projekt"
 )

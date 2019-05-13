@@ -123,6 +123,33 @@ Projekt/fast:
 	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/build
 .PHONY : Projekt/fast
 
+ByteArray.o: ByteArray.cpp.o
+
+.PHONY : ByteArray.o
+
+# target to build an object file
+ByteArray.cpp.o:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/ByteArray.cpp.o
+.PHONY : ByteArray.cpp.o
+
+ByteArray.i: ByteArray.cpp.i
+
+.PHONY : ByteArray.i
+
+# target to preprocess a source file
+ByteArray.cpp.i:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/ByteArray.cpp.i
+.PHONY : ByteArray.cpp.i
+
+ByteArray.s: ByteArray.cpp.s
+
+.PHONY : ByteArray.s
+
+# target to generate assembly for a file
+ByteArray.cpp.s:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/ByteArray.cpp.s
+.PHONY : ByteArray.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... Projekt"
 	@echo "... edit_cache"
+	@echo "... ByteArray.o"
+	@echo "... ByteArray.i"
+	@echo "... ByteArray.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

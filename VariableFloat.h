@@ -18,72 +18,87 @@ private:
     const u_int DOUBLE_FRACTION = 52;
     const u_int FLOAT_EXPONENT = 8;
     const u_int FLOAT_FRACTION = 23;
-
     /// Bias vector.
-    std::vector<u_char> biasContainer;
-
+    const std::vector<u_char> biasContainer;
+    /// Maximum exponent value for current representation (standard hex).
+    const std::vector<u_char> maxExponent;
+    /// Minimum exponent value for current representation (standard hex).
+    const std::vector<u_char> minExponent;
     /// Exponent byte container.
     std::vector<u_char> exponentContainer;
-
     /// Fraction byte container.
     std::vector<u_char> fractionContainer;
-
     /// Exponent size in bytes.
     u_int exponentSize{};
-
     /// Fraction size in bytes.
     u_int fractionSize{};
-
     /// Sign bit of a number.
     bool sign;
-
     /// Private constructor for initializing containers.
     VariableFloat();
+    /// Converts a hexadecimal string into a byte array.
+    /// \param input - input string.
+    /// \return Vector of bytes corresponding to string's value.
+    std::vector<u_char> hexStringToBytes(const std::string &input);
 public:
-
-
-
     /// Creates a bias vector for specified bit exponent bit count.
     /// \param customExponent - exponent bit count.
     /// \return Bias vector for specified bit count.
     std::vector<u_char> createBiasContainerForExponent(int customExponent);
-
-
-
-public:
     /// VariableFloat single precision constructor.
     /// \param number - constructor float argument.
     explicit VariableFloat(float number);
-
     /// VariableFloat double precision constructor.
     /// \param number - constructor double argument.
     explicit VariableFloat(double number);
-
+    /// VariableFloat hex constructor.
+    /// \param exponentRep - exponent representation given in hex string.
+    /// \param fractionRep - fraction representation given in hex string.
+    VariableFloat(bool sign, std::string exponentRep, std::string fractionRep);
+    /// VariableFloat destructor.
     ~VariableFloat() = default;
-
     /// VariableFloat copy constructor.
     VariableFloat(const VariableFloat<fraction, exponent> &number);
-
+    /// Assignment operator declaration.
+    /// \param number - number that should be assigned to 'this'.
+    /// \return Class object reference.
     const VariableFloat<fraction, exponent>& operator=(const VariableFloat<fraction, exponent> &number);
-
+    /// Adds 'operand' to current object.
+    /// \param operand - reference to VariableFloat object with same template parameters.
     void operator+=(const VariableFloat<fraction, exponent> &operand);
-
+    /// Subtracts 'operand' from current object.
+    /// \param operand - reference to VariableFloat object with same template parameters.
     void operator-=(const VariableFloat<fraction, exponent> &operand);
-
+    /// Multiplies current object by 'operand'.
+    /// \param operand - reference to VariableFloat object with same template parameters.
     void operator*=(const VariableFloat<fraction, exponent> &operand);
-
+    /// Divides current object by 'operand'.
+    /// \param operand - reference to VariableFloat object with same template parameters.
     void operator/=(const VariableFloat<fraction, exponent> &operand);
 
-    static VariableFloat<fraction, exponent> sqrt(VariableFloat number);
+    //static VariableFloat<fraction, exponent> sqrt(VariableFloat number) - TODO (maybe).
 
     /// Prints contents of containers in hex format.
     /// \param str - output stream.
     void printContainers(std::ostream &str) const;
+    /// Checks whether currently stored number is a NaN.
+    /// \return true if NaN, otherwise false.
+    bool isNan();
+    /// Checks whether currently stored number is infinity (number is too big).
+    /// \return true if Infinity, otherwise false.
+    bool isInfinity();
+    /// Checks whether currently stored number represents negative infinity.
+    /// \return true if -Infinity, otherwise false.
+    bool isNegativeInfinity();
+    /// Checks whether currently stored number represents positive infinity.
+    /// \return true if +Infinity, otherwise false.
+    bool isPositiveInfinity();
 };
 
 template<int fraction, int exponent>
 std::ostream& operator<<(std::ostream &str, const VariableFloat<fraction, exponent> &obj)
 {
+    //Prints the contents of containers using str.
     obj.printContainers(str);
     return str;
 }
@@ -91,6 +106,7 @@ std::ostream& operator<<(std::ostream &str, const VariableFloat<fraction, expone
 template<int fraction, int exponent>
 std::istream& operator>>(std::istream &str, VariableFloat<fraction, exponent> &obj)
 {
+    //TODO
     return str;
 }
 
@@ -101,17 +117,32 @@ VariableFloat<fraction,exponent>::VariableFloat()
     exponentSize = (exponent / 8) + 1;
     fractionSize = (fraction / 8) + 1;
 
-    for (unsigned int i = 0; i < exponentSize; ++i) biasContainer.push_back(255);
+    for (unsigned int i = 0; i < exponentSize; ++i)
+    {
+        biasContainer.push_back(255);
+        maxExponent.push_back(255);
+        minExponent.push_back(0);
+
+    }
+
     int shiftCount = exponentSize * 8 - (exponent - 1);
     ByteArray::shiftVectorRight(biasContainer, shiftCount);
+
+    shiftCount++;
+    ByteArray::shiftVectorRight(maxExponent, shiftCount);
+    ByteArray::subtractBytes(maxExponent, biasContainer);
+    ByteArray::subtractBytes(minExponent, biasContainer);
 }
 
 template<int fraction, int exponent>
 VariableFloat<fraction, exponent>::VariableFloat(const VariableFloat<fraction, exponent> &number) : VariableFloat()
 {
     sign = number.sign;
-    for (auto byte : number.exponentContainer) exponentContainer.insert(exponentContainer.begin(), byte);
-    for (auto byte : number.fractionContainer) fractionContainer.insert(fractionContainer.begin(), byte);
+    for (auto byte : number.exponentContainer) exponentContainer.push_back(byte);
+    for (auto byte : number.fractionContainer) fractionContainer.push_back(byte);
+    for (auto byte : number.biasContainer) biasContainer.push_back(byte);
+    for (auto byte : number.maxExponent) maxExponent.push_back(byte);
+    for (auto byte : number.minExponent) minExponent.push_back(byte);
 }
 
 template<int fraction, int exponent>
@@ -132,6 +163,7 @@ VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
     for (unsigned int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.push_back(0);
     std::vector<u_char> floatBias = createBiasContainerForExponent(FLOAT_EXPONENT);
     ByteArray::subtractBytes(exponentContainer, floatBias);
+    //TODO compare exponents to determine if they can be fit in this representation.
     ByteArray::addBytes(exponentContainer, biasContainer);
 
     u_int floatFraction = floatBytes << (FLOAT_EXPONENT + 1);
@@ -139,11 +171,6 @@ VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
     byteCount = fraction >= FLOAT_FRACTION ? (FLOAT_FRACTION / 8) + 1: fractionSize;
     ByteArray::putBytes(((u_char *)&floatFraction), byteCount, fractionContainer);
     for (unsigned int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.push_back(0);
-
-    printf("Float bytes: 0x%X\n", floatBytes);
-    printf("Float sign: %d\n", sign);
-    printf("Float exponent: 0x%X\n", floatExponent);
-    printf("Float fraction: 0x%X\n", floatFraction);
 }
 
 template<int fraction, int exponent>
@@ -164,6 +191,7 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
     for (unsigned int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.push_back(0);
     std::vector<u_char> doubleBias = createBiasContainerForExponent(DOUBLE_EXPONENT);
     ByteArray::subtractBytes(exponentContainer, doubleBias);
+    //TODO compare exponents to determine if they can be fit in this representation.
     ByteArray::addBytes(exponentContainer, biasContainer);
 
     u_int64_t doubleFraction = doubleBytes << (DOUBLE_EXPONENT + 1);
@@ -171,38 +199,55 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
     byteCount = fraction >= DOUBLE_FRACTION ? (DOUBLE_FRACTION / 8) + 1: fractionSize;
     ByteArray::putBytes(((u_char *)&doubleFraction), byteCount, fractionContainer);
     for (unsigned int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.push_back(0);
+}
 
-    printf("Double bytes: 0x%lX\n", doubleBytes);
-    printf("Double sign: %d\n", sign);
-    printf("Double exponent: 0x%lX\n", doubleExponent);
-    printf("Double fraction: 0x%lX\n", doubleFraction);
+template<int fraction, int exponent>
+VariableFloat<fraction, exponent>::VariableFloat(bool sign, std::string exponentRep, std::string fractionRep)
+{
+    this->sign = sign;
+    exponentContainer = hexStringToBytes(exponentRep);
+    ByteArray::addBytes(exponentContainer, biasContainer);
+    fractionContainer = hexStringToBytes(fractionRep);
 }
 
 template<int fraction, int exponent>
 void VariableFloat<fraction,exponent>::printContainers(std::ostream &str) const
 {
+    //Write sign to output stream.
     if (sign) str << "- ";
     else str << "+ ";
 
-    std::vector<u_char> copy(exponentContainer);
-
-    //if(!ByteArray::checkIfZero(exponentContainer))
-    //    ByteArray::subtractBytes(copy, biasContainer);
-
-    str << "0x";
-
-    for (unsigned int i = 0; i < copy.size(); ++i)
+    if (isInfinity())
     {
-        str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) exponentContainer[i];
+        str << "inf";
+        return;
     }
-    str << " ";
-
-    str << "0x";
-    for(unsigned int i = 0; i < fractionSize; ++i)
+    else if (isNan())
     {
-        str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) fractionContainer[i];
+        str << "NaN";
     }
-    str << std::endl;
+    else
+    {
+        std::vector<u_char> copy(exponentContainer);
+
+        //if(!ByteArray::checkIfZero(exponentContainer))
+        //    ByteArray::subtractBytes(copy, biasContainer);
+
+        str << "0x";
+
+        for (unsigned int i = 0; i < copy.size(); ++i)
+        {
+            str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) exponentContainer[i];
+        }
+        str << " ";
+
+        str << "0x";
+        for(unsigned int i = 0; i < fractionSize; ++i)
+        {
+            str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) fractionContainer[i];
+        }
+        str << std::endl;
+    }
 }
 
 template<int fraction, int exponent>
@@ -216,4 +261,67 @@ std::vector<u_char> VariableFloat<fraction, exponent>::createBiasContainerForExp
     int shiftCount = customExponentSize * 8 - (customExponent - 1);
     ByteArray::shiftVectorRight(customBias, shiftCount);
     return customBias;
+}
+
+template<int fraction, int exponent>
+std::vector<u_char> VariableFloat<fraction, exponent>::hexStringToBytes(const std::string &input)
+{
+    std::vector<u_char> bytes;
+    for (unsigned int i = 0; i < input.size(); i+=2)
+    {
+        std::string stringByte = input.substr(i, 2);
+        auto byte = (u_char) strtol(stringByte.c_str(), NULL, 16);
+        bytes.push_back(byte);
+    }
+    return bytes;
+}
+
+template<int fraction, int exponent>
+bool VariableFloat<fraction, exponent>::isNan()
+{
+    for (unsigned int i = 0; i < exponentContainer.size(); ++i)
+    {
+        if (exponentContainer[i] != 255)
+            return false;
+    }
+
+    bool fractionSet = false;
+    for (unsigned int i = 0; i < exponentContainer.size(); ++i)
+    {
+        if (exponentContainer[i] != 0)
+        {
+            fractionSet = true;
+            break;
+        }
+    }
+    return fractionSet;
+}
+
+template<int fraction, int exponent>
+bool VariableFloat<fraction, exponent>::isInfinity()
+{
+    for (unsigned int i = 0; i < exponentContainer.size(); ++i)
+    {
+        if (exponentContainer[i] != 255)
+            return false;
+    }
+
+    for (unsigned int i = 0; i < exponentContainer.size(); ++i)
+    {
+        if (exponentContainer[i] != 0)
+            return false;
+    }
+    return true;
+}
+
+template<int fraction, int exponent>
+bool VariableFloat<fraction, exponent>::isNegativeInfinity()
+{
+    return !sign && isInfinity();
+}
+
+template<int fraction, int exponent>
+bool VariableFloat<fraction, exponent>::isPositiveInfinity()
+{
+    return sign && isInfinity();
 }
