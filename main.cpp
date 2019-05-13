@@ -29,10 +29,17 @@ void checkIfZeroTest()
     std::cout << ByteArray::checkIfZero(buf) << std::endl;
 }
 
+void multiplyTest(){
+    std::vector<u_char> buf = {0xff,0xff,0xff};
+    std::vector<u_char> buf2 = {0xff, 0xff};
+    ByteArray::multiplyBytes(buf, buf2);
+    std::cout<<buf<<std::endl;
+}
+
 int main()
 {
-    //shiftTest2();
-    //return 0;
+    multiplyTest();
+    return 0;
 
     VariableFloat<26, 10> f(0.0f);
     std::cout << f << std::endl;

@@ -133,11 +133,74 @@ std::vector<u_char> ByteArray::createOne(unsigned int size)
     return ret;
 }
 
+void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_char> &second)
+{
+    std::vector<std::vector<u_char> > partSums;
+
+    //multiply first by each byte of second
+    for(u_char i:second){
+        std::vector<u_char> partSum = first;
+        multiplyBytesByByte(partSum, i);
+        partSums.push_back(partSum);
+    }
+
+    //calculate size of part sums
+    unsigned int sizeF= first.size()*2 - 1;
+    unsigned int sizeS= second.size()*2 - 1;
+    unsigned int size = sizeF > sizeS ? sizeF : sizeS;
+
+    //make all part sums equal size
+    for(unsigned int i=0;i<partSums.size();++i){
+        for(unsigned int j=0;j<i;++j){
+            partSums[i].push_back(0);
+        }
+
+        for(unsigned int j=i;partSums[i].size()<=size;++j){
+            partSums[i].insert(partSums[i].begin(), 0);
+        }
+    }
+
+    first = partSums[0];
+    u_char carryover = 0; //sums of all carry
+    for(unsigned int i=1;i<partSums.size();++i){
+        if(addBytes(first, partSums[i])) carryover++;
+    }
+
+    //if range has to be extended
+    if(carryover > 0)
+        first.insert(first.begin(), carryover);
+
+    std::cout<<partSums<<std::endl;
+}
+
+void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplyer)
+{
+    u_char carry = 0;
+    for(int i=first.size()-1;i>=0;--i){
+        unsigned short part = first[i]*multiplyer;
+        first[i] = (part & 0xFF) + carry;
+        carry = part >> 8;
+    }
+
+    if(carry > 0)
+        first.insert(first.begin(), carry);
+
+}
+
 std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj)
 {
     for(const u_char i : obj)
     {
         str<<std::hex<<"0x"<<(unsigned)i<<" ";
     }
+    return str;
+}
+
+std::ostream &operator <<(std::ostream &str, const std::vector<std::vector<u_char> > &obj)
+{
+    for(unsigned int i=0;i<obj.size();++i){
+        str<<obj[i]<<std::endl;
+    }
+
     return str;
 }

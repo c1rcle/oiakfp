@@ -209,6 +209,16 @@ VariableFloat<fraction, exponent> operator - (const VariableFloat<fraction, expo
     return n1 + n2Bf;
 }
 
+
+template<int fraction, int exponent>
+VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2){
+    VariableFloat<fraction, exponent> ret(0.0);
+
+    std::vector<u_char> retExponent = n1.getExponentContainer();
+    ByteArray::addBytes(retExponent, n2.getExponentContainer());
+    ret.setExponentContainer(retExponent);
+}
+
 template<int fraction, int exponent>
 std::ostream& operator<<(std::ostream &str, const VariableFloat<fraction, exponent> &obj)
 {
