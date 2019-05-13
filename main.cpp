@@ -16,8 +16,10 @@ void shiftTest()
 
 void shiftTest2()
 {
+    //0000 0001 0010 0001
+    //0000 0010 0100 0010
     std::vector<u_char> b = {0x1, 0x21};
-    ByteArray::shiftVectorRight(b, 1);
+    ByteArray::shiftVectorLeft(b, 1);
     std::cout<<b<<std::endl;
 }
 
@@ -29,8 +31,8 @@ void checkIfZeroTest()
 
 int main()
 {
-    //shiftTest();
-    //return 0;
+    shiftTest2();
+    return 0;
 
     VariableFloat<26, 10> f(0.0f);
     std::cout << f << std::endl;
@@ -43,8 +45,8 @@ int main()
     //VariableFloat<23, 8> g(4.5f);
     //VariableFloat<23, 8> h(2.2578125f);
 
-    VariableFloat<23, 8> g(false, "01", "80");
-    VariableFloat<23, 8> h(false, "01", "80");
+    VariableFloat<23, 8> g(true, "01", "00");
+    VariableFloat<23, 8> h(true, "02", "00");
 
 
     std::cout << g << std::endl;

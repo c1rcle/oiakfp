@@ -35,16 +35,6 @@ void ByteArray::shiftVectorRight(std::vector<u_char> &vector, int shift)
     }
     for (int i = s1; i < size; ++i)
         setBit(vector[vector.size()- i/8 -1],i%8,0);
-
-    /*
-     This iteration is correct if Big Endian is used.
-    */
-    /*for(int i=0;i<s1;++i){
-        setBit(vector[i/8],i%8, getBit(vector[i/8+byteOffset], (i+bitOffset)%8));
-    }
-
-    for(int i=s1;i<size;++i)
-        setBit(vector[i/8],i%8,0);*/
 }
 
 
@@ -54,7 +44,16 @@ void ByteArray::shiftVectorLeft(std::vector<u_char> &vector, int shift)
     int bitOffset = shift % 8;
 
     int size = (unsigned)vector.size() * 8;
-    int s1 = size - shift;
+    int s1 = shift;
+
+    for(int i=size-1;i>=s1;--i){
+        std::cout<<vector.size()- i/8 -1<<":"<<i%8<<" <- "<<vector.size()- (i-bitOffset)/8 + byteOffset -1<<":"<<(i-bitOffset)%8<<std::endl;
+        setBit(vector[vector.size()- i/8 -1],i%8, getBit(vector[vector.size()- (i-bitOffset)/8 + byteOffset -1], (i-bitOffset)%8));
+    }
+
+    for(int i=s1-1;i>=0;--i){
+        setBit(vector[vector.size()- i/8 -1],i%8,0);
+    }
 }
 
 bool ByteArray::addBytes(std::vector<u_char> &first, const std::vector<u_char> &second)
