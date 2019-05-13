@@ -45,33 +45,43 @@ public:
     /// \param customExponent - exponent bit count.
     /// \return Bias vector for specified bit count.
     std::vector<u_char> createBiasContainerForExponent(int customExponent);
+
     /// VariableFloat single precision constructor.
     /// \param number - constructor float argument.
     explicit VariableFloat(float number);
+
     /// VariableFloat double precision constructor.
     /// \param number - constructor double argument.
     explicit VariableFloat(double number);
+
     /// VariableFloat hex constructor.
     /// \param exponentRep - exponent representation given in hex string.
     /// \param fractionRep - fraction representation given in hex string.
     VariableFloat(bool sign, std::string exponentRep, std::string fractionRep);
+
     /// VariableFloat destructor.
     ~VariableFloat() = default;
+
     /// VariableFloat copy constructor.
     VariableFloat(const VariableFloat<fraction, exponent> &number);
+
     /// Assignment operator declaration.
     /// \param number - number that should be assigned to 'this'.
     /// \return Class object reference.
     const VariableFloat<fraction, exponent>& operator=(const VariableFloat<fraction, exponent> &number);
+
     /// Adds 'operand' to current object.
     /// \param operand - reference to VariableFloat object with same template parameters.
     void operator+=(const VariableFloat<fraction, exponent> &operand);
+
     /// Subtracts 'operand' from current object.
     /// \param operand - reference to VariableFloat object with same template parameters.
     void operator-=(const VariableFloat<fraction, exponent> &operand);
+
     /// Multiplies current object by 'operand'.
     /// \param operand - reference to VariableFloat object with same template parameters.
     void operator*=(const VariableFloat<fraction, exponent> &operand);
+
     /// Divides current object by 'operand'.
     /// \param operand - reference to VariableFloat object with same template parameters.
     void operator/=(const VariableFloat<fraction, exponent> &operand);
@@ -93,7 +103,77 @@ public:
     /// Checks whether currently stored number represents positive infinity.
     /// \return true if +Infinity, otherwise false.
     bool isPositiveInfinity() const;
+
+    const std::vector<u_char>& getFractionContainer() const {return fractionContainer;}
+    const std::vector<u_char>& getExponentContainer() const {return exponentContainer;}
+
+    void setFractionContainer(const std::vector<u_char>& f) {fractionContainer = f;}
+    void setExponentContainer(const std::vector<u_char>& e) {exponentContainer = e;}
 };
+
+template<int fraction, int exponent>
+VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2){
+
+    VariableFloat<fraction, exponent> ret(0.0);
+    std::vector<u_char> retExponent;
+
+    std::cout<<"sizes: "<<n1.getExponentContainer().size()<<", "<<n1.getFractionContainer().size()<<std::endl;
+
+    //which number has bigger exponent
+    n1.printContainers(std::cout);
+    n2.printContainers(std::cout);
+
+    std::vector<u_char> sub = n1.getExponentContainer();
+    retExponent = n1.getExponentContainer();
+    std::vector<u_char> higherFrac = n1.getFractionContainer();
+    std::vector<u_char> lowerFrac = n2.getFractionContainer();
+
+    bool carry = ByteArray::subtractBytes(sub, n2.getExponentContainer());
+    std::cout<<"sub: "<<sub<<" "<<carry<<std::endl;
+
+    if(carry) {
+        sub = n2.getExponentContainer();
+        retExponent = n2.getExponentContainer();
+        higherFrac = n2.getFractionContainer();
+        lowerFrac = n1.getFractionContainer();
+        ByteArray::subtractBytes(sub, n1.getExponentContainer());
+    }
+
+    //remember to add 1 at the beginning of containers
+    higherFrac.insert(higherFrac.begin(), 0x1);
+    std::cout<<lowerFrac<<std::endl;
+
+    lowerFrac.insert(lowerFrac.begin(), 0x1);
+    std::cout<<lowerFrac<<std::endl;
+    //shift fraction for lower number
+    while(!ByteArray::checkIfZero(sub)){
+        //std::cout<<"iteration: "<<sub<<" "<<lowerFrac<<std::endl;
+        ByteArray::subtractBytes(sub, ByteArray::createOne(sub.size()));
+        std::cout<<"i:"<<lowerFrac<<std::endl;
+        ByteArray::shiftVectorRight(lowerFrac,1);
+        std::cout<<lowerFrac<<std::endl;
+    }
+
+    std::cout<<"denormalized lower Frac: "<<lowerFrac<<std::endl;
+    std::cout<<higherFrac<<std::endl;
+    std::cout<<lowerFrac<<std::endl;
+    ByteArray::addBytes(higherFrac, lowerFrac);
+    std::cout<<"frac sum: "<<higherFrac<<std::endl;
+
+    if(higherFrac[0] == 0x1) higherFrac.erase(higherFrac.begin());
+
+    else if(higherFrac[0] > 0x1) {
+        ByteArray::shiftVectorRight(higherFrac,1);
+        higherFrac.erase(higherFrac.begin());
+        ByteArray::addBytes(retExponent, ByteArray::createOne(retExponent.size()));
+    }
+
+    ret.setExponentContainer(retExponent);
+    ret.setFractionContainer(higherFrac);
+
+    return ret;
+}
+
 
 template<int fraction, int exponent>
 std::ostream& operator<<(std::ostream &str, const VariableFloat<fraction, exponent> &obj)

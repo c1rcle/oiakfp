@@ -6,6 +6,7 @@
 class ByteArray
 {
 public:
+
     ///ByteArray static class default constructor.
     ByteArray() = default;
     /// Copies bytes to a container.
@@ -35,7 +36,7 @@ public:
     /// \param first - first addition operand (vector).
     /// \param second - second addition operand (vector).
     /// \return 0 - if there is no carry, 1 - otherwise.
-    static bool addBytes(std::vector<u_char> &first, std::vector<u_char> &second);
+    static bool addBytes(std::vector<u_char> &first, const std::vector<u_char> &second);
     /// Subtracts bytes from two containers (result stored in first).
     /// \param first - first subtraction operand (vector).
     /// \param second - second subtraction operand (vector).
@@ -48,6 +49,8 @@ public:
     static int compare(const std::vector<u_char> &first, const std::vector<u_char> &second);
 
     static bool checkIfZero(const std::vector<u_char> &first);
+
+    static std::vector<u_char> createOne(unsigned int size);
 };
 
 std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj);
