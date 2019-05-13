@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h
+iostream
+-
+vector
+-
+iomanip
+-
+
+/home/c1rcle/Politechnika/OiAK/OiakFp/main.cpp
+iostream
+-
+iomanip
+-
+VariableFloat.h
+/home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h
+

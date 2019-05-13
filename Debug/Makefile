@@ -48,8 +48,12 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../main.cpp 
-OBJECTS       = main.o
+SOURCES       = ../main.cpp \
+		../Timer.cpp \
+		../ByteArray.cpp 
+OBJECTS       = main.o \
+		Timer.o \
+		ByteArray.o
 DIST          = /home/Qt/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/Qt/5.7/gcc_64/mkspecs/common/unix.conf \
 		/home/Qt/5.7/gcc_64/mkspecs/common/linux.conf \
@@ -194,7 +198,11 @@ DIST          = /home/Qt/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/Qt/5.7/gcc_64/mkspecs/features/exceptions.prf \
 		/home/Qt/5.7/gcc_64/mkspecs/features/yacc.prf \
 		/home/Qt/5.7/gcc_64/mkspecs/features/lex.prf \
-		../../oiakfp.pro VariableFloat.h ../main.cpp
+		../../oiakfp.pro VariableFloat.h \
+		Timer.h \
+		ByteArray.h ../main.cpp \
+		../Timer.cpp \
+		../ByteArray.cpp
 QMAKE_TARGET  = oiakfp
 DESTDIR       = 
 TARGET        = oiakfp
@@ -540,8 +548,15 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../main.cpp ../VariableFloat.h
+main.o: ../main.cpp ../VariableFloat.h \
+		../Timer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
+
+Timer.o: ../Timer.cpp ../Timer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Timer.o ../Timer.cpp
+
+ByteArray.o: ../ByteArray.cpp ../ByteArray.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ByteArray.o ../ByteArray.cpp
 
 ####### Install
 
