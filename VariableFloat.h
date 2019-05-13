@@ -19,11 +19,11 @@ private:
     const u_int FLOAT_EXPONENT = 8;
     const u_int FLOAT_FRACTION = 23;
     /// Bias vector.
-    const std::vector<u_char> biasContainer;
+    std::vector<u_char> biasContainer;
     /// Maximum exponent value for current representation (standard hex).
-    const std::vector<u_char> maxExponent;
+    std::vector<u_char> maxExponent;
     /// Minimum exponent value for current representation (standard hex).
-    const std::vector<u_char> minExponent;
+    std::vector<u_char> minExponent;
     /// Exponent byte container.
     std::vector<u_char> exponentContainer;
     /// Fraction byte container.
@@ -83,16 +83,16 @@ public:
     void printContainers(std::ostream &str) const;
     /// Checks whether currently stored number is a NaN.
     /// \return true if NaN, otherwise false.
-    bool isNan();
+    bool isNan() const;
     /// Checks whether currently stored number is infinity (number is too big).
     /// \return true if Infinity, otherwise false.
-    bool isInfinity();
+    bool isInfinity() const;
     /// Checks whether currently stored number represents negative infinity.
     /// \return true if -Infinity, otherwise false.
-    bool isNegativeInfinity();
+    bool isNegativeInfinity() const;
     /// Checks whether currently stored number represents positive infinity.
     /// \return true if +Infinity, otherwise false.
-    bool isPositiveInfinity();
+    bool isPositiveInfinity() const;
 };
 
 template<int fraction, int exponent>
@@ -122,7 +122,6 @@ VariableFloat<fraction,exponent>::VariableFloat()
         biasContainer.push_back(255);
         maxExponent.push_back(255);
         minExponent.push_back(0);
-
     }
 
     int shiftCount = exponentSize * 8 - (exponent - 1);
@@ -277,7 +276,7 @@ std::vector<u_char> VariableFloat<fraction, exponent>::hexStringToBytes(const st
 }
 
 template<int fraction, int exponent>
-bool VariableFloat<fraction, exponent>::isNan()
+bool VariableFloat<fraction, exponent>::isNan() const
 {
     for (unsigned int i = 0; i < exponentContainer.size(); ++i)
     {
@@ -298,7 +297,7 @@ bool VariableFloat<fraction, exponent>::isNan()
 }
 
 template<int fraction, int exponent>
-bool VariableFloat<fraction, exponent>::isInfinity()
+bool VariableFloat<fraction, exponent>::isInfinity() const
 {
     for (unsigned int i = 0; i < exponentContainer.size(); ++i)
     {
@@ -315,13 +314,13 @@ bool VariableFloat<fraction, exponent>::isInfinity()
 }
 
 template<int fraction, int exponent>
-bool VariableFloat<fraction, exponent>::isNegativeInfinity()
+bool VariableFloat<fraction, exponent>::isNegativeInfinity() const
 {
     return !sign && isInfinity();
 }
 
 template<int fraction, int exponent>
-bool VariableFloat<fraction, exponent>::isPositiveInfinity()
+bool VariableFloat<fraction, exponent>::isPositiveInfinity() const
 {
     return sign && isInfinity();
 }
