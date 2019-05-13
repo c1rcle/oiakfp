@@ -29,9 +29,10 @@ void ByteArray::shiftVectorRight(std::vector<u_char> &vector, int shift)
     int size = (unsigned)vector.size()*8;
     int s1 = size - shift;
 
-    for (int i = 0; i < s1; ++i)
-        setBit(vector[vector.size()- i/8 -1],i%8, getBit(vector[vector.size()- i/8 - byteOffset -1], (i+bitOffset)%8));
-
+    for (int i = 0; i < s1; ++i){
+        //std::cout<<i<<" "<<vector<<std::endl;
+        setBit(vector[vector.size()- i/8 -1],i%8, getBit(vector[vector.size()- (i+bitOffset)/8 - byteOffset -1], (i+bitOffset)%8));
+    }
     for (int i = s1; i < size; ++i)
         setBit(vector[vector.size()- i/8 -1],i%8,0);
 
@@ -56,7 +57,7 @@ void ByteArray::shiftVectorLeft(std::vector<u_char> &vector, int shift)
     int s1 = size - shift;
 }
 
-bool ByteArray::addBytes(std::vector<u_char> &first, std::vector<u_char> &second)
+bool ByteArray::addBytes(std::vector<u_char> &first, const std::vector<u_char> &second)
 {
     u_char partialProduct = 0;
     int firstSize = first.size() - 1;
@@ -87,6 +88,7 @@ bool ByteArray::subtractBytes(std::vector<u_char> &first, const std::vector<u_ch
     int firstSize = first.size() - 1;
     int secondSize = second.size() - 1;
     int lastIndex = 0;
+
     bool carry = false;
     for (int i = 0; i <= secondSize; ++i)
     {
@@ -124,11 +126,19 @@ bool ByteArray::checkIfZero(const std::vector<u_char> &first)
     return true;
 }
 
-/*std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj)
+std::vector<u_char> ByteArray::createOne(unsigned int size)
+{
+    std::vector<u_char> ret(size);
+    ret[ret.size()-1] = 0x1;
+
+    return ret;
+}
+
+std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj)
 {
     for(const u_char i : obj)
     {
         str<<std::hex<<"0x"<<(unsigned)i<<" ";
     }
     return str;
-}*/
+}
