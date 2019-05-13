@@ -201,10 +201,12 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
 }
 
 template<int fraction, int exponent>
-VariableFloat<fraction, exponent>::VariableFloat(bool sign, std::string exponentRep, std::string fractionRep)
+VariableFloat<fraction, exponent>::VariableFloat(bool sign, std::string exponentRep, std::string fractionRep) : VariableFloat()
 {
     this->sign = sign;
     exponentContainer = hexStringToBytes(exponentRep);
+    int byteCount = exponentContainer.size();
+    for (unsigned int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.insert(exponentContainer.begin(), 0);
     ByteArray::addBytes(exponentContainer, biasContainer);
     fractionContainer = hexStringToBytes(fractionRep);
 }

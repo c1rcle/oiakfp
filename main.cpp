@@ -22,7 +22,9 @@ int main()
 {
     VariableFloat<26, 10> f(0.0f);
     std::cout << f << std::endl;
-    VariableFloat<68, 14> d(2.0f);
+    VariableFloat<68, 14> d(2.5f);
     std::cout << d << std::endl;
+    VariableFloat<23, 8> g(false, "01", "20");
+    std::cout << g << std::endl;
     return 0;
 }
