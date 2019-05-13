@@ -4,7 +4,11 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 HEADERS += \
-    VariableFloat.h
+    VariableFloat.h \
+    Timer.h \
+    ByteArray.h
 
 SOURCES += \
-    main.cpp
+    main.cpp \
+    Timer.cpp \
+    ByteArray.cpp
