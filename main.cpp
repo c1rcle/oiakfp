@@ -34,7 +34,7 @@ int main()
 
     VariableFloat<26, 10> f(0.0f);
     std::cout << f << std::endl;
-    VariableFloat<68, 14> d(2.5f);
+    VariableFloat<23, 8> d(2.5f);
     std::cout << d << std::endl;
     //    VariableFloat<23, 8> g(false, "01", "21");
     //    VariableFloat<23, 8> h(false, "02", "20");
