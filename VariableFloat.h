@@ -38,7 +38,6 @@ private:
     /// Private constructor for initializing containers.
     VariableFloat();
 public:
-
     /// Copies bytes to a container.
     /// \param source - source byte array.
     /// \param size - array element count.
@@ -241,24 +240,21 @@ void VariableFloat<fraction,exponent>::putBytes(const u_char * source, u_int siz
 }
 
 template<int fraction, int exponent>
-void VariableFloat<fraction,exponent>::setBit(u_char &byte, u_int pos, bool value)
+void VariableFloat<fraction,exponent>::setBit(u_char &byte, u_int position, bool value)
 {
     char mask = 1;
-    mask <<= pos;
+    mask <<= position;
 
     //std::cout<<std::hex<<(unsigned)mask<<std::endl;
 
-    if(value){
-        byte|=mask;
-    }else{
-        byte&=(~mask);
-    }
+    if (value) byte |= mask;
+    else byte &= ~mask;
 }
 
 template<int fraction, int exponent>
-bool VariableFloat<fraction, exponent>::getBit(u_char &byte, u_int pos)
+bool VariableFloat<fraction, exponent>::getBit(u_char &byte, u_int position)
 {
-    return (byte >> pos) & 0x1;
+    return (byte >> position) & 0x1;
 }
 
 template<int fraction, int exponent>
@@ -267,24 +263,18 @@ void VariableFloat<fraction, exponent>::shiftVectorRight(std::vector<u_char> &ve
     int byteOffset = shift / 8;
     int bitOffset = shift % 8;
 
-    int size = (unsigned)vector.size()*8;
+    int size = (unsigned) vector.size() * 8;
     int s1 = size - shift;
 
-    std::cout<<"shift:"<<s1<<" "<<size<<std::endl;
+    std::cout << "shift:" << s1 << " " << size << std::endl;
 
-    for(int i=0;i<s1;++i){
+    for(int i = 0; i < s1; ++i)
+        setBit(vector[vector.size()- i/8 -1], i % 8, getBit(vector[vector.size() - i/8 - byteOffset - 1], (i + bitOffset) % 8));
+        //std::cout <<i << ". dst:" << vector.size() - i/8 - 1 << " b:" << i%8 << ", src: "
+        // << vector.size() - i/8 - byteOffset - 1<< " b:" << (i + bitOffset) % 8 <<std::endl;
 
-        //std::cout<<i<<". dst:"<<vector.size()- i/8 -1<<" b:"<<i%8<<", src: "<<vector.size()- i/8 - byteOffset -1<<" b:"<<(i+bitOffset)%8<<std::endl;
-
-
-        setBit(vector[vector.size()- i/8 -1],i%8, getBit(vector[vector.size()- i/8 - byteOffset -1], (i+bitOffset)%8));
-    }
-
-    for(int i=s1;i<size;++i){
-        setBit(vector[vector.size()- i/8 -1],i%8,0);
-    }
-
-
+    for(int i=s1;i<size;++i)
+        setBit(vector[vector.size() - i/8 - 1], i % 8, 0);
     /*
      this iteration is correct if Big Endian is used.
     */
@@ -315,6 +305,7 @@ bool VariableFloat<fraction, exponent>::addBytes(std::vector<u_char> &first, std
     u_char partialProduct = 0;
     int firstSize = first.size() - 1;
     int secondSize = second.size() - 1;
+    int lastIndex = 0;
     bool carry = false;
     for (int i = 0; i <= secondSize; ++i)
     {
@@ -322,6 +313,14 @@ bool VariableFloat<fraction, exponent>::addBytes(std::vector<u_char> &first, std
         if (carry) partialProduct++;
         carry = partialProduct < first[firstSize - i];
         first[firstSize - i] = partialProduct;
+        lastIndex = firstSize - i;
+        if (firstSize - i < 0) break;
+    }
+    while (carry && lastIndex > 0)
+    {
+        partialProduct = first[lastIndex] + 1;
+        carry = partialProduct < first[lastIndex];
+        lastIndex--;
     }
     return carry;
 }
@@ -332,6 +331,7 @@ bool VariableFloat<fraction, exponent>::subtractBytes(std::vector<u_char> &first
     u_char partialProduct = 0;
     int firstSize = first.size() - 1;
     int secondSize = second.size() - 1;
+    int lastIndex = 0;
     bool carry = false;
     for (int i = 0; i <= secondSize; ++i)
     {
@@ -339,6 +339,14 @@ bool VariableFloat<fraction, exponent>::subtractBytes(std::vector<u_char> &first
         if (carry) partialProduct--;
         carry = partialProduct > first[firstSize - i];
         first[firstSize - i] = partialProduct;
+        lastIndex = firstSize - i;
+        if (firstSize - i < 0) break;
+    }
+    while (carry && lastIndex > 0)
+    {
+        partialProduct = first[lastIndex] - 1;
+        carry = partialProduct > first[lastIndex];
+        lastIndex--;
     }
     return carry;
 }

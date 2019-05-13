@@ -37,10 +37,7 @@ void shiftTest()
 
 int main()
 {
-
     shiftTest();
-    return 0;
-
     VariableFloat<26, 10> f(-18.47f);
     std::cout << f << std::endl;
     VariableFloat<68, 14> d(19.23);
