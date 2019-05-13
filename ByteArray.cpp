@@ -47,7 +47,7 @@ void ByteArray::shiftVectorLeft(std::vector<u_char> &vector, int shift)
     int s1 = shift;
 
     for(int i=size-1;i>=s1;--i){
-        std::cout<<vector.size()- i/8 -1<<":"<<i%8<<" <- "<<vector.size()- (i-bitOffset)/8 + byteOffset -1<<":"<<(i-bitOffset)%8<<std::endl;
+        //std::cout<<vector.size()- i/8 -1<<":"<<i%8<<" <- "<<vector.size()- (i-bitOffset)/8 + byteOffset -1<<":"<<(i-bitOffset)%8<<std::endl;
         setBit(vector[vector.size()- i/8 -1],i%8, getBit(vector[vector.size()- (i-bitOffset)/8 + byteOffset -1], (i-bitOffset)%8));
     }
 
