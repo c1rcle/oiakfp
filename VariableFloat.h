@@ -252,21 +252,19 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
     //prepare exponent
     std::vector<u_char> retExponent = n1.getExponentContainer();
     ByteArray::addBytes(retExponent, n2.getExponentContainer());
-    ret.setExponentContainer(retExponent);
+
 
 
     //if there is no more bits in fraction container
     std::vector<u_char> retFraction = n1.getFractionContainer();
 
-    std::cout<<(fraction+1)<<" "<< retFraction.size()<<" "<<retFraction.size()*8<<std::endl;
+    std::cout<<std::dec<<(fraction+1)<<" "<< retFraction.size()<<" "<<retFraction.size()*8<<std::endl;
 
-    if((fraction+1) > (retFraction.size()*8)) retFraction.insert(retFraction.begin(), 0x1);
-    else ByteArray::setBit(retFraction[retFraction.size() - (fraction+1)/8], 8 - (fraction+1)%8 -1, 1);
+    ByteArray::setBit(retFraction[retFraction.size() - (fraction+1)/8], (fraction)%8, 1);
 
     //if there is no more bits in fraction container
     std::vector<u_char> secondFraction = n2.getFractionContainer();
-    if((fraction+1) > (secondFraction.size()*8)) secondFraction.insert(secondFraction.begin(), 0x1);
-    else ByteArray::setBit(secondFraction[secondFraction.size() - (fraction+1)/8], 8 - (fraction+1)%8 -1, 1);
+    ByteArray::setBit(secondFraction[secondFraction.size() - (fraction+1)/8], (fraction)%8, 1);
 
     //retFraction.insert(retFraction.begin(), 0x1);
 
@@ -283,7 +281,22 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
 
 
     //save fraction in ret object
-    std::cout<<"mul: "<<retFraction<<std::endl;
+    int shiftDirection = (signed)ByteArray::findOldestOnePostition(retFraction) - fraction - 1; //normalisation shifts count
+    std::cout<<"mul: "<<retFraction<<", shift: "<<std::dec<<shiftDirection<<", "<<ByteArray::findOldestOnePostition(retFraction)<<std::endl;
+
+    //shift and shifts count to the exponent
+    if(shiftDirection < 0){
+        ByteArray::shiftVectorLeft(retFraction, -shiftDirection);
+
+        //crate value works only for char so maximumum size of shifts is 255
+        ByteArray::subtractBytes(retExponent, ByteArray::createValue(retExponent.size(), (-shiftDirection) & 0xFF));
+    }
+    else {
+        ByteArray::shiftVectorRight(retFraction, shiftDirection);
+        ByteArray::addBytes(retExponent, ByteArray::createValue(retExponent.size(), (shiftDirection) & 0xFF));
+    }
+
+    ret.setExponentContainer(retExponent);
     ret.setFractionContainer(retFraction);
 
     return ret;

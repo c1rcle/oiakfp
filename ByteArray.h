@@ -67,6 +67,7 @@ public:
     static bool checkIfZero(const std::vector<u_char> &first);
 
     static std::vector<u_char> createOne(unsigned int size);
+    static std::vector<u_char> createValue(unsigned int size, u_char value);
 
     ///
     /// \brief multiplyBytes multiply vector by vector
@@ -83,6 +84,22 @@ public:
     /// \return
     ///
     static void multiplyBytesByByte(std::vector<u_char> &first, u_char multiplyer);
+
+    ///
+    /// \brief findOldestOnePostition function check where the highest one is located and returns
+    ///        position of its
+    /// \param first
+    /// \return
+    ///
+    static unsigned int findOldestOnePostition(const std::vector<u_char> &first);
+
+    ///
+    /// \brief cutVector function cat vector to specified size in bits.
+    /// \param first
+    /// \param sizeInBits
+    /// \return
+    ///
+    static unsigned int cutVector(std::vector<u_char> &first, unsigned int sizeInBits);
 };
 
 std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj);
