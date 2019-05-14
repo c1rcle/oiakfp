@@ -246,9 +246,9 @@ VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
     ByteArray::addBytes(exponentContainer, biasContainer);
 
     u_int floatFraction = floatBytes << (FLOAT_EXPONENT + 1);
-    floatFraction >>= (FLOAT_EXPONENT + 1);
+    floatFraction >>= FLOAT_EXPONENT;
     byteCount = fraction >= FLOAT_FRACTION ? (FLOAT_FRACTION / 8) + 1: fractionSize;
-    ByteArray::putBytes(((u_char *)&floatFraction), byteCount, fractionContainer);
+    ByteArray::putBytes(((u_char *) &floatFraction), byteCount, fractionContainer);
     for (unsigned int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.push_back(0);
 }
 
@@ -266,7 +266,7 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
 
     //We need to convert our extracted exponent to template implementation.
     int byteCount = exponent >= DOUBLE_EXPONENT ? (DOUBLE_EXPONENT / 8) + 1 : exponentSize;
-    ByteArray::putBytes(((u_char *)&doubleExponent), byteCount, exponentContainer);
+    ByteArray::putBytes(((u_char *) &doubleExponent), byteCount, exponentContainer);
     for (unsigned int i = 0; i < (exponentSize - byteCount); i++) exponentContainer.push_back(0);
     std::vector<u_char> doubleBias = createBiasContainerForExponent(DOUBLE_EXPONENT);
     ByteArray::subtractBytes(exponentContainer, doubleBias);
@@ -275,8 +275,8 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
 
     u_int64_t doubleFraction = doubleBytes << (DOUBLE_EXPONENT + 1);
     doubleFraction >>= (DOUBLE_EXPONENT + 1);
-    byteCount = fraction >= DOUBLE_FRACTION ? (DOUBLE_FRACTION / 8) + 1: fractionSize;
-    ByteArray::putBytes(((u_char *)&doubleFraction), byteCount, fractionContainer);
+    byteCount = fraction >= DOUBLE_FRACTION ? (DOUBLE_FRACTION / 8) + 1 : fractionSize;
+    ByteArray::putBytes(((u_char *) &doubleFraction), byteCount, fractionContainer);
     for (unsigned int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.push_back(0);
 }
 

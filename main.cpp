@@ -31,13 +31,8 @@ int main()
 {
     //shiftTest();
     //return 0;
-
-    VariableFloat<26, 10> f(0.0f);
-    std::cout << f << std::endl;
-    VariableFloat<23, 8> d(2.5f);
-    std::cout << d << std::endl;
-    VariableFloat<23, 8> g(false, "01", "21");
-    VariableFloat<23, 8> h(false, "02", "20");
-    std::cout << g + h<< std::endl;
+    VariableFloat<52, 11> g(2.2578125);
+    VariableFloat<52, 11> h(4.5);
+    std::cout << g + h << std::endl;
     return 0;
 }
