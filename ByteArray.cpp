@@ -159,7 +159,7 @@ void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_ch
     //calculate size of part sums
     unsigned int sizeF= first.size();
     unsigned int sizeS= second.size();
-    unsigned int size = sizeF + sizeS;
+    unsigned int size = sizeF + sizeS - 1;
 
     //make all part sums equal size
     for(unsigned int i=0;i<partSums.size();++i){
@@ -182,7 +182,7 @@ void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_ch
     if(carryover > 0)
         first.insert(first.begin(), carryover);
 
-    std::cout<<partSums<<std::endl;
+    //std::cout<<partSums<<std::endl;
 }
 
 void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplyer)

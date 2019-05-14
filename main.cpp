@@ -45,8 +45,8 @@ void addTest(){
 
 int main()
 {
-    multiplyTest();
-    return 0;
+    //multiplyTest();
+    //return 0;
 
     VariableFloat<26, 10> f(0.0f);
     std::cout << f << std::endl;
@@ -59,14 +59,14 @@ int main()
     //VariableFloat<23, 8> g(4.5f);
     //VariableFloat<23, 8> h(2.2578125f);
 
-    VariableFloat<23, 8> g(true, "02", "00");
-    VariableFloat<23, 8> h(true, "01", "00");
+    VariableFloat<24, 8> g(true, "02", "00");
+    VariableFloat<24, 8> h(true, "01", "00");
 
 
     std::cout << g << std::endl;
     std::cout << h << std::endl;
 
-    std::cout << g - h<< std::endl;
+    std::cout << g * h << std::endl;
 
 
     return 0;

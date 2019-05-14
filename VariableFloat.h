@@ -214,9 +214,44 @@ template<int fraction, int exponent>
 VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2){
     VariableFloat<fraction, exponent> ret(0.0);
 
+    //prepare exponent
     std::vector<u_char> retExponent = n1.getExponentContainer();
     ByteArray::addBytes(retExponent, n2.getExponentContainer());
     ret.setExponentContainer(retExponent);
+
+
+    //if there is no more bits in fraction container
+    std::vector<u_char> retFraction = n1.getFractionContainer();
+
+    std::cout<<(fraction+1)<<" "<< retFraction.size()<<" "<<retFraction.size()*8<<std::endl;
+
+    if((fraction+1) > (retFraction.size()*8)) retFraction.insert(retFraction.begin(), 0x1);
+    else ByteArray::setBit(retFraction[retFraction.size() - (fraction+1)/8], 8 - (fraction+1)%8 -1, 1);
+
+    //if there is no more bits in fraction container
+    std::vector<u_char> secondFraction = n2.getFractionContainer();
+    if((fraction+1) > (secondFraction.size()*8)) secondFraction.insert(secondFraction.begin(), 0x1);
+    else ByteArray::setBit(secondFraction[secondFraction.size() - (fraction+1)/8], 8 - (fraction+1)%8 -1, 1);
+
+    //retFraction.insert(retFraction.begin(), 0x1);
+
+    //secondFraction.insert(secondFraction.begin(), 0x1);
+
+    std::cout<<"multiplying"<<std::endl;
+    std::cout<<"ret: "<<retFraction<<std::endl;
+    std::cout<<"sec: "<<secondFraction<<std::endl;
+
+    //multiply fractions
+    ByteArray::multiplyBytes(retFraction, secondFraction);
+
+    //normalisation
+
+
+    //save fraction in ret object
+    std::cout<<"mul: "<<retFraction<<std::endl;
+    ret.setFractionContainer(retFraction);
+
+    return ret;
 }
 
 template<int fraction, int exponent>
