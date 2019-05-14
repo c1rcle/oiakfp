@@ -45,6 +45,11 @@ void addTest(){
 
 int main()
 {
+    VariableFloat<52, 11> first(2.2578125);
+    VariableFloat<52, 11> second(4.5);
+
+    std::cout << first + second << std::endl;
+
     //multiplyTest();
     //return 0;
     VariableFloat<26, 10> f(0.0f);

@@ -18,24 +18,34 @@ private:
     const u_int DOUBLE_FRACTION = 52;
     const u_int FLOAT_EXPONENT = 8;
     const u_int FLOAT_FRACTION = 23;
+
     /// Bias vector.
     std::vector<u_char> biasContainer;
+
     /// Maximum exponent value for current representation (standard hex).
     std::vector<u_char> maxExponent;
+
     /// Minimum exponent value for current representation (standard hex).
     std::vector<u_char> minExponent;
+
     /// Exponent byte container.
     std::vector<u_char> exponentContainer;
+
     /// Fraction byte container.
     std::vector<u_char> fractionContainer;
+
     /// Exponent size in bytes.
     u_int exponentSize{};
+
     /// Fraction size in bytes.
     u_int fractionSize{};
+
     /// Sign bit of a number.
     bool sign;
+
     /// Private constructor for initializing containers.
     VariableFloat();
+
     /// Converts a hexadecimal string into a byte array.
     /// \param input - input string.
     /// \return Vector of bytes corresponding to string's value.
@@ -91,31 +101,51 @@ public:
     /// Prints contents of containers in hex format.
     /// \param str - output stream.
     void printContainers(std::ostream &str) const;
+
     /// Checks whether currently stored number is a NaN.
     /// \return true if NaN, otherwise false.
     bool isNan() const;
+
     /// Checks whether currently stored number is infinity (number is too big).
     /// \return true if Infinity, otherwise false.
     bool isInfinity() const;
+
     /// Checks whether currently stored number represents negative infinity.
     /// \return true if -Infinity, otherwise false.
     bool isNegativeInfinity() const;
+
     /// Checks whether currently stored number represents positive infinity.
     /// \return true if +Infinity, otherwise false.
     bool isPositiveInfinity() const;
 
-    const std::vector<u_char>& getFractionContainer() const {return fractionContainer;}
-    const std::vector<u_char>& getExponentContainer() const {return exponentContainer;}
-    bool getSign() const {return sign;}
+    /// Returns a reference to an object's fraction container.
+    /// \return reference to an object's fraction container
+    const std::vector<u_char>& getFractionContainer() const { return fractionContainer; }
 
-    void setFractionContainer(const std::vector<u_char>& f) {fractionContainer = f;}
-    void setExponentContainer(const std::vector<u_char>& e) {exponentContainer = e;}
-    void setSign(bool s) {sign = s;}
+    /// Returns a reference to an object's exponent container.
+    /// \return reference to an object's exponent container
+    const std::vector<u_char>& getExponentContainer() const { return exponentContainer; }
+
+    /// Returns sign of a number.
+    /// \return true if positive, otherwise false.
+    bool getSign() const { return sign; }
+
+    /// Sets fraction container using the argument's vector.
+    /// \param f - container to be set.
+    void setFractionContainer(const std::vector<u_char>& f) { fractionContainer = f; }
+
+    /// Sets exponent container using the argument's vector.
+    /// \param e - container to be set
+    void setExponentContainer(const std::vector<u_char>& e) { exponentContainer = e; }
+
+    /// Sets the sign of a number.
+    /// \param s - sign to be set.
+    void setSign(bool s) { sign = s; }
 };
 
 template<int fraction, int exponent>
-VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2){
-
+VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2)
+{
     VariableFloat<fraction, exponent> ret(0.0);
     std::vector<u_char> retExponent;
 
@@ -139,7 +169,8 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     std::cout<<"sub: "<<sub<<" "<<carry<<"signs: "<<sameSigns<<std::endl;
 
     //|n2| > |n1|
-    if(carry) {
+    if (carry)
+    {
 
         ret.setSign(n2.getSign());
         sub = n2.getExponentContainer();
@@ -156,7 +187,8 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     lowerFrac.insert(lowerFrac.begin(), 0x1);
     std::cout<<lowerFrac<<std::endl;
     //shift fraction for lower number
-    while(!ByteArray::checkIfZero(sub)){
+    while (!ByteArray::checkIfZero(sub))
+    {
         //std::cout<<"iteration: "<<sub<<" "<<lowerFrac<<std::endl;
         ByteArray::subtractBytes(sub, ByteArray::createOne(sub.size()));
         std::cout<<"i:"<<lowerFrac<<std::endl;
@@ -168,7 +200,7 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     std::cout<<higherFrac<<std::endl;
     std::cout<<lowerFrac<<std::endl;
 
-    if(sameSigns) ByteArray::addBytes(higherFrac, lowerFrac);
+    if (sameSigns) ByteArray::addBytes(higherFrac, lowerFrac);
     else ByteArray::subtractBytes(higherFrac, lowerFrac);
 
     std::cout<<"frac sum: "<<higherFrac<<std::endl;
@@ -178,7 +210,8 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     if(higherFrac[0] == 0x1) higherFrac.erase(higherFrac.begin());
 
     //possible when adding
-    else if(higherFrac[0] > 0x1) {
+    else if(higherFrac[0] > 0x1)
+    {
         ByteArray::shiftVectorRight(higherFrac,1);
         higherFrac.erase(higherFrac.begin());
         ByteArray::addBytes(retExponent, ByteArray::createOne(retExponent.size()));
@@ -186,7 +219,8 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     }
 
     //possible when subtracting
-    else if(higherFrac[0] == 0x0) {
+    else if(higherFrac[0] == 0x0)
+    {
         std::cout<<"subtructing "<<higherFrac<<std::endl;
         ByteArray::shiftVectorLeft(higherFrac,1);
         std::cout<<"subtructing "<<higherFrac<<std::endl;
@@ -202,16 +236,17 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
 }
 
 template<int fraction, int exponent>
-VariableFloat<fraction, exponent> operator - (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2){
+VariableFloat<fraction, exponent> operator - (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2)
+{
     VariableFloat<fraction, exponent> n2Bf = n2;
     n2Bf.setSign(!n2.getSign());
-
     return n1 + n2Bf;
 }
 
 
 template<int fraction, int exponent>
-VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2){
+VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2)
+{
     VariableFloat<fraction, exponent> ret(0.0);
 
     //prepare exponent
@@ -357,6 +392,8 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
     byteCount = fraction >= DOUBLE_FRACTION ? (DOUBLE_FRACTION / 8) + 1 : fractionSize;
     ByteArray::putBytes(((u_char *) &doubleFraction), byteCount, fractionContainer);
     for (unsigned int i = 0; i < (fractionSize - byteCount); i++) fractionContainer.push_back(0);
+    //Get rid of four zeroes in front (little endian).
+    ByteArray::shiftVectorLeft(fractionContainer, 4);
 }
 
 template<int fraction, int exponent>
@@ -379,34 +416,27 @@ void VariableFloat<fraction,exponent>::printContainers(std::ostream &str) const
     if (sign) str << "- ";
     else str << "+ ";
 
-    if (isInfinity())
-    {
-        str << "inf";
-        return;
-    }
-    else if (isNan())
-    {
-        str << "NaN";
-    }
+    if (isInfinity()) str << "inf";
+    else if (isNan()) str << "NaN";
     else
     {
         std::vector<u_char> copy(exponentContainer);
 
-        //if(!ByteArray::checkIfZero(exponentContainer))
-        //    ByteArray::subtractBytes(copy, biasContainer);
+        if(!ByteArray::checkIfZero(exponentContainer))
+            ByteArray::subtractBytes(copy, biasContainer);
 
         str << "0x";
 
-        for (unsigned int i = 0; i < copy.size(); ++i)
+        for (unsigned char i : copy)
         {
-            str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) exponentContainer[i];
+            str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) i;
         }
         str << " ";
 
         str << "0x";
-        for(unsigned int i = 0; i < fractionSize; ++i)
+        for(unsigned char i : fractionContainer)
         {
-            str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) fractionContainer[i];
+            str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) i;
         }
         str << std::endl;
     }
