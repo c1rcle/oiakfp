@@ -106,9 +106,11 @@ public:
 
     const std::vector<u_char>& getFractionContainer() const {return fractionContainer;}
     const std::vector<u_char>& getExponentContainer() const {return exponentContainer;}
+    bool getSign() const {return sign;}
 
     void setFractionContainer(const std::vector<u_char>& f) {fractionContainer = f;}
     void setExponentContainer(const std::vector<u_char>& e) {exponentContainer = e;}
+    void setSign(bool s) {sign = s;}
 };
 
 template<int fraction, int exponent>
@@ -117,21 +119,29 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     VariableFloat<fraction, exponent> ret(0.0);
     std::vector<u_char> retExponent;
 
+    bool sameSigns = n1.getSign() == n2.getSign();
+
     std::cout<<"sizes: "<<n1.getExponentContainer().size()<<", "<<n1.getFractionContainer().size()<<std::endl;
 
     //which number has bigger exponent
     n1.printContainers(std::cout);
     n2.printContainers(std::cout);
 
+    //|n1| > |n2|
+
+    ret.setSign(n1.getSign());
     std::vector<u_char> sub = n1.getExponentContainer();
     retExponent = n1.getExponentContainer();
     std::vector<u_char> higherFrac = n1.getFractionContainer();
     std::vector<u_char> lowerFrac = n2.getFractionContainer();
 
     bool carry = ByteArray::subtractBytes(sub, n2.getExponentContainer());
-    std::cout<<"sub: "<<sub<<" "<<carry<<std::endl;
+    std::cout<<"sub: "<<sub<<" "<<carry<<"signs: "<<sameSigns<<std::endl;
 
+    //|n2| > |n1|
     if(carry) {
+
+        ret.setSign(n2.getSign());
         sub = n2.getExponentContainer();
         retExponent = n2.getExponentContainer();
         higherFrac = n2.getFractionContainer();
@@ -157,15 +167,32 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     std::cout<<"denormalized lower Frac: "<<lowerFrac<<std::endl;
     std::cout<<higherFrac<<std::endl;
     std::cout<<lowerFrac<<std::endl;
-    ByteArray::addBytes(higherFrac, lowerFrac);
+
+    if(sameSigns) ByteArray::addBytes(higherFrac, lowerFrac);
+    else ByteArray::subtractBytes(higherFrac, lowerFrac);
+
     std::cout<<"frac sum: "<<higherFrac<<std::endl;
 
+    //normalisation
+    //possible in both cases
     if(higherFrac[0] == 0x1) higherFrac.erase(higherFrac.begin());
 
+    //possible when adding
     else if(higherFrac[0] > 0x1) {
         ByteArray::shiftVectorRight(higherFrac,1);
         higherFrac.erase(higherFrac.begin());
         ByteArray::addBytes(retExponent, ByteArray::createOne(retExponent.size()));
+
+    }
+
+    //possible when subtracting
+    else if(higherFrac[0] == 0x0) {
+        std::cout<<"subtructing "<<higherFrac<<std::endl;
+        ByteArray::shiftVectorLeft(higherFrac,1);
+        std::cout<<"subtructing "<<higherFrac<<std::endl;
+        higherFrac.erase(higherFrac.begin());
+        ByteArray::subtractBytes(retExponent, ByteArray::createOne(retExponent.size()));
+
     }
 
     ret.setExponentContainer(retExponent);
@@ -174,6 +201,58 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     return ret;
 }
 
+template<int fraction, int exponent>
+VariableFloat<fraction, exponent> operator - (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2){
+    VariableFloat<fraction, exponent> n2Bf = n2;
+    n2Bf.setSign(!n2.getSign());
+
+    return n1 + n2Bf;
+}
+
+
+template<int fraction, int exponent>
+VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2){
+    VariableFloat<fraction, exponent> ret(0.0);
+
+    //prepare exponent
+    std::vector<u_char> retExponent = n1.getExponentContainer();
+    ByteArray::addBytes(retExponent, n2.getExponentContainer());
+    ret.setExponentContainer(retExponent);
+
+
+    //if there is no more bits in fraction container
+    std::vector<u_char> retFraction = n1.getFractionContainer();
+
+    std::cout<<(fraction+1)<<" "<< retFraction.size()<<" "<<retFraction.size()*8<<std::endl;
+
+    if((fraction+1) > (retFraction.size()*8)) retFraction.insert(retFraction.begin(), 0x1);
+    else ByteArray::setBit(retFraction[retFraction.size() - (fraction+1)/8], 8 - (fraction+1)%8 -1, 1);
+
+    //if there is no more bits in fraction container
+    std::vector<u_char> secondFraction = n2.getFractionContainer();
+    if((fraction+1) > (secondFraction.size()*8)) secondFraction.insert(secondFraction.begin(), 0x1);
+    else ByteArray::setBit(secondFraction[secondFraction.size() - (fraction+1)/8], 8 - (fraction+1)%8 -1, 1);
+
+    //retFraction.insert(retFraction.begin(), 0x1);
+
+    //secondFraction.insert(secondFraction.begin(), 0x1);
+
+    std::cout<<"multiplying"<<std::endl;
+    std::cout<<"ret: "<<retFraction<<std::endl;
+    std::cout<<"sec: "<<secondFraction<<std::endl;
+
+    //multiply fractions
+    ByteArray::multiplyBytes(retFraction, secondFraction);
+
+    //normalisation
+
+
+    //save fraction in ret object
+    std::cout<<"mul: "<<retFraction<<std::endl;
+    ret.setFractionContainer(retFraction);
+
+    return ret;
+}
 
 template<int fraction, int exponent>
 std::ostream& operator<<(std::ostream &str, const VariableFloat<fraction, exponent> &obj)
