@@ -44,6 +44,14 @@ public:
     /// \return 0 - if there is no carry, 1 - otherwise.
     static bool addBytes(std::vector<u_char> &first, const std::vector<u_char> &second);
 
+    ///
+    /// \brief addBytesEqSize
+    /// \param first
+    /// \param second
+    /// \return
+    ///
+    static bool addBytesEqSize(std::vector<u_char> &first, const std::vector<u_char> &second);
+
     /// Subtracts bytes from two containers (result stored in first).
     /// \param first - first subtraction operand (vector).
     /// \param second - second subtraction operand (vector).

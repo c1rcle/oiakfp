@@ -81,6 +81,18 @@ bool ByteArray::addBytes(std::vector<u_char> &first, const std::vector<u_char> &
     return carry;
 }
 
+bool ByteArray::addBytesEqSize(std::vector<u_char> &first, const std::vector<u_char> &second)
+{
+    u_char carry = 0;
+    for(int i=first.size()-1;i>=0;--i){
+        short part= first[i] + second[i] + carry;
+        first[i] = part & 0xFF;
+        carry = part >> 8;
+    }
+
+    return carry;
+}
+
 bool ByteArray::subtractBytes(std::vector<u_char> &first, const std::vector<u_char> &second)
 {
     u_char partialProduct = 0;
@@ -145,9 +157,9 @@ void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_ch
     }
 
     //calculate size of part sums
-    unsigned int sizeF= first.size()*2 - 1;
-    unsigned int sizeS= second.size()*2 - 1;
-    unsigned int size = sizeF > sizeS ? sizeF : sizeS;
+    unsigned int sizeF= first.size();
+    unsigned int sizeS= second.size();
+    unsigned int size = sizeF + sizeS;
 
     //make all part sums equal size
     for(unsigned int i=0;i<partSums.size();++i){
@@ -163,7 +175,7 @@ void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_ch
     first = partSums[0];
     u_char carryover = 0; //sums of all carry
     for(unsigned int i=1;i<partSums.size();++i){
-        if(addBytes(first, partSums[i])) carryover++;
+        if(addBytesEqSize(first, partSums[i])) carryover++;
     }
 
     //if range has to be extended

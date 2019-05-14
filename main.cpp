@@ -30,9 +30,16 @@ void checkIfZeroTest()
 }
 
 void multiplyTest(){
-    std::vector<u_char> buf = {0xff,0xff,0xff};
+    std::vector<u_char> buf = {0xff,0xff,0xff,0xff};
     std::vector<u_char> buf2 = {0xff, 0xff};
     ByteArray::multiplyBytes(buf, buf2);
+    std::cout<<buf<<std::endl;
+}
+
+void addTest(){
+    std::vector<u_char> buf = {0x0, 0x0, 0xfe, 0xff, 0xff, 0x1};
+    std::vector<u_char> buf2 = {0x0, 0xfe, 0xff, 0xff, 0x1, 0x0};
+    ByteArray::addBytesEqSize(buf, buf2);
     std::cout<<buf<<std::endl;
 }
 
