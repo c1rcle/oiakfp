@@ -175,10 +175,10 @@ void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_ch
     first = partSums[0];
     u_char carryover = 0; //sums of all carry
     for (unsigned int i = 1; i < partSums.size(); ++i)
-        if(addBytesEqSize(first, partSums[i])) carryover++;
+        if (addBytesEqSize(first, partSums[i])) carryover++;
 
     //if range has to be extended
-    if(carryover > 0) first.insert(first.begin(), carryover);
+    if (carryover > 0) first.insert(first.begin(), carryover);
     //std::cout<<partSums<<std::endl;
 }
 
@@ -197,31 +197,31 @@ void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplie
 unsigned int ByteArray::findOldestOnePostition(const std::vector<u_char> &first)
 {
     unsigned int ret = 0;
-    for(unsigned int i=0;i<first.size();++i){
-        if(first[i] == 0) {
+    for (auto i : first)
+    {
+        if (i == 0)
+        {
             ret += 8;
             continue;
         }
-        else if(first[i] & 0x80) ret += 0;
-        else if(first[i] & 0x40) ret += 1;
-        else if(first[i] & 0x20) ret += 2;
-        else if(first[i] & 0x10) ret += 3;
-        else if(first[i] & 0x8) ret += 4;
-        else if(first[i] & 0x4) ret += 5;
-        else if(first[i] & 0x2) ret += 6;
-        else if(first[i] & 0x1) ret += 7;
-
+        else if(i & 0x80) ret += 0;
+        else if(i & 0x40) ret += 1;
+        else if(i & 0x20) ret += 2;
+        else if(i & 0x10) ret += 3;
+        else if(i & 0x8) ret += 4;
+        else if(i & 0x4) ret += 5;
+        else if(i & 0x2) ret += 6;
+        else if(i & 0x1) ret += 7;
         break;
     }
-
-    ret = first.size()*8-ret;
-
+    ret = first.size() * 8 - ret;
     return ret;
 }
 
 unsigned int ByteArray::cutVector(std::vector<u_char> &first, unsigned int sizeInBits)
 {
-    for(unsigned int i = first.size()-1;i>=0;--i){
+    for(unsigned int i = first.size()-1;i>=0;--i)
+    {
 
     }
 }

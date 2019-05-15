@@ -161,7 +161,8 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
 
     bool sameSigns = n1.getSign() == n2.getSign();
 
-    std::cout<<"sizes: "<<n1.getExponentContainer().size()<<", "<<n1.getFractionContainer().size()<<std::endl;
+    std::cout << "sizes: " << n1.getExponentContainer().size() << ", " <<
+    n1.getFractionContainer().size() <<std::endl;
 
     //which number has bigger exponent
     n1.printContainers(std::cout);
@@ -176,12 +177,11 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     std::vector<u_char> lowerFrac = n2.getFractionContainer();
 
     bool carry = ByteArray::subtractBytes(sub, n2.getExponentContainer());
-    std::cout<<"sub: "<<sub<<" "<<carry<<"signs: "<<sameSigns<<std::endl;
+    std::cout << "sub: " << sub << " " << carry << "signs: " << sameSigns << std::endl;
 
     //|n2| > |n1|
     if (carry)
     {
-
         ret.setSign(n2.getSign());
         sub = n2.getExponentContainer();
         retExponent = n2.getExponentContainer();
@@ -192,56 +192,50 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
 
     //remember to add 1 at the beginning of containers
     higherFrac.insert(higherFrac.begin(), 0x1);
-    std::cout<<lowerFrac<<std::endl;
+    std::cout << lowerFrac << std::endl;
 
     lowerFrac.insert(lowerFrac.begin(), 0x1);
-    std::cout<<lowerFrac<<std::endl;
+    std::cout << lowerFrac << std::endl;
     //shift fraction for lower number
     while (!ByteArray::checkIfZero(sub))
     {
         //std::cout<<"iteration: "<<sub<<" "<<lowerFrac<<std::endl;
         ByteArray::subtractBytes(sub, ByteArray::createOne(sub.size()));
-        std::cout<<"i:"<<lowerFrac<<std::endl;
+        std::cout << "i:" << lowerFrac << std::endl;
         ByteArray::shiftVectorRight(lowerFrac,1);
-        std::cout<<lowerFrac<<std::endl;
+        std::cout << lowerFrac << std::endl;
     }
 
-    std::cout<<"denormalized lower Frac: "<<lowerFrac<<std::endl;
-    std::cout<<higherFrac<<std::endl;
-    std::cout<<lowerFrac<<std::endl;
+    std::cout << "denormalized lower Frac: " << lowerFrac << std::endl;
+    std::cout << higherFrac << std::endl;
+    std::cout << lowerFrac << std::endl;
 
     if (sameSigns) ByteArray::addBytes(higherFrac, lowerFrac);
     else ByteArray::subtractBytes(higherFrac, lowerFrac);
 
-    std::cout<<"frac sum: "<<higherFrac<<std::endl;
+    std::cout << "frac sum: " << higherFrac << std::endl;
 
     //normalisation
     //possible in both cases
-    if(higherFrac[0] == 0x1) higherFrac.erase(higherFrac.begin());
-
+    if (higherFrac[0] == 0x1) higherFrac.erase(higherFrac.begin());
     //possible when adding
-    else if(higherFrac[0] > 0x1)
+    else if (higherFrac[0] > 0x1)
     {
-        ByteArray::shiftVectorRight(higherFrac,1);
+        ByteArray::shiftVectorRight(higherFrac, 1);
         higherFrac.erase(higherFrac.begin());
         ByteArray::addBytes(retExponent, ByteArray::createOne(retExponent.size()));
-
     }
-
     //possible when subtracting
-    else if(higherFrac[0] == 0x0)
+    else if (higherFrac[0] == 0x0)
     {
-        std::cout<<"subtracting "<<higherFrac<<std::endl;
+        std::cout << "subtracting " << higherFrac << std::endl;
         ByteArray::shiftVectorLeft(higherFrac,1);
-        std::cout<<"subtracting "<<higherFrac<<std::endl;
+        std::cout << "subtracting " << higherFrac << std::endl;
         higherFrac.erase(higherFrac.begin());
         ByteArray::subtractBytes(retExponent, ByteArray::createOne(retExponent.size()));
-
     }
-
     ret.setExponentContainer(retExponent);
     ret.setFractionContainer(higherFrac);
-
     return ret;
 }
 
@@ -263,52 +257,49 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
     std::vector<u_char> retExponent = n1.getExponentContainer();
     ByteArray::addBytes(retExponent, n2.getExponentContainer());
 
-
-
     //if there is no more bits in fraction container
     std::vector<u_char> retFraction = n1.getFractionContainer();
 
-    std::cout<<std::dec<<(fraction+1)<<" "<< retFraction.size()<<" "<<retFraction.size()*8<<std::endl;
+    std::cout << std::dec << (fraction+1 )<< " " << retFraction.size() << " " << retFraction.size() * 8 << std::endl;
 
-    ByteArray::setBit(retFraction[retFraction.size() - (fraction+1)/8], (fraction)%8, 1);
+    ByteArray::setBit(retFraction, fraction, true);
 
     //if there is no more bits in fraction container
     std::vector<u_char> secondFraction = n2.getFractionContainer();
-    ByteArray::setBit(secondFraction[secondFraction.size() - (fraction+1)/8], (fraction)%8, 1);
+    ByteArray::setBit(secondFraction, fraction, true);
 
     //retFraction.insert(retFraction.begin(), 0x1);
 
     //secondFraction.insert(secondFraction.begin(), 0x1);
 
-    std::cout<<"multiplying"<<std::endl;
-    std::cout<<"ret: "<<retFraction<<std::endl;
-    std::cout<<"sec: "<<secondFraction<<std::endl;
+    std::cout << "multiplying" << std::endl;
+    std::cout << "ret: " << retFraction << std::endl;
+    std::cout << "sec: " << secondFraction << std::endl;
 
     //multiply fractions
     ByteArray::multiplyBytes(retFraction, secondFraction);
 
-    //normalisation
-
+    //normalisation - TODO
 
     //save fraction in ret object
-    int shiftDirection = (signed)ByteArray::findOldestOnePostition(retFraction) - fraction - 1; //normalisation shifts count
-    std::cout<<"mul: "<<retFraction<<", shift: "<<std::dec<<shiftDirection<<", "<<ByteArray::findOldestOnePostition(retFraction)<<std::endl;
+    int shiftDirection = (signed) ByteArray::findOldestOnePostition(retFraction) - fraction - 1; //normalisation shift count
+    std::cout << "mul: " << retFraction << ", shift: " << std::dec << shiftDirection << ", " <<
+    ByteArray::findOldestOnePostition(retFraction) << std::endl;
 
     //shift and shifts count to the exponent
-    if(shiftDirection < 0){
+    if (shiftDirection < 0)
+    {
         ByteArray::shiftVectorLeft(retFraction, -shiftDirection);
-
-        //crate value works only for char so maximumum size of shifts is 255
+        //crate value works only for char so maximum size of shifts is 255
         ByteArray::subtractBytes(retExponent, ByteArray::createValue(retExponent.size(), (-shiftDirection) & 0xFF));
     }
-    else {
+    else
+    {
         ByteArray::shiftVectorRight(retFraction, shiftDirection);
         ByteArray::addBytes(retExponent, ByteArray::createValue(retExponent.size(), (shiftDirection) & 0xFF));
     }
-
     ret.setExponentContainer(retExponent);
     ret.setFractionContainer(retFraction);
-
     return ret;
 }
 
