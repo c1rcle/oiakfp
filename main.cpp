@@ -9,7 +9,7 @@ void shiftTest()
     for(unsigned int i = 0; i <= bytes.size() * 8; ++i)
     {
         std::vector<u_char> buf = bytes;
-        ByteArray::shiftVectorRight(buf, i);
+        ByteArray::shiftVectorLeft(buf, i);
         std::cout<<buf<<std::endl;
     }
 }
