@@ -234,8 +234,11 @@ unsigned int ByteArray::findOldestOnePostition(const std::vector<u_char> &first)
 
 unsigned int ByteArray::cutVector(std::vector<u_char> &first, unsigned int sizeInBits)
 {
-    for(unsigned int i = first.size()-1;i>=0;--i){
 
+    std::vector<u_char> data;
+
+    for(unsigned int i = first.size()-1;i>=0;--i){
+        if(sizeInBits >= 8)
     }
 }
 
