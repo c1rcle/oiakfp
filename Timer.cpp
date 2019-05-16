@@ -1,11 +1,7 @@
 #include "Timer.h"
 #include <sys/time.h>
 
-
-Timer::Timer()
-{
-
-}
+Timer::Timer() = default;
 
 void Timer::start() noexcept
 {

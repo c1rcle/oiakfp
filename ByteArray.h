@@ -17,16 +17,16 @@ public:
     static void putBytes(const u_char * source, u_int size, std::vector<u_char> &destination);
 
     /// Sets specified bit value.
-    /// \param byte - specific byte which value will change.
-    /// \param position - position in range <0;7>.
+    /// \param array - byte array which single bit will be changed.
+    /// \param position - bit position.
     /// \param value - new value.
-    static void setBit(u_char &byte, u_int position, bool value);
+    static void setBit(std::vector<u_char> &array, u_int position, bool value);
 
     /// Returns specified bit value.
-    /// \param byte - specific byte which value will be retrieved.
-    /// \param position - position in range <0;7>.
+    /// \param array - byte array which single bit will be retrieved.
+    /// \param position - bit position.
     /// \return true if bit equals 1, otherwise false.
-    static bool getBit(u_char &byte, u_int position);
+    static bool getBit(std::vector<u_char> &array, u_int position);
 
     /// Shifts a vector of bytes 'shift' times right.
     /// \param vector - vector which contents are going to be shifted.

@@ -6,54 +6,47 @@ void ByteArray::putBytes(const u_char * source, u_int size, std::vector<u_char> 
         destination.insert(destination.begin(), source[i]);
 }
 
-void ByteArray::setBit(u_char &byte, u_int position, bool value)
+void ByteArray::setBit(std::vector<u_char> &array, u_int position, bool value)
 {
-    char mask = 1;
-    mask <<= position;
+    int bytePosition = position / 8;
+    int bitPosition = position % 8;
 
-    if (value) byte |= mask;
-    else byte &= (~mask);
+    u_char mask = 0x80;
+    mask >>= bitPosition;
+
+    if (value) array[bytePosition] |= mask;
+    else array[bytePosition] &= (~mask);
 }
 
 
-bool ByteArray::getBit(u_char &byte, u_int position)
+bool ByteArray::getBit(std::vector<u_char> &array, u_int position)
 {
-    return (byte >> position) & 0x1;
+    int bytePosition = position / 8;
+    int bitPosition = position % 8;
+    return (array[bytePosition] >> (8 - bitPosition - 1)) & 0x01;
 }
 
 void ByteArray::shiftVectorRight(std::vector<u_char> &vector, int shift)
 {
-    int byteOffset = shift / 8;
-    int bitOffset = shift % 8;
+    int size = (unsigned) vector.size() * 8;
+    int s1 = shift;
 
-    int size = (unsigned)vector.size()*8;
-    int s1 = size - shift;
-
-    for (int i = 0; i < s1; ++i){
-        //std::cout<<i<<" "<<vector<<std::endl;
-        setBit(vector[vector.size()- i/8 -1],i%8, getBit(vector[vector.size()- (i+bitOffset)/8 - byteOffset -1], (i+bitOffset)%8));
-    }
-    for (int i = s1; i < size; ++i)
-        setBit(vector[vector.size()- i/8 -1],i%8,0);
+    for(int i = size - 1; i >= s1; --i)
+        setBit(vector, i, getBit(vector, i - shift));
+    for(int i = s1 - 1; i >= 0; --i)
+        setBit(vector, i, false);
 }
 
 
 void ByteArray::shiftVectorLeft(std::vector<u_char> &vector, int shift)
 {
-    int byteOffset = shift / 8;
-    int bitOffset = shift % 8;
+    int size = (unsigned) vector.size() * 8;
+    int s1 = size - shift;
 
-    int size = (unsigned)vector.size() * 8;
-    int s1 = shift;
-
-    for(int i=size-1;i>=s1;--i){
-        //std::cout<<vector.size()- i/8 -1<<":"<<i%8<<" <- "<<vector.size()- (i-bitOffset)/8 + byteOffset -1<<":"<<(i-bitOffset)%8<<std::endl;
-        setBit(vector[vector.size()- i/8 -1],i%8, getBit(vector[vector.size()- (i-bitOffset)/8 + byteOffset -1], (i-bitOffset)%8));
-    }
-
-    for(int i=s1-1;i>=0;--i){
-        setBit(vector[vector.size()- i/8 -1],i%8,0);
-    }
+    for (int i = 0; i < s1; ++i)
+        setBit(vector, i, getBit(vector, i + shift));
+    for (int i = s1; i < size; ++i)
+        setBit(vector, i, false);
 }
 
 bool ByteArray::addBytes(std::vector<u_char> &first, const std::vector<u_char> &second)
@@ -130,9 +123,9 @@ int ByteArray::compare(const std::vector<u_char> &first, const std::vector<u_cha
 
 bool ByteArray::checkIfZero(const std::vector<u_char> &first)
 {
-    for(u_char i:first)
+    for (u_char i : first)
     {
-        if(i != 0) return false;
+        if (i != 0) return false;
     }
     return true;
 }
@@ -141,7 +134,6 @@ std::vector<u_char> ByteArray::createOne(unsigned int size)
 {
     std::vector<u_char> ret(size);
     ret[ret.size()-1] = 0x1;
-
     return ret;
 }
 
@@ -158,104 +150,95 @@ void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_ch
     std::vector<std::vector<u_char> > partSums;
 
     //multiply first by each byte of second
-    for(u_char i:second){
+    for (u_char i : second)
+    {
         std::vector<u_char> partSum = first;
         multiplyBytesByByte(partSum, i);
         partSums.push_back(partSum);
     }
 
     //calculate size of part sums
-    unsigned int sizeF= first.size();
-    unsigned int sizeS= second.size();
+    unsigned int sizeF = first.size();
+    unsigned int sizeS = second.size();
     unsigned int size = sizeF + sizeS - 1;
 
     //make all part sums equal size
-    for(unsigned int i=0;i<partSums.size();++i){
-        for(unsigned int j=0;j<i;++j){
+    for (unsigned int i = 0; i < partSums.size(); ++i)
+    {
+        for (unsigned int j = 0; j < i; ++j)
             partSums[i].push_back(0);
-        }
 
-        for(unsigned int j=i;partSums[i].size()<=size;++j){
+        for (unsigned int j = i; partSums[i].size() <= size; ++j)
             partSums[i].insert(partSums[i].begin(), 0);
-        }
     }
 
     first = partSums[0];
     u_char carryover = 0; //sums of all carry
-    for(unsigned int i=1;i<partSums.size();++i){
-        if(addBytesEqSize(first, partSums[i])) carryover++;
-    }
+    for (unsigned int i = 1; i < partSums.size(); ++i)
+        if (addBytesEqSize(first, partSums[i])) carryover++;
 
     //if range has to be extended
-    if(carryover > 0)
-        first.insert(first.begin(), carryover);
-
+    if (carryover > 0) first.insert(first.begin(), carryover);
     //std::cout<<partSums<<std::endl;
 }
 
-void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplyer)
+void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplier)
 {
     u_char carry = 0;
-    for(int i=first.size()-1;i>=0;--i){
-        unsigned short part = first[i]*multiplyer;
+    for (int i = first.size() - 1; i >= 0; --i)
+    {
+        unsigned short part = first[i] * multiplier;
         first[i] = (part & 0xFF) + carry;
         carry = part >> 8;
     }
-
-    if(carry > 0)
-        first.insert(first.begin(), carry);
-
+    if (carry > 0) first.insert(first.begin(), carry);
 }
 
 unsigned int ByteArray::findOldestOnePostition(const std::vector<u_char> &first)
 {
     unsigned int ret = 0;
-    for(unsigned int i=0;i<first.size();++i){
-        if(first[i] == 0) {
+    for (auto i : first)
+    {
+        if (i == 0)
+        {
             ret += 8;
             continue;
         }
-        else if(first[i] & 0x80) ret += 0;
-        else if(first[i] & 0x40) ret += 1;
-        else if(first[i] & 0x20) ret += 2;
-        else if(first[i] & 0x10) ret += 3;
-        else if(first[i] & 0x8) ret += 4;
-        else if(first[i] & 0x4) ret += 5;
-        else if(first[i] & 0x2) ret += 6;
-        else if(first[i] & 0x1) ret += 7;
-
+        else if(i & 0x80) ret += 0;
+        else if(i & 0x40) ret += 1;
+        else if(i & 0x20) ret += 2;
+        else if(i & 0x10) ret += 3;
+        else if(i & 0x8) ret += 4;
+        else if(i & 0x4) ret += 5;
+        else if(i & 0x2) ret += 6;
+        else if(i & 0x1) ret += 7;
         break;
     }
-
-    ret = first.size()*8-ret;
-
+    ret = first.size() * 8 - ret;
     return ret;
 }
 
 unsigned int ByteArray::cutVector(std::vector<u_char> &first, unsigned int sizeInBits)
 {
+    for(unsigned int i = first.size()-1;i>=0;--i)
+    {
 
+    }
     std::vector<u_char> data;
 
     for(unsigned int i = first.size()-1;i>=0;--i){
-        if(sizeInBits >= 8)
+        if(sizeInBits >= 8);
     }
 }
 
 std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj)
 {
-    for(const u_char i : obj)
-    {
-        str<<std::hex<<"0x"<<(unsigned)i<<" ";
-    }
+    for (const u_char i : obj) str << std::hex << "0x" << (unsigned) i << " ";
     return str;
 }
 
 std::ostream &operator <<(std::ostream &str, const std::vector<std::vector<u_char> > &obj)
 {
-    for(unsigned int i=0;i<obj.size();++i){
-        str<<obj[i]<<std::endl;
-    }
-
+    for (const auto & i : obj) str << i << std::endl;
     return str;
 }
