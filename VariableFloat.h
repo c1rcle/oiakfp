@@ -142,7 +142,11 @@ public:
 
     /// Sets fraction container using the argument's vector.
     /// \param f - container to be set.
-    void setFractionContainer(std::vector<u_char>& f) { fractionContainer = roundFraction(f); }
+    void setFractionContainer(std::vector<u_char>& f)
+    {
+        fractionContainer = roundFraction(f);
+        if (fractionContainer.size() > fractionSize) fractionContainer.pop_back();
+    }
 
     /// Sets exponent container using the argument's vector.
     /// \param e - container to be set
@@ -275,7 +279,6 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     n2.printContainers(std::cout);
 
     //|n1| > |n2|
-
     ret.setSign(n1.getSign());
     std::vector<u_char> sub = n1.getExponentContainer();
     retExponent = n1.getExponentContainer();
@@ -297,23 +300,14 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     }
 
     //remember to add 1 at the beginning of containers
-    //higherFrac.insert(higherFrac.begin(), 0x1);
-    //std::cout << "higher" << higherFrac << std::endl;
-
-
-    std::cout << "(1) no hidden 1: " << higherFrac << std::endl;
 
     higherFrac.push_back(0);
-    ByteArray::shiftVectorRight(higherFrac,1);
+    ByteArray::shiftVectorRight(higherFrac, 1);
     ByteArray::setBit(higherFrac, 0, true);
 
-    std::cout << "(1) hidden 1: " << higherFrac << std::endl;
-    std::cout << "(2) no hidden 1: " << lowerFrac << std::endl;
-
     lowerFrac.push_back(0);
-    ByteArray::shiftVectorRight(lowerFrac,1);
+    ByteArray::shiftVectorRight(lowerFrac, 1);
     ByteArray::setBit(lowerFrac, 0, true);
-    std::cout << "(2) hidden 1: "  << lowerFrac << std::endl;
 
     //shift fraction for lower number
     while (!ByteArray::checkIfZero(sub))
@@ -321,12 +315,26 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
         //std::cout<<"iteration: "<<sub<<" "<<lowerFrac<<std::endl;
         ByteArray::subtractBytes(sub, ByteArray::createOne(sub.size()));
         std::cout << "i:" << lowerFrac << std::endl;
-        ByteArray::shiftVectorRight(lowerFrac,1);
+        ByteArray::shiftVectorRight(lowerFrac, 1);
         std::cout << lowerFrac << std::endl;
     }
 
-    if (sameSigns) ByteArray::addBytes(higherFrac, lowerFrac);
-    else ByteArray::subtractBytes(higherFrac, lowerFrac);
+    if (sameSigns)
+    {
+        if (ByteArray::addBytes(higherFrac, lowerFrac))
+        {
+            ByteArray::shiftVectorRight(higherFrac, 1);
+            ByteArray::setBit(higherFrac, 0, true);
+        }
+    }
+    else
+    {
+        if (ByteArray::subtractBytes(higherFrac, lowerFrac))
+        {
+            ByteArray::shiftVectorRight(higherFrac, 1);
+            ByteArray::setBit(higherFrac, 0, true);
+        }
+    }
 
     ByteArray::shiftVectorLeft(higherFrac, 1);
 
