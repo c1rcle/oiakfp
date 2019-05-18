@@ -45,6 +45,18 @@ void addTest(){
 
 int main()
 {
+    std::vector<u_char> a = {1,0,0,0};
+    std::cout<<a<<std::endl;
+    ByteArray::setBit(a, 23, 1);
+    std::cout<<a<<std::endl;
+    //return 0;
+
+
+    VariableFloat<52, 11> s(0.0);
+    //std::cin>>s;
+    //std::cout<<"entered value: "<<s<<std::endl;
+
+
     VariableFloat<52, 11> first(2.2578125);
     VariableFloat<52, 11> second(4.5);
 
@@ -52,10 +64,11 @@ int main()
 
     //multiplyTest();
     //return 0;
-    VariableFloat<26, 10> f(0.0f);
+    VariableFloat<23, 8> f(1/3.0);
     std::cout << f << std::endl;
+    //return 0;
     VariableFloat<23, 8> d(2.5f);
-    std::cout << d << std::endl;
+    //std::cout << d << std::endl;
     //VariableFloat<23, 8> g(false, "01", "21");
     //VariableFloat<23, 8> h(false, "02", "20");
     //    std::cout << g + h<< std::endl;
@@ -63,13 +76,15 @@ int main()
     //VariableFloat<23, 8> g(4.5f);
     //VariableFloat<23, 8> h(2.2578125f);
 
-    VariableFloat<23, 8> g(true, "02", "00");
-    VariableFloat<23, 8> h(true, "01", "00");
+//    VariableFloat<23, 8> g(true, "01", "10");
+//    VariableFloat<23, 8> h(true, "02", "10");
+    VariableFloat<23, 8> g(true, "01", "80");
+    VariableFloat<23, 8> h(true, "02", "80");
 
 
     std::cout << g << std::endl;
     std::cout << h << std::endl;
 
-    std::cout << g * h << std::endl;
+    std::cout << g + h << std::endl;
     return 0;
 }
