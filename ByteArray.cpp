@@ -74,7 +74,7 @@ bool ByteArray::addBytes(std::vector<u_char> &first, const std::vector<u_char> &
     return carry;
 }
 
-bool ByteArray::addBytesEqSize(std::vector<u_char> &first, const std::vector<u_char> &second)
+u_char ByteArray::addBytesEqSize(std::vector<u_char> &first, const std::vector<u_char> &second)
 {
     u_char carry = 0;
     for(int i=first.size()-1;i>=0;--i){
@@ -229,6 +229,26 @@ unsigned int ByteArray::cutVector(std::vector<u_char> &first, unsigned int sizeI
     for(unsigned int i = first.size()-1;i>=0;--i){
         if(sizeInBits >= 8);
     }
+}
+
+std::string ByteArray::toBinaryString(const std::vector<u_char> &first, unsigned point)
+{
+    std::string ret="";
+
+    for(int i=0;i<=first.size();++i){
+
+        u_char mask=0x80;
+        for(int j=7;j>=0;--j){
+            //std::cout<<j<<", "<<i<<", "<<std::hex<<(unsigned int)mask<<", "<<std::hex<<(unsigned int)first[i]<<", "<<(first[i]&mask)<<std::endl;
+            ret += (first[i] & mask) == 0 ? '0' : '1';
+
+            mask = mask >> 1;
+        }
+    }
+
+    ret.insert(ret.begin() + point, '.');
+
+    return ret;
 }
 
 std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj)

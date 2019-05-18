@@ -157,6 +157,8 @@ public:
     void setSign(bool s) { sign = s; }
 
     const std::vector<u_char>& getBIAS() const {return biasContainer;}
+
+    std::string toBinary() const;
 };
 
 template<int fraction, int exponent>
@@ -273,8 +275,8 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
 
     bool sameSigns = n1.getSign() == n2.getSign();
 
-    std::cout << "sizes: " << n1.getExponentContainer().size() << ", " <<
-    n1.getFractionContainer().size() <<std::endl;
+    //std::cout << "sizes: " << n1.getExponentContainer().size() << ", " <<
+    //n1.getFractionContainer().size() <<std::endl;
 
     //|n1| > |n2|
     ret.setSign(n1.getSign());
@@ -284,7 +286,7 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     std::vector<u_char> lowerFrac = n2.getFractionContainer();
 
     bool carry = ByteArray::subtractBytes(sub, n2.getExponentContainer());
-    std::cout << "sub: " << sub << " " << carry << "signs: " << sameSigns << std::endl;
+    //std::cout << "sub: " << sub << " " << carry << "signs: " << sameSigns << std::endl;
 
     //|n2| > |n1|
     if (carry)
@@ -312,33 +314,56 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     {
         //std::cout<<"iteration: "<<sub<<" "<<lowerFrac<<std::endl;
         ByteArray::subtractBytes(sub, ByteArray::createOne(sub.size()));
-        std::cout << "i:" << lowerFrac << std::endl;
         ByteArray::shiftVectorRight(lowerFrac, 1);
-        std::cout << lowerFrac << std::endl;
     }
+
+    int pointPos = higherFrac.size()*8 - ByteArray::findOldestOnePostition(higherFrac) - 1;
+
+    //std::cout << "(1) higherFrac: " << higherFrac<< std::endl;
+    //std::cout << "(1) lowerFrac:  " << lowerFrac<< std::endl;
+    //std::cout << "(1) point pos:  " << std::dec <<pointPos << std::endl;
+
+    //for overflow
 
     if (sameSigns)
     {
-        if (ByteArray::addBytes(higherFrac, lowerFrac))
-        {
-            ByteArray::shiftVectorRight(higherFrac, 1);
-            ByteArray::setBit(higherFrac, 0, true);
-        }
+        u_char carry = ByteArray::addBytesEqSize(higherFrac, lowerFrac);
+        higherFrac.insert(higherFrac.begin(), carry);
     }
     else
     {
-        if (ByteArray::subtractBytes(higherFrac, lowerFrac))
-        {
-            ByteArray::shiftVectorRight(higherFrac, 1);
-            ByteArray::setBit(higherFrac, 0, true);
-        }
+        //there will be no overflow. higherFrac is always bigger than lowerFrac
+        ByteArray::subtractBytes(higherFrac, lowerFrac);
+
+            //ByteArray::shiftVectorRight(higherFrac, 1);
+
     }
 
+
+    int newPointPos = higherFrac.size()*8 - ByteArray::findOldestOnePostition(higherFrac) - 1;
+    //std::cout << "(1) new point pos:  "<<std::dec << newPointPos << std::endl;
+
+    int shiftDirection = pointPos - newPointPos;
+
+    if(shiftDirection < 0) {
+        ByteArray::shiftVectorRight(higherFrac, -shiftDirection);
+        ByteArray::addBytes(retExponent, ByteArray::createValue(retExponent.size(), -shiftDirection));
+    }
+    else{
+        ByteArray::shiftVectorLeft(higherFrac, shiftDirection);
+        ByteArray::subtractBytes(retExponent, ByteArray::createValue(retExponent.size(), shiftDirection));
+    }
+
+    //std::cout << "(1) sum:  " << higherFrac<< std::endl;
+
+    higherFrac.erase(higherFrac.end()-1);
+
+    //remove only if was added in previous operations. (if same signs)
+    if(higherFrac.size() > lowerFrac.size())
+        higherFrac.erase(higherFrac.begin());
+
+    //shift back
     ByteArray::shiftVectorLeft(higherFrac, 1);
-
-    //normalisation
-
-
 
 
     ret.setExponentContainer(retExponent);
@@ -562,7 +587,7 @@ std::vector<u_char> &VariableFloat<fraction, exponent>::roundFraction(std::vecto
     bool sBit = false;
 
     //Check whether there are any '1's later in the fraction.
-    for (unsigned int i = rBitPosition + 1; i < arraySize; ++i)
+    for (int i = rBitPosition + 1; i < arraySize; ++i)
     {
         if (ByteArray::getBit(currentFraction, i))
         {
@@ -673,4 +698,29 @@ template<int fraction, int exponent>
 bool VariableFloat<fraction, exponent>::isPositiveInfinity() const
 {
     return sign && isInfinity();
+}
+
+template<int fraction, int exponent>
+std::string VariableFloat<fraction, exponent>::toBinary() const
+{
+    std::vector<u_char> exp = getExponentContainer();
+    ByteArray::subtractBytes(exp, getBIAS());
+
+
+    std::vector<u_char> frac = getFractionContainer();
+
+    frac.push_back(0);
+    ByteArray::shiftVectorRight(frac,1);
+    ByteArray::setBit(frac, 0, true);
+
+    int pointPos = 1; //frac.size()*8 - ByteArray::findOldestOnePostition(frac) - 1;
+
+    while (!ByteArray::checkIfZero(exp)) {
+
+        pointPos ++;
+        ByteArray::subtractBytes(exp, ByteArray::createOne(exp.size()));
+    }
+
+
+    return (getSign() == false ? "+ ":"- ") + ByteArray::toBinaryString(frac, pointPos);
 }

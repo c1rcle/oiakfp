@@ -50,7 +50,7 @@ public:
     /// \param second
     /// \return
     ///
-    static bool addBytesEqSize(std::vector<u_char> &first, const std::vector<u_char> &second);
+    static u_char addBytesEqSize(std::vector<u_char> &first, const std::vector<u_char> &second);
 
     /// Subtracts bytes from two containers (result stored in first).
     /// \param first - first subtraction operand (vector).
@@ -100,6 +100,8 @@ public:
     /// \return
     ///
     static unsigned int cutVector(std::vector<u_char> &first, unsigned int sizeInBits);
+
+    static std::string toBinaryString(const std::vector<u_char> &first, unsigned point);
 };
 
 std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj);
