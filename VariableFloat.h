@@ -79,7 +79,6 @@ public:
     /// \param fractionRep - fraction representation given in hex string.
     VariableFloat(bool sign, const std::string& exponentRep, const std::string& fractionRep);
 
-
     /// VariableFloat destructor.
     ~VariableFloat() = default;
 
@@ -143,7 +142,7 @@ public:
 
     /// Sets fraction container using the argument's vector.
     /// \param f - container to be set.
-    void setFractionContainer(const std::vector<u_char>& f) { fractionContainer = f; }
+    void setFractionContainer(std::vector<u_char>& f) { fractionContainer = roundFraction(f); }
 
     /// Sets exponent container using the argument's vector.
     /// \param e - container to be set
@@ -261,9 +260,6 @@ VariableFloat<fraction, exponent>::VariableFloat(bool sign, const std::string &e
 }
 
 template<int fraction, int exponent>
-std::istream& operator>>(std::istream &str, VariableFloat<fraction, exponent> &obj);
-
-template<int fraction, int exponent>
 VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2)
 {
     VariableFloat<fraction, exponent> ret(0.0);
@@ -332,7 +328,7 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     if (sameSigns) ByteArray::addBytes(higherFrac, lowerFrac);
     else ByteArray::subtractBytes(higherFrac, lowerFrac);
 
-    ByteArray::shiftVectorLeft(higherFrac,1);
+    ByteArray::shiftVectorLeft(higherFrac, 1);
 
     //normalisation
     //possible in both cases
@@ -445,10 +441,7 @@ std::istream& operator>>(std::istream &str, VariableFloat<fraction, exponent> &o
     str>>sign;
     str>>exp;
     str>>frac;
-
-
     obj = VariableFloat<fraction, exponent>(sign, exp, frac);
-
     return str;
 }
 
