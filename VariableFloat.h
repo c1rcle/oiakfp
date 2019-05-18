@@ -79,6 +79,7 @@ public:
     /// \param fractionRep - fraction representation given in hex string.
     VariableFloat(bool sign, std::string exponentRep, std::string fractionRep);
 
+
     /// VariableFloat destructor.
     ~VariableFloat() = default;
 
@@ -154,6 +155,9 @@ public:
 };
 
 template<int fraction, int exponent>
+std::istream& operator>>(std::istream &str, VariableFloat<fraction, exponent> &obj);
+
+template<int fraction, int exponent>
 VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2)
 {
     VariableFloat<fraction, exponent> ret(0.0);
@@ -191,11 +195,24 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     }
 
     //remember to add 1 at the beginning of containers
-    higherFrac.insert(higherFrac.begin(), 0x1);
-    std::cout << lowerFrac << std::endl;
+    //higherFrac.insert(higherFrac.begin(), 0x1);
+    //std::cout << "higher" << higherFrac << std::endl;
 
-    lowerFrac.insert(lowerFrac.begin(), 0x1);
-    std::cout << lowerFrac << std::endl;
+
+    std::cout << "(1) no hidden 1: " << higherFrac << std::endl;
+
+    higherFrac.push_back(0);
+    ByteArray::shiftVectorRight(higherFrac,1);
+    ByteArray::setBit(higherFrac, 0, true);
+
+    std::cout << "(1) hidden 1: " << higherFrac << std::endl;
+    std::cout << "(2) no hidden 1: " << lowerFrac << std::endl;
+
+    lowerFrac.push_back(0);
+    ByteArray::shiftVectorRight(lowerFrac,1);
+    ByteArray::setBit(lowerFrac, 0, true);
+    std::cout << "(2) hidden 1: "  << lowerFrac << std::endl;
+
     //shift fraction for lower number
     while (!ByteArray::checkIfZero(sub))
     {
@@ -206,14 +223,10 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
         std::cout << lowerFrac << std::endl;
     }
 
-    std::cout << "denormalized lower Frac: " << lowerFrac << std::endl;
-    std::cout << higherFrac << std::endl;
-    std::cout << lowerFrac << std::endl;
-
     if (sameSigns) ByteArray::addBytes(higherFrac, lowerFrac);
     else ByteArray::subtractBytes(higherFrac, lowerFrac);
 
-    std::cout << "frac sum: " << higherFrac << std::endl;
+    ByteArray::shiftVectorLeft(higherFrac,1);
 
     //normalisation
     //possible in both cases
@@ -266,11 +279,15 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
 
     //if there is no more bits in fraction container
     std::vector<u_char> secondFraction = n2.getFractionContainer();
-    ByteArray::setBit(secondFraction, fraction, true);
 
-    //retFraction.insert(retFraction.begin(), 0x1);
+    secondFraction.push_back(0);
+    ByteArray::shiftVectorRight(secondFraction,1);
+    ByteArray::setBit(secondFraction, 0, true);
 
-    //secondFraction.insert(secondFraction.begin(), 0x1);
+    retFraction.push_back(0);
+    ByteArray::shiftVectorRight(retFraction,1);
+    ByteArray::setBit(retFraction, 0, true);
+
 
     std::cout << "multiplying" << std::endl;
     std::cout << "ret: " << retFraction << std::endl;
@@ -298,6 +315,7 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
         ByteArray::shiftVectorRight(retFraction, shiftDirection);
         ByteArray::addBytes(retExponent, ByteArray::createValue(retExponent.size(), (shiftDirection) & 0xFF));
     }
+
     ret.setExponentContainer(retExponent);
     ret.setFractionContainer(retFraction);
     return ret;
@@ -314,7 +332,17 @@ std::ostream& operator<<(std::ostream &str, const VariableFloat<fraction, expone
 template<int fraction, int exponent>
 std::istream& operator>>(std::istream &str, VariableFloat<fraction, exponent> &obj)
 {
-    //TODO
+    std::string frac;
+    std::string exp;
+    bool sign;
+
+    str>>sign;
+    str>>exp;
+    str>>frac;
+
+
+    obj = VariableFloat<fraction, exponent>(sign, exp, frac);
+
     return str;
 }
 
@@ -350,6 +378,16 @@ VariableFloat<fraction, exponent>::VariableFloat(const VariableFloat<fraction, e
     for (auto byte : number.biasContainer) biasContainer.push_back(byte);
     for (auto byte : number.maxExponent) maxExponent.push_back(byte);
     for (auto byte : number.minExponent) minExponent.push_back(byte);
+}
+
+template<int fraction, int exponent>
+const VariableFloat<fraction, exponent> &VariableFloat<fraction, exponent>::operator=(const VariableFloat<fraction, exponent> &number)
+{
+    this->setSign(number.getSign());
+    this->setExponentContainer(number.getExponentContainer());
+    this->setFractionContainer(number.getFractionContainer());
+
+    return *this;
 }
 
 template<int fraction, int exponent>
@@ -560,6 +598,8 @@ std::vector<u_char> &VariableFloat<fraction, exponent>::roundFraction(std::vecto
         for (int i = fraction; i < arraySize; ++i)
             ByteArray::setBit(currentFraction, i, false);
     }
+
+    return currentFraction;
 }
 
 template<int fraction, int exponent>
