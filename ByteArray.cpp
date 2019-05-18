@@ -150,10 +150,10 @@ void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_ch
     std::vector<std::vector<u_char> > partSums;
 
     //multiply first by each byte of second
-    for (u_char i : second)
+    for (int i=second.size()-1;i>=0;--i)
     {
         std::vector<u_char> partSum = first;
-        multiplyBytesByByte(partSum, i);
+        multiplyBytesByByte(partSum, second[i]);
         partSums.push_back(partSum);
     }
 
@@ -187,8 +187,8 @@ void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplie
     u_char carry = 0;
     for (int i = first.size() - 1; i >= 0; --i)
     {
-        unsigned short part = first[i] * multiplier;
-        first[i] = (part & 0xFF) + carry;
+        unsigned short part = first[i] * multiplier + carry;
+        first[i] = (part& 0xFF);
         carry = part >> 8;
     }
     if (carry > 0) first.insert(first.begin(), carry);

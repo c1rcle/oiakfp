@@ -152,6 +152,8 @@ public:
     /// Sets the sign of a number.
     /// \param s - sign to be set.
     void setSign(bool s) { sign = s; }
+
+    const std::vector<u_char>& getBIAS() const {return biasContainer;}
 };
 
 template<int fraction, int exponent>
@@ -274,12 +276,7 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     std::cout << "sizes: " << n1.getExponentContainer().size() << ", " <<
     n1.getFractionContainer().size() <<std::endl;
 
-    //which number has bigger exponent
-    n1.printContainers(std::cout);
-    n2.printContainers(std::cout);
-
     //|n1| > |n2|
-
     ret.setSign(n1.getSign());
     std::vector<u_char> sub = n1.getExponentContainer();
     retExponent = n1.getExponentContainer();
@@ -335,24 +332,10 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     ByteArray::shiftVectorLeft(higherFrac,1);
 
     //normalisation
-    //possible in both cases
-    if (higherFrac[0] == 0x1) higherFrac.erase(higherFrac.begin());
-    //possible when adding
-    else if (higherFrac[0] > 0x1)
-    {
-        ByteArray::shiftVectorRight(higherFrac, 1);
-        higherFrac.erase(higherFrac.begin());
-        ByteArray::addBytes(retExponent, ByteArray::createOne(retExponent.size()));
-    }
-    //possible when subtracting
-    else if (higherFrac[0] == 0x0)
-    {
-        std::cout << "subtracting " << higherFrac << std::endl;
-        ByteArray::shiftVectorLeft(higherFrac,1);
-        std::cout << "subtracting " << higherFrac << std::endl;
-        higherFrac.erase(higherFrac.begin());
-        ByteArray::subtractBytes(retExponent, ByteArray::createOne(retExponent.size()));
-    }
+
+
+
+
     ret.setExponentContainer(retExponent);
     ret.setFractionContainer(higherFrac);
     return ret;
@@ -374,13 +357,25 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
 
     //Prepare exponent.
     std::vector<u_char> retExponent = n1.getExponentContainer();
-    ByteArray::addBytes(retExponent, n2.getExponentContainer());
+    ByteArray::subtractBytes(retExponent, n1.getBIAS());
+    //std::cout << "(1) ret exponent: " << retExponent<<std::endl;
 
+    std::vector<u_char> secondExponent = n2.getExponentContainer();
+    ByteArray::subtractBytes(secondExponent, n2.getBIAS());
+
+    ByteArray::addBytes(retExponent, secondExponent);
+    //std::cout << "(2) sec exponent: " << secondExponent<<std::endl;
+
+    //std::cout << "(2) ret exponent: " << retExponent<<std::endl;
     //if there is no more bits in fraction container
     std::vector<u_char> retFraction = n1.getFractionContainer();
 
     //if there is no more bits in fraction container
     std::vector<u_char> secondFraction = n2.getFractionContainer();
+
+
+    //std::cout << "(0) mul (first): " << retFraction << std::endl;
+    //std::cout << "(0) mul (second): " << secondFraction << std::endl;
 
     secondFraction.push_back(0);
     ByteArray::shiftVectorRight(secondFraction,1);
@@ -391,36 +386,67 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
     ByteArray::setBit(retFraction, 0, true);
 
 
-    //std::cout << "multiplying" << std::endl;
-    std::cout << "(1) mul (first): " << retFraction << std::endl;
-    std::cout << "(2) mul (second): " << secondFraction << std::endl;
+    //std::cout << "(1) mul (first): " << retFraction << std::endl;
+    //std::cout << "(1) mul (second): " << secondFraction << std::endl;
 
-    std::cout<<"(1) oldest 1: "<<retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction)<<std::endl;
-    std::cout<<"(1) oldest 1: "<<retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction)<<std::endl;
-    std::cout<<"(2) oldest 1: "<<secondFraction.size()*8 - ByteArray::findOldestOnePostition(secondFraction)<<std::endl;
+    //std::cout<<"(1) oldest 1: "<<retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction)<<std::endl;
+    //std::cout<<"(2) oldest 1: "<<secondFraction.size()*8 - ByteArray::findOldestOnePostition(secondFraction)<<std::endl;
+
+    int pointPos = retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction) - 1;
 
     //multiply fractions
     ByteArray::multiplyBytes(retFraction, secondFraction);
-    std::cout << "(3) mul : " << retFraction << std::endl;
 
-    std::cout<<"(3) oldest 1: "<<(signed)(retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction))<<std::endl;
-    //normalisation - TODO
+
+    //std::cout << "(3) mul : " << retFraction << std::endl;
+    //set point at the same position in vector
+    ByteArray::shiftVectorRight(retFraction, pointPos);
+
+    //std::cout << "(3) shift: " <<std::dec<< pointPos*2 << std::endl;
+    //std::cout << "(3) mul shifted: " << retFraction << std::endl;
+
+
+    //std::cout<<"(3) oldest 1: "<< std::dec<<(signed)secondFraction.size()*8 - (signed)(retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction))<<std::endl;
 
     //save fraction in ret object
-    int shiftDirection = (signed)(retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction)); //normalisation shift count
+    //normalisation shift count
+    int shiftDirection = (signed)secondFraction.size()*8 - (signed)(retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction));
 
+    //std::cout << "(1) ret exponent: " << retExponent<<std::endl;
+    //std::cout << "shift direction: " << shiftDirection << std::endl;
     //shift and shifts count to the exponent
     if (shiftDirection < 0)
     {
-        ByteArray::shiftVectorLeft(retFraction, -shiftDirection);
+        ByteArray::shiftVectorRight(retFraction, -shiftDirection);
         //crate value works only for char so maximum size of shifts is 255
-        ByteArray::subtractBytes(retExponent, ByteArray::createValue(retExponent.size(), (-shiftDirection) & 0xFF));
+        ByteArray::addBytes(retExponent, ByteArray::createValue(retExponent.size(), (-shiftDirection) & 0xFF));
+
     }
     else
     {
-        ByteArray::shiftVectorRight(retFraction, shiftDirection);
-        ByteArray::addBytes(retExponent, ByteArray::createValue(retExponent.size(), (shiftDirection) & 0xFF));
+        ByteArray::shiftVectorLeft(retFraction, shiftDirection);
+        ByteArray::subtractBytes(retExponent, ByteArray::createValue(retExponent.size(), (shiftDirection) & 0xFF));
     }
+
+    //std::cout<<"(2) ret exponent: "<<retExponent<<std::endl;
+    //std::cout << "(4) mul : " << retFraction << std::endl;
+    //remove extra bytes from ret vector
+    while(retFraction.size() != secondFraction.size()){
+        retFraction.erase(retFraction.begin());
+    }
+
+    //std::cout << "(2.5) mul : " << retFraction << std::endl;
+
+    ByteArray::setBit(retFraction, 0, false);
+    ByteArray::shiftVectorLeft(retFraction, 1);
+
+    //remove what has been added before shift
+    retFraction.erase(retFraction.end()-1);
+
+    //std::cout << "(3) mul : " << retFraction << std::endl;
+
+
+    ByteArray::addBytes(retExponent, n1.getBIAS());
 
     ret.setExponentContainer(retExponent);
     ret.setFractionContainer(retFraction);
@@ -486,7 +512,6 @@ void VariableFloat<fraction,exponent>::printContainers(std::ostream &str) const
         {
             str << std::hex << std::setfill('0') << std::setw(2) << (unsigned) i;
         }
-        str << std::endl;
     }
 }
 
