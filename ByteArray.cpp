@@ -197,24 +197,24 @@ void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplie
 unsigned int ByteArray::findOldestOnePostition(const std::vector<u_char> &first)
 {
     unsigned int ret = 0;
-    for (auto i : first)
+    for (unsigned int i=0;i<=first.size();++i)
     {
-        if (i == 0)
+        if (first[i] == 0)
         {
             ret += 8;
             continue;
         }
-        else if(i & 0x80) ret += 0;
-        else if(i & 0x40) ret += 1;
-        else if(i & 0x20) ret += 2;
-        else if(i & 0x10) ret += 3;
-        else if(i & 0x8) ret += 4;
-        else if(i & 0x4) ret += 5;
-        else if(i & 0x2) ret += 6;
-        else if(i & 0x1) ret += 7;
+        else if(first[i] & 0x80) ret += 0;
+        else if(first[i] & 0x40) ret += 1;
+        else if(first[i] & 0x20) ret += 2;
+        else if(first[i] & 0x10) ret += 3;
+        else if(first[i] & 0x8) ret += 4;
+        else if(first[i] & 0x4) ret += 5;
+        else if(first[i] & 0x2) ret += 6;
+        else if(first[i] & 0x1) ret += 7;
         break;
     }
-    ret = first.size() * 8 - ret;
+//    /ret = first.size() * 8 - ret;
     return ret;
 }
 

@@ -45,10 +45,11 @@ void addTest(){
 
 int main()
 {
-    std::vector<u_char> a = {1,0,0,0};
+    std::vector<u_char> a = {0,0,0,0};
     std::cout<<a<<std::endl;
-    ByteArray::setBit(a, 23, 1);
-    std::cout<<a<<std::endl;
+    ByteArray::setBit(a, 28, 1);
+
+    std::cout<<a<<", "<<ByteArray::findOldestOnePostition(a)<<std::endl;
     //return 0;
 
 
@@ -78,13 +79,13 @@ int main()
 
 //    VariableFloat<23, 8> g(true, "01", "10");
 //    VariableFloat<23, 8> h(true, "02", "10");
-    VariableFloat<23, 8> g(true, "01", "80");
+    VariableFloat<23, 8> g(true, "01", "00");
     VariableFloat<23, 8> h(true, "02", "80");
 
 
     std::cout << g << std::endl;
     std::cout << h << std::endl;
 
-    std::cout << g + h << std::endl;
+    std::cout << g * h << std::endl;
     return 0;
 }

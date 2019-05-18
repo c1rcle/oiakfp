@@ -86,8 +86,8 @@ public:
     static void multiplyBytesByByte(std::vector<u_char> &first, u_char multiplyer);
 
     ///
-    /// \brief findOldestOnePostition function check where the highest one is located and returns
-    ///        position of its
+    /// \brief findOldestOnePostition function check where the highest true bit is located and returns
+    ///        position of its. Counting is same as setBit function's countig
     /// \param first
     /// \return
     ///

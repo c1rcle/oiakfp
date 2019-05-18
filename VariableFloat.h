@@ -273,10 +273,6 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
     //if there is no more bits in fraction container
     std::vector<u_char> retFraction = n1.getFractionContainer();
 
-    std::cout << std::dec << (fraction+1 )<< " " << retFraction.size() << " " << retFraction.size() * 8 << std::endl;
-
-    ByteArray::setBit(retFraction, fraction, true);
-
     //if there is no more bits in fraction container
     std::vector<u_char> secondFraction = n2.getFractionContainer();
 
@@ -289,19 +285,23 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
     ByteArray::setBit(retFraction, 0, true);
 
 
-    std::cout << "multiplying" << std::endl;
-    std::cout << "ret: " << retFraction << std::endl;
-    std::cout << "sec: " << secondFraction << std::endl;
+    //std::cout << "multiplying" << std::endl;
+    std::cout << "(1) mul (first): " << retFraction << std::endl;
+    std::cout << "(2) mul (second): " << secondFraction << std::endl;
+
+    std::cout<<"(1) oldest 1: "<<retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction)<<std::endl;
+    std::cout<<"(1) oldest 1: "<<retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction)<<std::endl;
+    std::cout<<"(2) oldest 1: "<<secondFraction.size()*8 - ByteArray::findOldestOnePostition(secondFraction)<<std::endl;
 
     //multiply fractions
     ByteArray::multiplyBytes(retFraction, secondFraction);
+    std::cout << "(3) mul : " << retFraction << std::endl;
 
+    std::cout<<"(3) oldest 1: "<<(signed)(retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction))<<std::endl;
     //normalisation - TODO
 
     //save fraction in ret object
-    int shiftDirection = (signed) ByteArray::findOldestOnePostition(retFraction) - fraction - 1; //normalisation shift count
-    std::cout << "mul: " << retFraction << ", shift: " << std::dec << shiftDirection << ", " <<
-    ByteArray::findOldestOnePostition(retFraction) << std::endl;
+    int shiftDirection = (signed)(retFraction.size()*8 - ByteArray::findOldestOnePostition(retFraction)); //normalisation shift count
 
     //shift and shifts count to the exponent
     if (shiftDirection < 0)
@@ -319,6 +319,11 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
     ret.setExponentContainer(retExponent);
     ret.setFractionContainer(retFraction);
     return ret;
+}
+
+template<int fraction, int exponent>
+VariableFloat<fraction, exponent> operator / (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2){
+
 }
 
 template<int fraction, int exponent>
