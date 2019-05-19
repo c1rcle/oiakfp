@@ -56,6 +56,7 @@ bool ByteArray::addBytes(std::vector<u_char> &first, const std::vector<u_char> &
     int secondSize = second.size() - 1;
     int lastIndex = 0;
     bool carry = false;
+
     for (int i = 0; i <= secondSize; ++i)
     {
         partialProduct = first[firstSize - i] + second[secondSize - i];
@@ -74,15 +75,15 @@ bool ByteArray::addBytes(std::vector<u_char> &first, const std::vector<u_char> &
     return carry;
 }
 
-u_char ByteArray::addBytesEqSize(std::vector<u_char> &first, const std::vector<u_char> &second)
+u_char ByteArray::addBytesEqualSize(std::vector<u_char> &first, const std::vector<u_char> &second)
 {
     u_char carry = 0;
-    for(int i=first.size()-1;i>=0;--i){
-        short part= first[i] + second[i] + carry;
+    for (int i = first.size() - 1; i >= 0 ; --i)
+    {
+        short part = first[i] + second[i] + carry;
         first[i] = part & 0xFF;
         carry = part >> 8;
     }
-
     return carry;
 }
 
@@ -92,8 +93,8 @@ bool ByteArray::subtractBytes(std::vector<u_char> &first, const std::vector<u_ch
     int firstSize = first.size() - 1;
     int secondSize = second.size() - 1;
     int lastIndex = 0;
-
     bool carry = false;
+
     for (int i = 0; i <= secondSize; ++i)
     {
         partialProduct = first[firstSize - i] - second[secondSize - i];
@@ -114,6 +115,7 @@ bool ByteArray::subtractBytes(std::vector<u_char> &first, const std::vector<u_ch
 
 int ByteArray::compare(const std::vector<u_char> &first, const std::vector<u_char> &second)
 {
+    //TODO - clean function cause it has unused local variables.
     auto * s = (u_char*) &second;
     std::vector<u_char> res = first;
 
@@ -124,45 +126,42 @@ int ByteArray::compare(const std::vector<u_char> &first, const std::vector<u_cha
 bool ByteArray::checkIfZero(const std::vector<u_char> &first)
 {
     for (u_char i : first)
-    {
         if (i != 0) return false;
-    }
     return true;
 }
 
 std::vector<u_char> ByteArray::createOne(unsigned int size)
 {
     std::vector<u_char> ret(size);
-    ret[ret.size()-1] = 0x1;
+    ret[ret.size() - 1] = 0x1;
     return ret;
 }
 
 std::vector<u_char> ByteArray::createValue(unsigned int size, u_char value)
 {
     std::vector<u_char> ret(size);
-    ret[ret.size()-1] = value;
-
+    ret[ret.size() - 1] = value;
     return ret;
 }
 
 void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_char> &second)
 {
-    std::vector<std::vector<u_char> > partSums;
+    std::vector<std::vector<u_char>> partSums;
 
-    //multiply first by each byte of second
-    for (int i=second.size()-1;i>=0;--i)
+    //Multiply first by each byte of second.
+    for (int i = second.size() - 1; i >= 0; --i)
     {
         std::vector<u_char> partSum = first;
         multiplyBytesByByte(partSum, second[i]);
         partSums.push_back(partSum);
     }
 
-    //calculate size of part sums
+    //Calculate size of partial sums.
     unsigned int sizeF = first.size();
     unsigned int sizeS = second.size();
     unsigned int size = sizeF + sizeS - 1;
 
-    //make all part sums equal size
+    //Make all part sums equal size.
     for (unsigned int i = 0; i < partSums.size(); ++i)
     {
         for (unsigned int j = 0; j < i; ++j)
@@ -173,13 +172,12 @@ void ByteArray::multiplyBytes(std::vector<u_char> &first, const std::vector<u_ch
     }
 
     first = partSums[0];
-    u_char carryover = 0; //sums of all carry
+    u_char carryover = 0; //Sum of all carry occurrences.
     for (unsigned int i = 1; i < partSums.size(); ++i)
-        if (addBytesEqSize(first, partSums[i])) carryover++;
+        if (addBytesEqualSize(first, partSums[i])) carryover++;
 
-    //if range has to be extended
+    //If range has to be extended.
     if (carryover > 0) first.insert(first.begin(), carryover);
-    //std::cout<<partSums<<std::endl;
 }
 
 void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplier)
@@ -194,7 +192,12 @@ void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplie
     if (carry > 0) first.insert(first.begin(), carry);
 }
 
-unsigned int ByteArray::findOldestOnePostition(const std::vector<u_char> &first)
+void ByteArray::divideBytes(std::vector<u_char> &first, std::vector<u_char> &second)
+{
+
+}
+
+unsigned int ByteArray::findHighestOrderOnePosition(const std::vector<u_char> &first)
 {
     unsigned int ret = 0;
     for (unsigned int i=0;i<=first.size();++i)
@@ -214,12 +217,12 @@ unsigned int ByteArray::findOldestOnePostition(const std::vector<u_char> &first)
         else if(first[i] & 0x1) ret += 7;
         break;
     }
-//    /ret = first.size() * 8 - ret;
     return ret;
 }
 
 unsigned int ByteArray::cutVector(std::vector<u_char> &first, unsigned int sizeInBits)
 {
+    //TODO - unfinished function.
     for(unsigned int i = first.size()-1;i>=0;--i)
     {
 
@@ -233,31 +236,28 @@ unsigned int ByteArray::cutVector(std::vector<u_char> &first, unsigned int sizeI
 
 std::string ByteArray::toBinaryString(const std::vector<u_char> &first, unsigned point)
 {
-    std::string ret="";
-
-    for(int i=0;i<=first.size();++i){
-
-        u_char mask=0x80;
-        for(int j=7;j>=0;--j){
+    std::string ret;
+    for (int i = 0; i <= first.size(); ++i)
+    {
+        u_char mask = 0x80;
+        for (int j = 7; j >= 0; --j)
+        {
             //std::cout<<j<<", "<<i<<", "<<std::hex<<(unsigned int)mask<<", "<<std::hex<<(unsigned int)first[i]<<", "<<(first[i]&mask)<<std::endl;
             ret += (first[i] & mask) == 0 ? '0' : '1';
-
             mask = mask >> 1;
         }
     }
-
     ret.insert(ret.begin() + point, '.');
-
     return ret;
 }
 
-std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj)
+std::ostream &operator <<(std::ostream& str, const std::vector<u_char>& obj)
 {
     for (const u_char i : obj) str << std::hex << "0x" << (unsigned) i << " ";
     return str;
 }
 
-std::ostream &operator <<(std::ostream &str, const std::vector<std::vector<u_char> > &obj)
+std::ostream &operator <<(std::ostream &str, const std::vector<std::vector<u_char>> &obj)
 {
     for (const auto & i : obj) str << i << std::endl;
     return str;

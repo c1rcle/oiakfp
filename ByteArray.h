@@ -3,11 +3,11 @@
 #include <iostream>
 #include <vector>
 
+/// Static class for variable precision byte array manipulation.
 class ByteArray
 {
 public:
-
-    ///ByteArray static class default constructor.
+    /// ByteArray static class default constructor.
     ByteArray() = default;
 
     /// Copies bytes to a container.
@@ -44,13 +44,11 @@ public:
     /// \return 0 - if there is no carry, 1 - otherwise.
     static bool addBytes(std::vector<u_char> &first, const std::vector<u_char> &second);
 
-    ///
-    /// \brief addBytesEqSize
-    /// \param first
-    /// \param second
-    /// \return
-    ///
-    static u_char addBytesEqSize(std::vector<u_char> &first, const std::vector<u_char> &second);
+    /// Adds bytes from two containers together (their size is equal).
+    /// \param first - first addition operand.
+    /// \param second - second addition operand.
+    /// \return 0 - if there is no carry, 1 - otherwise.
+    static u_char addBytesEqualSize(std::vector<u_char> &first, const std::vector<u_char> &second);
 
     /// Subtracts bytes from two containers (result stored in first).
     /// \param first - first subtraction operand (vector).
@@ -64,45 +62,63 @@ public:
     /// \return 0 if first and second argument is the same, -1 if second is greater and 1 if first is greater.
     static int compare(const std::vector<u_char> &first, const std::vector<u_char> &second);
 
+    /// Function that checks whether a byte container contains zero.
+    /// \param first - byte array to be checked.
+    /// \return 1 - if zero, 0 - otherwise.
     static bool checkIfZero(const std::vector<u_char> &first);
 
+    /// Creates a byte array of given size which has a value of 1.
+    /// \param size - array byte size.
+    /// \return Byte array of given size which has a value of 1.
     static std::vector<u_char> createOne(unsigned int size);
+
+    /// Creates a byte array of given size which has a value of 'value'.
+    /// \param size - array byte size.
+    /// \param value - initial value for array.
+    /// \return Byte array of given size which has a value of 'value'.
     static std::vector<u_char> createValue(unsigned int size, u_char value);
 
-    ///
-    /// \brief multiplyBytes multiply vector by vector
-    /// \param first[in|out]
-    /// \param second
-    /// \return
-    ///
+    /// Multiplies bytes from two containers together (result stored in first).
+    /// \param first - first multiplication operand (vector).
+    /// \param second - second multiplication operand (vector).
     static void multiplyBytes(std::vector<u_char> &first, const std::vector<u_char> &second);
 
-    ///
-    /// \brief multiplyBytesByByte multiply vector by one byte.
-    /// \param first[in|out]
-    /// \param second
-    /// \return
-    ///
-    static void multiplyBytesByByte(std::vector<u_char> &first, u_char multiplyer);
+    /// Multiplies bytes from a single container by a single byte (result stored in that container).
+    /// \param first - first multiplication operand (vector).
+    /// \param multiplier - second multiplication operand (byte).
+    static void multiplyBytesByByte(std::vector<u_char> &first, u_char multiplier);
 
-    ///
-    /// \brief findOldestOnePostition function check where the highest true bit is located and returns
-    ///        position of its. Counting is same as setBit function's countig
-    /// \param first
-    /// \return
-    ///
-    static unsigned int findOldestOnePostition(const std::vector<u_char> &first);
+    /// Divides bytes from two containers (result stored in first).
+    /// \param first - first division operand (vector).
+    /// \param second - second division operand (vector).
+    static void divideBytes(std::vector<u_char> &first, std::vector<u_char> &second);
 
-    ///
-    /// \brief cutVector function cat vector to specified size in bits.
-    /// \param first
-    /// \param sizeInBits
+    /// Finds the position of highest order '1' in a byte container.
+    /// \param first - container to find that position in.
+    /// \return Index of highest order '1'.
+    static unsigned int findHighestOrderOnePosition(const std::vector<u_char> &first);
+
+    /// Cuts a given container to a specified bit length.
+    /// \param first - byte array to cut.
+    /// \param sizeInBits - bit length after being cut.
     /// \return
-    ///
     static unsigned int cutVector(std::vector<u_char> &first, unsigned int sizeInBits);
 
+    /// Converts a byte array to a binary string.
+    /// \param first - byte array to convert.
+    /// \param point - decimal point index.
+    /// \return Byte array binary string representation.
     static std::string toBinaryString(const std::vector<u_char> &first, unsigned point);
 };
 
-std::ostream& operator <<(std::ostream& str, const std::vector<u_char>& obj);
-std::ostream& operator <<(std::ostream& str, const std::vector<std::vector<u_char> >& obj);
+/// Overloaded output stream operator for a byte vector.
+/// \param str - Output stream reference.
+/// \param obj - Byte vector object reference.
+/// \return - modified output stream.
+std::ostream &operator <<(std::ostream &str, const std::vector<u_char> &obj);
+
+/// Overloaded output stream operator for a vector of byte vectors.
+/// \param str - Output stream reference.
+/// \param obj - Vector of byte vectors object reference.
+/// \return - modified output stream.
+std::ostream &operator <<(std::ostream &str, const std::vector<std::vector<u_char>> &obj);

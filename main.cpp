@@ -39,7 +39,7 @@ void multiplyTest(){
 void addTest(){
     std::vector<u_char> buf = {0x0, 0x0, 0xfe, 0xff, 0xff, 0x1};
     std::vector<u_char> buf2 = {0x0, 0xfe, 0xff, 0xff, 0x1, 0x0};
-    ByteArray::addBytesEqSize(buf, buf2);
+    ByteArray::addBytesEqualSize(buf, buf2);
     std::cout<<buf<<std::endl;
 }
 
