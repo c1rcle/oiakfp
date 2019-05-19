@@ -16,3 +16,27 @@ iostream
 vector
 -
 
+/home/c1rcle/Politechnika/OiAK/OiakFp/Timer.h
+chrono
+-
+
+/home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h
+iostream
+-
+vector
+-
+iomanip
+-
+ByteArray.h
+/home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.h
+
+/home/c1rcle/Politechnika/OiAK/OiakFp/main.cpp
+iostream
+-
+iomanip
+-
+VariableFloat.h
+/home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h
+Timer.h
+/home/c1rcle/Politechnika/OiAK/OiakFp/Timer.h
+

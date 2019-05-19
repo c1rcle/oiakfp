@@ -199,7 +199,7 @@ void ByteArray::divideBytes(std::vector<u_char> &first, std::vector<u_char> &sec
 
     auto quotient = first;
     auto divisor = second;
-    for (int i = 0; i < byteCount - first.size(); ++i)
+    for (int i = 0; i < byteCount; ++i)
     {
         quotient.insert(quotient.begin(), 0);
         divisor.insert(divisor.begin(), 0);

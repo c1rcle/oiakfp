@@ -7,8 +7,8 @@ void divideTest()
 {
     std::vector<u_char> first = {0xA4, 0x57};
     std::vector<u_char> second = {0xC0, 0x12};
-    int point = ByteArray::divideBytes(first, second, 20);
-    std::cout << point << ", " << first << std::endl;
+    ByteArray::divideBytes(first, second, 20);
+    std::cout << first << std::endl;
 }
 
 void shiftTest()
