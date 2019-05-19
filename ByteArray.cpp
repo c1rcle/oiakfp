@@ -192,7 +192,7 @@ void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplie
     if (carry > 0) first.insert(first.begin(), carry);
 }
 
-unsigned int ByteArray::divideBytes(std::vector<u_char> &first, std::vector<u_char> &second, unsigned int precision)
+void ByteArray::divideBytes(std::vector<u_char> &first, std::vector<u_char> &second, unsigned int precision)
 {
     int byteCount = (precision - 1) / 8 + 1;
     auto result = std::vector<u_char>(byteCount, 0);
@@ -231,7 +231,6 @@ unsigned int ByteArray::divideBytes(std::vector<u_char> &first, std::vector<u_ch
         for (int k = 0; k < quotient.size(); ++k) partialProduct[k] = 0;
     }
     first = result;
-    return 0;
 }
 
 unsigned int ByteArray::findHighestOrderOnePosition(const std::vector<u_char> &first)

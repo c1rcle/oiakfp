@@ -91,8 +91,8 @@ public:
     /// Divides bytes from two containers (result stored in first).
     /// \param first - first division operand (vector).
     /// \param second - second division operand (vector).
-    /// \return binary point position (if number has no fraction '-1').
-    static unsigned int divideBytes(std::vector<u_char> &first, std::vector<u_char> &second, unsigned int precision);
+    /// \param precision - division bit precision.
+    static void divideBytes(std::vector<u_char> &first, std::vector<u_char> &second, unsigned int precision);
 
     /// Finds the position of highest order '1' in a byte container.
     /// \param first - container to find that position in.
