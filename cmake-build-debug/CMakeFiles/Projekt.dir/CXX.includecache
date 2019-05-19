@@ -6,33 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.h
-iostream
--
-vector
--
-
-/home/c1rcle/Politechnika/OiAK/OiakFp/Timer.h
-chrono
--
-
-/home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h
-iostream
--
-vector
--
-iomanip
--
+/home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.cpp
 ByteArray.h
 /home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.h
 
-/home/c1rcle/Politechnika/OiAK/OiakFp/main.cpp
+/home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.h
 iostream
 -
-iomanip
+vector
 -
-VariableFloat.h
-/home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h
-Timer.h
-/home/c1rcle/Politechnika/OiAK/OiakFp/Timer.h
 

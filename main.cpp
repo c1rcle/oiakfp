@@ -3,6 +3,14 @@
 #include "VariableFloat.h"
 #include "Timer.h"
 
+void divideTest()
+{
+    std::vector<u_char> first = {0xA4, 0x57};
+    std::vector<u_char> second = {0xC0, 0x12};
+    int point = ByteArray::divideBytes(first, second, 20);
+    std::cout << point << ", " << first << std::endl;
+}
+
 void shiftTest()
 {
     std::vector<u_char> bytes = {0xFF,0xFF,0xFF,0xFF};
@@ -45,7 +53,8 @@ void addTest(){
 
 int main()
 {
-
+    divideTest();
+    /*
     std::vector<u_char> vec = {0xFF, 0x0F, 0xF0, 0x00};
     std::cout<<ByteArray::toBinaryString(vec, 10)<<std::endl;
 
@@ -54,7 +63,7 @@ int main()
 
     std::cout << "   " << first << std::endl;
     std::cout << "+  " << second << std::endl;
-    std::cout << "   "  << first + second << std::endl;
+    std::cout << "=  "  << first + second << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
 
@@ -73,10 +82,10 @@ int main()
 
     std::cout << "   " << g << std::endl;
     std::cout << "*  " << h << std::endl;
-    std::cout << "   " << g + h << std::endl;
+    std::cout << "=  " << g + h << std::endl;
     std::cout << std::endl;
 
     std::cout << "std:    " << g << std::endl;
-    std::cout << "binary: " << g.toBinary() <<std::endl;
+    std::cout << "binary: " << g.toBinary() <<std::endl; */
     return 0;
 }

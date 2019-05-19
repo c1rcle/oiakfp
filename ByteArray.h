@@ -91,18 +91,24 @@ public:
     /// Divides bytes from two containers (result stored in first).
     /// \param first - first division operand (vector).
     /// \param second - second division operand (vector).
-    static void divideBytes(std::vector<u_char> &first, std::vector<u_char> &second);
+    /// \return binary point position (if number has no fraction '-1').
+    static unsigned int divideBytes(std::vector<u_char> &first, std::vector<u_char> &second, unsigned int precision);
 
     /// Finds the position of highest order '1' in a byte container.
     /// \param first - container to find that position in.
     /// \return Index of highest order '1'.
     static unsigned int findHighestOrderOnePosition(const std::vector<u_char> &first);
 
+    /// Finds the position of lowest order '1' in a byte container.
+    /// \param first - container to find that position in.
+    /// \return Index of lowest order '1'.
+    static unsigned int findLowestOrderOnePosition(std::vector<u_char> &first);
+
     /// Cuts a given container to a specified bit length.
     /// \param first - byte array to cut.
     /// \param sizeInBits - bit length after being cut.
     /// \return
-    static unsigned int cutVector(std::vector<u_char> &first, unsigned int sizeInBits);
+    static std::vector<u_char> cutVector(std::vector<u_char> &first, unsigned int sizeInBits);
 
     /// Converts a byte array to a binary string.
     /// \param first - byte array to convert.

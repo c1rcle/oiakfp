@@ -186,21 +186,58 @@ void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplie
     for (int i = first.size() - 1; i >= 0; --i)
     {
         unsigned short part = first[i] * multiplier + carry;
-        first[i] = (part& 0xFF);
+        first[i] = (part & 0xFF);
         carry = part >> 8;
     }
     if (carry > 0) first.insert(first.begin(), carry);
 }
 
-void ByteArray::divideBytes(std::vector<u_char> &first, std::vector<u_char> &second)
+unsigned int ByteArray::divideBytes(std::vector<u_char> &first, std::vector<u_char> &second, unsigned int precision)
 {
+    int byteCount = (precision - 1) / 8 + 1;
+    auto result = std::vector<u_char>(byteCount, 0);
 
+    auto quotient = first;
+    auto divisor = second;
+    for (int i = 0; i < byteCount - first.size(); ++i)
+    {
+        quotient.insert(quotient.begin(), 0);
+        divisor.insert(divisor.begin(), 0);
+    }
+    auto partialProduct = std::vector<u_char>(quotient.size(), 0);
+    int bitCount = quotient.size() * 8;
+
+    for (int i = 0; i < precision; ++i)
+    {
+        for (int j = bitCount - 1; j >= 0; --j)
+        {
+            bool shiftBit = getBit(quotient, 0);
+            shiftVectorLeft(partialProduct, 1);
+            shiftVectorLeft(quotient, 1);
+            setBit(partialProduct, bitCount - 1, shiftBit);
+
+            auto temp = partialProduct;
+            if (subtractBytes(partialProduct, divisor))
+            {
+                setBit(quotient, bitCount - 1, false);
+                partialProduct = temp;
+            }
+            else setBit(quotient, bitCount - 1, true);
+        }
+
+        setBit(result, i, getBit(quotient, bitCount - 1));
+        quotient = partialProduct;
+        shiftVectorLeft(quotient, 1);
+        for (int k = 0; k < quotient.size(); ++k) partialProduct[k] = 0;
+    }
+    first = result;
+    return 0;
 }
 
 unsigned int ByteArray::findHighestOrderOnePosition(const std::vector<u_char> &first)
 {
     unsigned int ret = 0;
-    for (unsigned int i=0;i<=first.size();++i)
+    for (unsigned int i = 0; i <= first.size(); ++i)
     {
         if (first[i] == 0)
         {
@@ -220,18 +257,22 @@ unsigned int ByteArray::findHighestOrderOnePosition(const std::vector<u_char> &f
     return ret;
 }
 
-unsigned int ByteArray::cutVector(std::vector<u_char> &first, unsigned int sizeInBits)
+unsigned int ByteArray::findLowestOrderOnePosition(std::vector<u_char> &first)
 {
-    //TODO - unfinished function.
-    for(unsigned int i = first.size()-1;i>=0;--i)
+    for (int i = first.size() * 8 - 1; i >= 0; --i)
     {
-
+        if (getBit(first, i)) return i;
     }
-    std::vector<u_char> data;
+    return -1;
+}
 
-    for(unsigned int i = first.size()-1;i>=0;--i){
-        if(sizeInBits >= 8);
-    }
+std::vector<u_char> ByteArray::cutVector(std::vector<u_char> &first, unsigned int sizeInBits)
+{
+    int byteSize = (sizeInBits - 1) / 8 + 1;
+    auto result = std::vector<u_char>(byteSize, 0);
+    for (int i = 0; i < sizeInBits; ++i)
+        setBit(result, i, getBit(first, i));
+    return result;
 }
 
 std::string ByteArray::toBinaryString(const std::vector<u_char> &first, unsigned point)
