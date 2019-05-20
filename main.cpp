@@ -58,14 +58,18 @@ int main()
     VariableFloat<23, 8> data []= {VariableFloat<23, 8>(1.0f),
                                                VariableFloat<23, 8>(2.0f),
                                                VariableFloat<23, 8>(1.5f),
-                                               VariableFloat<23, 8>(2.5f)};/*
+                                               VariableFloat<23, 8>(2.5f),
                                                VariableFloat<23, 8>(1.125f),
                                                VariableFloat<23, 8>(2.750)
-                                              };*/
+                                              };
 
     Test t;
     AddingTest<23,8> add(data);
-    t.createTest(add, 2);
+    Test::TestResult result = t.createTest(add, 3);
+    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
+    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+
 
     //std::cout<<(data[1]+data[0]).toBinary()<<std::endl;
 
