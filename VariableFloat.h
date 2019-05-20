@@ -407,8 +407,14 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
 
     //shift back
     ByteArray::shiftVectorLeft(higherFrac, 1);
+
     ret.setExponentContainer(retExponent);
     ret.setFractionContainer(higherFrac);
+
+    switch(ret.checkForOverflow(retExponent)){
+    case 1: ret.setInfinity(ret.getSign()); break;
+    case -1: ret.setZero(ret.getSign()); break;
+    }
     return ret;
 }
 
