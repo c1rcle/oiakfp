@@ -6,7 +6,7 @@
 *.obj
 
 Debug/oiakfp
-cmake-build-debug/Projek
+cmake-build-debug/Projekt
 # Precompiled Headers
 *.gch
 *.pch
