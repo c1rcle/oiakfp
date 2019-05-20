@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.cpp
-ByteArray.h
-/home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.h
-
 /home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.h
 iostream
 -

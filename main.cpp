@@ -53,7 +53,6 @@ void addTest(){
 
 int main()
 {
-    divideTest();
     /*
     std::vector<u_char> vec = {0xFF, 0x0F, 0xF0, 0x00};
     std::cout<<ByteArray::toBinaryString(vec, 10)<<std::endl;
@@ -87,5 +86,9 @@ int main()
 
     std::cout << "std:    " << g << std::endl;
     std::cout << "binary: " << g.toBinary() <<std::endl; */
+    VariableFloat<23, 8> g(12.456f);
+    VariableFloat<23, 8> h(2.5f);
+
+    std::cout << g / h << std::endl;
     return 0;
 }

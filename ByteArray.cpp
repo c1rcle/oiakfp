@@ -49,6 +49,29 @@ void ByteArray::shiftVectorLeft(std::vector<u_char> &vector, int shift)
         setBit(vector, i, false);
 }
 
+std::vector<u_char> ByteArray::getBytesFromInt(unsigned int value, unsigned int size)
+{
+    auto result = std::vector<u_char>();
+    for (int i = 0; i < 4; ++i)
+    {
+        u_char byte = value & 0xFF;
+        result.insert(result.begin(), byte);
+        value >>= 8;
+    }
+
+    if (size > 4)
+    {
+        int difference = size - 4;
+        for (int i = 0; i < difference; ++i) result.insert(result.begin(), 0);
+    }
+    else if (size < 4)
+    {
+        int difference = 4 - size;
+        for (int i = 0; i < difference; ++i) result.erase(result.begin());
+    }
+    return result;
+}
+
 bool ByteArray::addBytes(std::vector<u_char> &first, const std::vector<u_char> &second)
 {
     u_char partialProduct = 0;
@@ -192,7 +215,7 @@ void ByteArray::multiplyBytesByByte(std::vector<u_char> &first, u_char multiplie
     if (carry > 0) first.insert(first.begin(), carry);
 }
 
-void ByteArray::divideBytes(std::vector<u_char> &first, std::vector<u_char> &second, unsigned int precision)
+void ByteArray::divideBytes(std::vector<u_char> &first, const std::vector<u_char> &second, unsigned int precision)
 {
     int byteCount = (precision - 1) / 8 + 1;
     auto result = std::vector<u_char>(byteCount, 0);
