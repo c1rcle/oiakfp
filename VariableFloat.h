@@ -129,13 +129,21 @@ public:
     /// \return true if +Infinity, otherwise false.
     bool isPositiveInfinity() const;
 
+    /// Returns a reference to an object's maxExponent container.
+    /// \return reference to an object's maxExponent container.
+    const std::vector<u_char> &getMaxExponent() const { return maxExponent; }
+
+    /// Returns a reference to an object's minExponent container.
+    /// \return reference to an object's minExponent container.
+    const std::vector<u_char> &getMinExponent() const { return minExponent; }
+
     /// Returns a reference to an object's fraction container.
     /// \return reference to an object's fraction container
-    const std::vector<u_char>& getFractionContainer() const { return fractionContainer; }
+    const std::vector<u_char> &getFractionContainer() const { return fractionContainer; }
 
     /// Returns a reference to an object's exponent container.
     /// \return reference to an object's exponent container
-    const std::vector<u_char>& getExponentContainer() const { return exponentContainer; }
+    const std::vector<u_char> &getExponentContainer() const { return exponentContainer; }
 
     /// Returns sign of a number.
     /// \return true if positive, otherwise false.
@@ -156,6 +164,17 @@ public:
     /// Sets the sign of a number.
     /// \param s - sign to be set.
     void setSign(bool s) { sign = s; }
+
+    /// Sets the object's number representation to zero.
+    /// \param setSign - if true then negative, otherwise positive.
+    void setZero(bool setSign);
+
+    /// Sets the object's number representation to positive or negative infinity.
+    /// \param setSign - if true then negative, otherwise positive.
+    void setInfinity(bool setSign);
+
+    /// Sets the object's number representation to NaN.
+    void setNan();
 
     /// Returns a reference to an object's bias container.
     /// \return Reference to a bias container.
@@ -183,10 +202,10 @@ VariableFloat<fraction,exponent>::VariableFloat()
     int shiftCount = exponentSize * 8 - (exponent - 1);
     ByteArray::shiftVectorRight(biasContainer, shiftCount);
 
-    shiftCount++;
+    shiftCount--;
     ByteArray::shiftVectorRight(maxExponent, shiftCount);
-    ByteArray::subtractBytes(maxExponent, biasContainer);
-    ByteArray::subtractBytes(minExponent, biasContainer);
+    ByteArray::setBit(maxExponent, exponent - 1, false);
+    ByteArray::setBit(minExponent, exponent - 1, true);
 }
 
 template<int fraction, int exponent>
@@ -342,11 +361,11 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     //std::cout << "(1) point pos:  " << std::dec <<pointPos << std::endl;
 
     //for overflow
-
     if (sameSigns)
     {
         u_char carrySameSigns = ByteArray::addBytesEqualSize(higherFrac, lowerFrac);
         higherFrac.insert(higherFrac.begin(), carrySameSigns);
+        //std::cout<<"inserted"<<std::endl;
     }
     else
     {
@@ -368,18 +387,23 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
         ByteArray::addBytes(retExponent, ByteArray::createValue(retExponent.size(), -shiftDirection));
     }
     else
-        {
+    {
         ByteArray::shiftVectorLeft(higherFrac, shiftDirection);
         ByteArray::subtractBytes(retExponent, ByteArray::createValue(retExponent.size(), shiftDirection));
     }
 
     //std::cout << "(1) sum:  " << higherFrac<< std::endl;
 
+    //remove what has been pushed before
     higherFrac.erase(higherFrac.end() - 1);
 
+    //std::cout << "(2) sum:  " << higherFrac<< std::endl;
+
     //remove only if was added in previous operations. (if same signs)
-    if (higherFrac.size() > lowerFrac.size())
+    if (sameSigns)
         higherFrac.erase(higherFrac.begin());
+
+    //std::cout << "(3) sum:  " << higherFrac<< std::endl;
 
     //shift back
     ByteArray::shiftVectorLeft(higherFrac, 1);
@@ -500,7 +524,53 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
 template<int fraction, int exponent>
 VariableFloat<fraction, exponent> operator / (const VariableFloat<fraction, exponent> &n1, const VariableFloat<fraction, exponent> &n2)
 {
+    VariableFloat<fraction, exponent> returnNumber(0.0);
+    //Subtract exponents.
+    auto resultExponent = n1.getExponentContainer();
+    auto secondExponent = n2.getExponentContainer();
+    ByteArray::subtractBytes(secondExponent, n1.getBias());
+    ByteArray::subtractBytes(resultExponent, secondExponent);
+    bool resultSign = n1.getSign() != n2.getSign();
 
+    //Divide mantissas.
+    auto resultMantissa = n1.getFractionContainer();
+    auto secondMantissa = n2.getFractionContainer();
+
+    //Add hidden '1'.
+    resultMantissa.push_back(0);
+    ByteArray::shiftVectorRight(resultMantissa, 1);
+    ByteArray::setBit(resultMantissa, 0, true);
+
+    secondMantissa.push_back(0);
+    ByteArray::shiftVectorRight(secondMantissa, 1);
+    ByteArray::setBit(secondMantissa, 0, true);
+    ByteArray::divideBytes(resultMantissa, secondMantissa, fraction + 3);
+
+    //Find highest order '1' of result mantissa, normalize it and remove leading '1'.
+    int index = ByteArray::findHighestOrderOnePosition(resultMantissa);
+    ByteArray::shiftVectorLeft(resultMantissa, index + 1);
+
+    //Adjust result exponent.
+    auto indexBytes = ByteArray::getBytesFromInt(index, resultExponent.size());
+    bool overflow = ByteArray::addBytes(resultExponent, indexBytes);
+
+    //Check for over or underflow.
+    if (overflow)
+    {
+        returnNumber.setInfinity(resultSign);
+        return returnNumber;
+    }
+    else if (ByteArray::compare(resultExponent, n1.getMinExponent()) == -1)
+    {
+        returnNumber.setSign(resultSign);
+        return returnNumber;
+    }
+
+    //Save the result.
+    returnNumber.setSign(resultSign);
+    returnNumber.setExponentContainer(resultExponent);
+    returnNumber.setFractionContainer(resultMantissa);
+    return returnNumber;
 }
 
 template<int fraction, int exponent>
@@ -732,4 +802,27 @@ std::string VariableFloat<fraction, exponent>::toBinary() const
         ByteArray::subtractBytes(exp, ByteArray::createOne(exp.size()));
     }
     return (!getSign() ? "+ ":"- ") + ByteArray::toBinaryString(frac, pointPos);
+}
+
+template<int fraction, int exponent>
+void VariableFloat<fraction, exponent>::setZero(bool setSign)
+{
+    sign = setSign;
+    for (int i = 0; i < exponentSize; ++i) exponentContainer[i] = 0;
+    for (int i = 0; i < fractionSize; ++i) fractionContainer[i] = 0;
+}
+
+template<int fraction, int exponent>
+void VariableFloat<fraction, exponent>::setInfinity(bool setSign)
+{
+    sign = setSign;
+    for (int i = 0; i < exponentSize; ++i) exponentContainer[i] = 255;
+    for (int i = 0; i < fractionSize; ++i) fractionContainer[i] = 0;
+}
+
+template<int fraction, int exponent>
+void VariableFloat<fraction, exponent>::setNan()
+{
+    for (int i = 0; i < exponentSize; ++i) exponentContainer[i] = 255;
+    fractionContainer[0] = 255;
 }

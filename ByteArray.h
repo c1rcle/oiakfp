@@ -38,6 +38,12 @@ public:
     /// \param shift - bit shift count.
     static void shiftVectorLeft(std::vector<u_char> &vector, int shift);
 
+    /// Creates a vector of bytes that represents an unsigned four-byte integer.
+    /// \param value - integer to convert.
+    /// \param size - number of bytes that representation should be using.
+    /// \return Vector of bytes that represents an unsigned four-byte integer.
+    static std::vector<u_char> getBytesFromInt(unsigned int value, unsigned int size = 4);
+
     /// Adds bytes from two containers together (result stored in first).
     /// \param first - first addition operand (vector).
     /// \param second - second addition operand (vector).
@@ -92,7 +98,7 @@ public:
     /// \param first - first division operand (vector).
     /// \param second - second division operand (vector).
     /// \param precision - division bit precision.
-    static void divideBytes(std::vector<u_char> &first, std::vector<u_char> &second, unsigned int precision);
+    static void divideBytes(std::vector<u_char> &first, const std::vector<u_char> &second, unsigned int precision);
 
     /// Finds the position of highest order '1' in a byte container.
     /// \param first - container to find that position in.

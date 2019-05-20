@@ -70,18 +70,19 @@ int main()
     //std::cout<<(data[1]+data[0]).toBinary()<<std::endl;
 
     //divideTest();
+
     /*
     std::vector<u_char> vec = {0xFF, 0x0F, 0xF0, 0x00};
     std::cout<<ByteArray::toBinaryString(vec, 10)<<std::endl;
 */
-    VariableFloat<52, 11> first(2.2578125);
-    VariableFloat<52, 11> second(4.5);
+    /*VariableFloat<52, 11> first(1.0f);
+    VariableFloat<52, 11> second(2.0f);
 
     std::cout << "   " << first << std::endl;
     std::cout << "+  " << second << std::endl;
     std::cout << "=  "  << first + second << std::endl;
     std::cout << std::endl;
-    std::cout << std::endl;
+    std::cout << std::endl;*/
 /*
     //VariableFloat<23, 8> g(false, "01", "21");
     //VariableFloat<23, 8> h(false, "02", "20");
@@ -103,5 +104,9 @@ int main()
 
     std::cout << "std:    " << g << std::endl;
     std::cout << "binary: " << g.toBinary() <<std::endl; */
+    VariableFloat<23, 8> g(12.456f);
+    VariableFloat<23, 8> h(2.5f);
+
+    std::cout << g / h << std::endl;
     return 0;
 }
