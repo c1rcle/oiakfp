@@ -43,8 +43,6 @@ private:
     /// Sign bit of a number.
     bool sign{};
 
-    /// Private constructor for initializing containers.
-    VariableFloat();
 
     /// Converts a hexadecimal string into a byte array.
     /// \param input - input string.
@@ -60,7 +58,10 @@ private:
     /// \param currentFraction - current fraction byte container.
     /// \return Reference to a modified byte container.
     std::vector<u_char> &roundFraction(std::vector<u_char> &currentFraction);
+    /// Private constructor for initializing containers.
+    VariableFloat();
 public:
+
     /// Creates a bias vector for specified bit exponent bit count.
     /// \param customExponent - exponent bit count.
     /// \return Bias vector for specified bit count.
@@ -197,6 +198,19 @@ VariableFloat<fraction, exponent>::VariableFloat(const VariableFloat<fraction, e
     for (auto byte : number.biasContainer) biasContainer.push_back(byte);
     for (auto byte : number.maxExponent) maxExponent.push_back(byte);
     for (auto byte : number.minExponent) minExponent.push_back(byte);
+}
+
+template<int fraction, int exponent>
+const VariableFloat<fraction, exponent> &VariableFloat<fraction, exponent>::operator=(const VariableFloat<fraction, exponent> &number)
+{
+    sign = number.sign;
+    for (auto byte : number.exponentContainer) exponentContainer.push_back(byte);
+    for (auto byte : number.fractionContainer) fractionContainer.push_back(byte);
+    for (auto byte : number.biasContainer) biasContainer.push_back(byte);
+    for (auto byte : number.maxExponent) maxExponent.push_back(byte);
+    for (auto byte : number.minExponent) minExponent.push_back(byte);
+
+    return *this;
 }
 
 template<int fraction, int exponent>

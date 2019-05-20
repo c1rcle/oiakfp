@@ -6,9 +6,13 @@ CONFIG -= qt
 HEADERS += \
     VariableFloat.h \
     Timer.h \
-    ByteArray.h
+    ByteArray.h \
+    Test.h \
+    AddingTest.h
 
 SOURCES += \
     main.cpp \
     Timer.cpp \
-    ByteArray.cpp
+    ByteArray.cpp \
+    Test.cpp \
+    AddingTest.cpp

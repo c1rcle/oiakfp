@@ -2,6 +2,8 @@
 #include <iomanip>
 #include "VariableFloat.h"
 #include "Timer.h"
+#include "Test.h"
+#include "AddingTest.h"
 
 void divideTest()
 {
@@ -53,11 +55,25 @@ void addTest(){
 
 int main()
 {
-    divideTest();
+    VariableFloat<23, 8> data []= {VariableFloat<23, 8>(1.0f),
+                                               VariableFloat<23, 8>(2.0f),
+                                               VariableFloat<23, 8>(1.5f),
+                                               VariableFloat<23, 8>(2.5f)};/*
+                                               VariableFloat<23, 8>(1.125f),
+                                               VariableFloat<23, 8>(2.750)
+                                              };*/
+
+    Test t;
+    AddingTest<23,8> add(data);
+    t.createTest(add, 2);
+
+    //std::cout<<(data[1]+data[0]).toBinary()<<std::endl;
+
+    //divideTest();
     /*
     std::vector<u_char> vec = {0xFF, 0x0F, 0xF0, 0x00};
     std::cout<<ByteArray::toBinaryString(vec, 10)<<std::endl;
-
+*/
     VariableFloat<52, 11> first(2.2578125);
     VariableFloat<52, 11> second(4.5);
 
@@ -66,7 +82,7 @@ int main()
     std::cout << "=  "  << first + second << std::endl;
     std::cout << std::endl;
     std::cout << std::endl;
-
+/*
     //VariableFloat<23, 8> g(false, "01", "21");
     //VariableFloat<23, 8> h(false, "02", "20");
     //    std::cout << g + h<< std::endl;
