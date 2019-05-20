@@ -428,11 +428,11 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
 
     //Prepare exponent.
     std::vector<u_char> retExponent = n1.getExponentContainer();
-    ByteArray::subtractBytes(retExponent, n1.getBIAS());
+    ByteArray::subtractBytes(retExponent, n1.getBias());
     //std::cout << "(1) ret exponent: " << retExponent<<std::endl;
 
     std::vector<u_char> secondExponent = n2.getExponentContainer();
-    ByteArray::subtractBytes(secondExponent, n2.getBIAS());
+    ByteArray::subtractBytes(secondExponent, n2.getBias());
 
     ByteArray::addBytes(retExponent, secondExponent);
     //std::cout << "(2) sec exponent: " << secondExponent<<std::endl;
@@ -515,7 +515,7 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
     retFraction.erase(retFraction.end()-1);
 
     //std::cout << "(3) mul : " << retFraction << std::endl;
-    ByteArray::addBytes(retExponent, n1.getBIAS());
+    ByteArray::addBytes(retExponent, n1.getBias());
     ret.setExponentContainer(retExponent);
     ret.setFractionContainer(retFraction);
     return ret;

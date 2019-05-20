@@ -5,6 +5,8 @@
 #include "Test.h"
 #include "AddTest.h"
 #include "SubTest.h"
+#include "MulTest.h"
+#include "DevTest.h"
 
 void divideTest()
 {
@@ -77,6 +79,17 @@ int main()
     std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
     std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
 
+    MulTest<23,8> mul(data);
+    result = t.createTest(mul, 3);
+    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
+    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+
+    DevTest<23,8> dev(data);
+    result = t.createTest(dev, 3);
+    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
+    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
 
     //std::cout<<(data[1]+data[0]).toBinary()<<std::endl;
 
