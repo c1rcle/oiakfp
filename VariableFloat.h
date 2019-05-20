@@ -158,7 +158,8 @@ public:
     void setFractionContainer(std::vector<u_char>& f)
     {
         fractionContainer = roundFraction(f);
-        if (fractionContainer.size() > fractionSize) fractionContainer.pop_back();
+        int difference = fractionContainer.size() - fractionSize;
+        for (int i = 0; i < difference; i++) fractionContainer.pop_back();
     }
 
     /// Sets exponent container using the argument's vector.
@@ -349,8 +350,7 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
         ByteArray::subtractBytes(sub, n1.getExponentContainer());
     }
 
-    //remember to add 1 at the beginning of containers
-
+    //Add hidden '1'.
     higherFrac.push_back(0);
     ByteArray::shiftVectorRight(higherFrac, 1);
     ByteArray::setBit(higherFrac, 0, true);
@@ -359,7 +359,7 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     ByteArray::shiftVectorRight(lowerFrac, 1);
     ByteArray::setBit(lowerFrac, 0, true);
 
-    //shift fraction for lower number
+    //Shift fraction for lower number.
     while (!ByteArray::checkIfZero(sub))
     {
         ByteArray::subtractBytes(sub, ByteArray::createOne(sub.size()));
@@ -368,7 +368,7 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
 
     int pointPos = higherFrac.size()*8 - ByteArray::findHighestOrderOnePosition(higherFrac) - 1;
 
-    //for overflow
+    //For overflow.
     if (sameSigns)
     {
         u_char carrySameSigns = ByteArray::addBytesEqualSize(higherFrac, lowerFrac);
@@ -376,7 +376,7 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     }
     else
     {
-        //there will be no overflow. higherFrac is always bigger than lowerFrac
+        //There will be no overflow. 'higherFrac' is always bigger than 'lowerFrac'.
         ByteArray::subtractBytes(higherFrac, lowerFrac);
     }
 
@@ -394,14 +394,14 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
         ByteArray::subtractBytes(retExponent, ByteArray::createValue(retExponent.size(), shiftDirection));
     }
 
-    //remove what has been pushed before
+    //Remove what has been pushed before.
     higherFrac.erase(higherFrac.end() - 1);
 
-    //remove only if was added in previous operations. (if same signs)
+    //Remove only if it was added in previous operations. (if same signs)
     if (sameSigns)
         higherFrac.erase(higherFrac.begin());
 
-    //shift back
+    //Shift back (remove leading '1').
     ByteArray::shiftVectorLeft(higherFrac, 1);
     ret.setExponentContainer(retExponent);
     ret.setFractionContainer(higherFrac);
@@ -431,10 +431,10 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
 
     ByteArray::addBytes(retExponent, secondExponent);
 
-    //if there is no more bits in fraction container
+    //If there is no more bits in fraction container.
     std::vector<u_char> retFraction = n1.getFractionContainer();
 
-    //if there is no more bits in fraction container
+    //If there is no more bits in fraction container.
     std::vector<u_char> secondFraction = n2.getFractionContainer();
 
     secondFraction.push_back(0);
@@ -446,22 +446,22 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
     ByteArray::setBit(retFraction, 0, true);
     int pointPos = retFraction.size()*8 - ByteArray::findHighestOrderOnePosition(retFraction) - 1;
 
-    //multiply fractions
+    //Multiply fractions.
     ByteArray::multiplyBytes(retFraction, secondFraction);
 
-    //set point at the same position in vector
+    //Set point at the same position in vector.
     ByteArray::shiftVectorRight(retFraction, pointPos);
 
-    //save fraction in ret object
-    //normalisation shift count
+    //Save fraction in ret object,
+    //normalisation shift count.
     int shiftDirection = (signed)secondFraction.size()*8 - (signed)(retFraction.size() * 8 -
             ByteArray::findHighestOrderOnePosition(retFraction));
 
-    //shift and shifts count to the exponent
+    //Compute exponent shift count and shift it accordingly.
     if (shiftDirection < 0)
     {
         ByteArray::shiftVectorRight(retFraction, -shiftDirection);
-        //crate value works only for char so maximum size of shifts is 255
+        //Create value only works for char so maximum shift count is 255.
         ByteArray::addBytes(retExponent, ByteArray::createValue(retExponent.size(), (-shiftDirection) & 0xFF));
 
     }
@@ -471,14 +471,14 @@ VariableFloat<fraction, exponent> operator * (const VariableFloat<fraction, expo
         ByteArray::subtractBytes(retExponent, ByteArray::createValue(retExponent.size(), (shiftDirection) & 0xFF));
     }
 
-    //remove extra bytes from ret vector
+    //Remove extra bytes from ret vector.
     while (retFraction.size() != secondFraction.size())
         retFraction.erase(retFraction.begin());
 
     ByteArray::setBit(retFraction, 0, false);
     ByteArray::shiftVectorLeft(retFraction, 1);
 
-    //remove what has been added before shift
+    //Remove what has been added before shift.
     retFraction.erase(retFraction.end()-1);
     ByteArray::addBytes(retExponent, n1.getBias());
     ret.setExponentContainer(retExponent);
@@ -536,7 +536,7 @@ VariableFloat<fraction, exponent> operator / (const VariableFloat<fraction, expo
     secondMantissa.push_back(0);
     ByteArray::shiftVectorRight(secondMantissa, 1);
     ByteArray::setBit(secondMantissa, 0, true);
-    ByteArray::divideBytes(resultMantissa, secondMantissa, fraction + 3);
+    ByteArray::divideBytes(resultMantissa, secondMantissa, fraction + 5);
 
     //Find highest order '1' of result mantissa, normalize it and remove leading '1'.
     int index = ByteArray::findHighestOrderOnePosition(resultMantissa);
@@ -804,7 +804,7 @@ std::string VariableFloat<fraction, exponent>::toBinary() const
     ByteArray::shiftVectorRight(frac,1);
     ByteArray::setBit(frac, 0, true);
 
-    int pointPos = 1; //frac.size()*8 - ByteArray::findOldestOnePostition(frac) - 1;
+    int pointPos = 1;
     while (!ByteArray::checkIfZero(exp))
     {
         pointPos ++;
