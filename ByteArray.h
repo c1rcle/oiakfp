@@ -120,7 +120,7 @@ public:
     /// \param first - byte array to convert.
     /// \param point - decimal point index.
     /// \return Byte array binary string representation.
-    static std::string toBinaryString(const std::vector<u_char> &first, unsigned point);
+    static std::string toBinaryString(const std::vector<u_char> &first, unsigned int point);
 };
 
 /// Overloaded output stream operator for a byte vector.

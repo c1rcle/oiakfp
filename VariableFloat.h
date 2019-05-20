@@ -43,8 +43,6 @@ private:
     /// Sign bit of a number.
     bool sign{};
 
-    /// Private constructor for initializing containers.
-    VariableFloat();
 
     /// Converts a hexadecimal string into a byte array.
     /// \param input - input string.
@@ -60,7 +58,10 @@ private:
     /// \param currentFraction - current fraction byte container.
     /// \return Reference to a modified byte container.
     std::vector<u_char> &roundFraction(std::vector<u_char> &currentFraction);
+    /// Private constructor for initializing containers.
+    VariableFloat();
 public:
+
     /// Creates a bias vector for specified bit exponent bit count.
     /// \param customExponent - exponent bit count.
     /// \return Bias vector for specified bit count.
@@ -219,6 +220,19 @@ VariableFloat<fraction, exponent>::VariableFloat(const VariableFloat<fraction, e
 }
 
 template<int fraction, int exponent>
+const VariableFloat<fraction, exponent> &VariableFloat<fraction, exponent>::operator=(const VariableFloat<fraction, exponent> &number)
+{
+    sign = number.sign;
+    for (auto byte : number.exponentContainer) exponentContainer.push_back(byte);
+    for (auto byte : number.fractionContainer) fractionContainer.push_back(byte);
+    for (auto byte : number.biasContainer) biasContainer.push_back(byte);
+    for (auto byte : number.maxExponent) maxExponent.push_back(byte);
+    for (auto byte : number.minExponent) minExponent.push_back(byte);
+
+    return *this;
+}
+
+template<int fraction, int exponent>
 VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
 {
     u_int floatBytes = *((u_int *) &number);
@@ -347,11 +361,11 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     //std::cout << "(1) point pos:  " << std::dec <<pointPos << std::endl;
 
     //for overflow
-
     if (sameSigns)
     {
         u_char carrySameSigns = ByteArray::addBytesEqualSize(higherFrac, lowerFrac);
         higherFrac.insert(higherFrac.begin(), carrySameSigns);
+        //std::cout<<"inserted"<<std::endl;
     }
     else
     {
@@ -373,18 +387,23 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
         ByteArray::addBytes(retExponent, ByteArray::createValue(retExponent.size(), -shiftDirection));
     }
     else
-        {
+    {
         ByteArray::shiftVectorLeft(higherFrac, shiftDirection);
         ByteArray::subtractBytes(retExponent, ByteArray::createValue(retExponent.size(), shiftDirection));
     }
 
     //std::cout << "(1) sum:  " << higherFrac<< std::endl;
 
+    //remove what has been pushed before
     higherFrac.erase(higherFrac.end() - 1);
 
+    //std::cout << "(2) sum:  " << higherFrac<< std::endl;
+
     //remove only if was added in previous operations. (if same signs)
-    if (higherFrac.size() > lowerFrac.size())
+    if (sameSigns)
         higherFrac.erase(higherFrac.begin());
+
+    //std::cout << "(3) sum:  " << higherFrac<< std::endl;
 
     //shift back
     ByteArray::shiftVectorLeft(higherFrac, 1);
@@ -797,8 +816,8 @@ template<int fraction, int exponent>
 void VariableFloat<fraction, exponent>::setInfinity(bool setSign)
 {
     sign = setSign;
-    for (int i = 0; i < exponentSize; ++i) exponentContainer[i] = 255;
-    for (int i = 0; i < fractionSize; ++i) fractionContainer[i] = 0;
+    for (unsigned int i = 0; i < exponentSize; ++i) exponentContainer[i] = 255;
+    for (unsigned int i = 0; i < fractionSize; ++i) fractionContainer[i] = 0;
 }
 
 template<int fraction, int exponent>

@@ -297,7 +297,7 @@ std::vector<u_char> ByteArray::cutVector(std::vector<u_char> &first, unsigned in
     return result;
 }
 
-std::string ByteArray::toBinaryString(const std::vector<u_char> &first, unsigned point)
+std::string ByteArray::toBinaryString(const std::vector<u_char> &first, unsigned int point)
 {
     std::string ret;
     for (int i = 0; i <= first.size(); ++i)
@@ -310,7 +310,8 @@ std::string ByteArray::toBinaryString(const std::vector<u_char> &first, unsigned
             mask = mask >> 1;
         }
     }
-    ret.insert(ret.begin() + point, '.');
+    if(point < ret.size())
+        ret.insert(ret.begin() + point, '.');
     return ret;
 }
 

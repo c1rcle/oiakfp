@@ -2,6 +2,11 @@
 #include <iomanip>
 #include "VariableFloat.h"
 #include "Timer.h"
+#include "Test.h"
+#include "AddTest.h"
+#include "SubTest.h"
+#include "MulTest.h"
+#include "DevTest.h"
 
 void divideTest()
 {
@@ -53,19 +58,56 @@ void addTest(){
 
 int main()
 {
+    VariableFloat<23, 8> data []= {VariableFloat<23, 8>(1.0f),
+                                               VariableFloat<23, 8>(2.0f),
+                                               VariableFloat<23, 8>(1.5f),
+                                               VariableFloat<23, 8>(2.5f),
+                                               VariableFloat<23, 8>(1.125f),
+                                               VariableFloat<23, 8>(2.750f)
+                                              };
+
+    Test t;
+    AddTest<23,8> add(data);
+    Test::TestResult result = t.createTest(add, 3);
+    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
+    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+
+    SubTest<23,8> sub(data);
+    result = t.createTest(sub, 3);
+    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
+    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+
+    MulTest<23,8> mul(data);
+    result = t.createTest(mul, 3);
+    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
+    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+
+    DevTest<23,8> dev(data);
+    result = t.createTest(dev, 3);
+    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
+    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+
+    //std::cout<<(data[1]+data[0]).toBinary()<<std::endl;
+
+    //divideTest();
+
     /*
     std::vector<u_char> vec = {0xFF, 0x0F, 0xF0, 0x00};
     std::cout<<ByteArray::toBinaryString(vec, 10)<<std::endl;
-
-    VariableFloat<52, 11> first(2.2578125);
-    VariableFloat<52, 11> second(4.5);
+*/
+    /*VariableFloat<52, 11> first(1.0f);
+    VariableFloat<52, 11> second(2.0f);
 
     std::cout << "   " << first << std::endl;
     std::cout << "+  " << second << std::endl;
     std::cout << "=  "  << first + second << std::endl;
     std::cout << std::endl;
-    std::cout << std::endl;
-
+    std::cout << std::endl;*/
+/*
     //VariableFloat<23, 8> g(false, "01", "21");
     //VariableFloat<23, 8> h(false, "02", "20");
     //    std::cout << g + h<< std::endl;
