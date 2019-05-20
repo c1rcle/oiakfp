@@ -131,6 +131,6 @@ int main()
     VariableFloat<23, 8> g(12.456f);
     VariableFloat<23, 8> h(2.5f);
 
-    std::cout << g / h << std::endl;
+    std::cout << g + h << std::endl;
     return 0;
 }
