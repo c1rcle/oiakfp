@@ -139,10 +139,11 @@ bool ByteArray::subtractBytes(std::vector<u_char> &first, const std::vector<u_ch
 int ByteArray::compare(const std::vector<u_char> &first, const std::vector<u_char> &second)
 {
     //TODO - clean function cause it has unused local variables.
-    auto * s = (u_char*) &second;
+    //auto * s = (u_char*) &second;
     std::vector<u_char> res = first;
 
-    bool carry = subtractBytes(res, second);
+    //bool carry =
+    subtractBytes(res, second);
     return checkIfZero(res);
 }
 
