@@ -43,7 +43,6 @@ private:
     /// Sign bit of a number.
     bool sign{};
 
-
     /// Converts a hexadecimal string into a byte array.
     /// \param input - input string.
     /// \return Vector of bytes corresponding to string's value.
@@ -58,6 +57,7 @@ private:
     /// \param currentFraction - current fraction byte container.
     /// \return Reference to a modified byte container.
     std::vector<u_char> &roundFraction(std::vector<u_char> &currentFraction);
+
     /// Private constructor for initializing containers.
     VariableFloat();
 public:
