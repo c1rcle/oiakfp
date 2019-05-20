@@ -72,6 +72,15 @@ std::vector<u_char> ByteArray::getBytesFromInt(unsigned int value, unsigned int 
     return result;
 }
 
+void ByteArray::negateBytes(std::vector<u_char> &first)
+{
+    int onePosition = findLowestOrderOnePosition(first);
+    for (int i = onePosition - 1; i >= 0; --i)
+    {
+        ByteArray::setBit(first, i, !getBit(first, i));
+    }
+}
+
 bool ByteArray::addBytes(std::vector<u_char> &first, const std::vector<u_char> &second)
 {
     u_char partialProduct = 0;

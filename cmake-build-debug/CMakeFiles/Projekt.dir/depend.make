@@ -5,7 +5,47 @@ CMakeFiles/Projekt.dir/ByteArray.cpp.o: ../ByteArray.cpp
 CMakeFiles/Projekt.dir/ByteArray.cpp.o: ../ByteArray.h
 
 CMakeFiles/Projekt.dir/main.cpp.o: ../ByteArray.h
-CMakeFiles/Projekt.dir/main.cpp.o: ../Timer.h
 CMakeFiles/Projekt.dir/main.cpp.o: ../VariableFloat.h
 CMakeFiles/Projekt.dir/main.cpp.o: ../main.cpp
+CMakeFiles/Projekt.dir/main.cpp.o: ../test/AddTest.h
+CMakeFiles/Projekt.dir/main.cpp.o: ../test/DivTest.h
+CMakeFiles/Projekt.dir/main.cpp.o: ../test/MulTest.h
+CMakeFiles/Projekt.dir/main.cpp.o: ../test/SubTest.h
+CMakeFiles/Projekt.dir/main.cpp.o: ../test/Test.h
+CMakeFiles/Projekt.dir/main.cpp.o: ../util/Timer.h
+
+CMakeFiles/Projekt.dir/test/AddTest.cpp.o: ../ByteArray.h
+CMakeFiles/Projekt.dir/test/AddTest.cpp.o: ../VariableFloat.h
+CMakeFiles/Projekt.dir/test/AddTest.cpp.o: ../test/AddTest.cpp
+CMakeFiles/Projekt.dir/test/AddTest.cpp.o: ../test/AddTest.h
+CMakeFiles/Projekt.dir/test/AddTest.cpp.o: ../test/Test.h
+CMakeFiles/Projekt.dir/test/AddTest.cpp.o: ../util/Timer.h
+
+CMakeFiles/Projekt.dir/test/DivTest.cpp.o: ../ByteArray.h
+CMakeFiles/Projekt.dir/test/DivTest.cpp.o: ../VariableFloat.h
+CMakeFiles/Projekt.dir/test/DivTest.cpp.o: ../test/DivTest.cpp
+CMakeFiles/Projekt.dir/test/DivTest.cpp.o: ../test/DivTest.h
+CMakeFiles/Projekt.dir/test/DivTest.cpp.o: ../test/Test.h
+CMakeFiles/Projekt.dir/test/DivTest.cpp.o: ../util/Timer.h
+
+CMakeFiles/Projekt.dir/test/MulTest.cpp.o: ../ByteArray.h
+CMakeFiles/Projekt.dir/test/MulTest.cpp.o: ../VariableFloat.h
+CMakeFiles/Projekt.dir/test/MulTest.cpp.o: ../test/MulTest.cpp
+CMakeFiles/Projekt.dir/test/MulTest.cpp.o: ../test/MulTest.h
+CMakeFiles/Projekt.dir/test/MulTest.cpp.o: ../test/Test.h
+CMakeFiles/Projekt.dir/test/MulTest.cpp.o: ../util/Timer.h
+
+CMakeFiles/Projekt.dir/test/SubTest.cpp.o: ../ByteArray.h
+CMakeFiles/Projekt.dir/test/SubTest.cpp.o: ../VariableFloat.h
+CMakeFiles/Projekt.dir/test/SubTest.cpp.o: ../test/SubTest.cpp
+CMakeFiles/Projekt.dir/test/SubTest.cpp.o: ../test/SubTest.h
+CMakeFiles/Projekt.dir/test/SubTest.cpp.o: ../test/Test.h
+CMakeFiles/Projekt.dir/test/SubTest.cpp.o: ../util/Timer.h
+
+CMakeFiles/Projekt.dir/test/Test.cpp.o: ../test/Test.cpp
+CMakeFiles/Projekt.dir/test/Test.cpp.o: ../test/Test.h
+CMakeFiles/Projekt.dir/test/Test.cpp.o: ../util/Timer.h
+
+CMakeFiles/Projekt.dir/util/Timer.cpp.o: ../util/Timer.cpp
+CMakeFiles/Projekt.dir/util/Timer.cpp.o: ../util/Timer.h
 
