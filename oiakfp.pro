@@ -8,11 +8,17 @@ HEADERS += \
     Timer.h \
     ByteArray.h \
     Test.h \
-    AddingTest.h
+    SubTest.h \
+    MulTest.h \
+    DevTest.h \
+    AddTest.h
 
 SOURCES += \
     main.cpp \
     Timer.cpp \
     ByteArray.cpp \
     Test.cpp \
-    AddingTest.cpp
+    SubTest.cpp \
+    MulTest.cpp \
+    DevTest.cpp \
+    AddTest.cpp

@@ -52,12 +52,18 @@ SOURCES       = ../main.cpp \
 		../Timer.cpp \
 		../ByteArray.cpp \
 		../Test.cpp \
-		../AddingTest.cpp 
+		../SubTest.cpp \
+		../MulTest.cpp \
+		../DevTest.cpp \
+		../AddTest.cpp 
 OBJECTS       = main.o \
 		Timer.o \
 		ByteArray.o \
 		Test.o \
-		AddingTest.o
+		SubTest.o \
+		MulTest.o \
+		DevTest.o \
+		AddTest.o
 DIST          = /home/Qt/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/Qt/5.7/gcc_64/mkspecs/common/unix.conf \
 		/home/Qt/5.7/gcc_64/mkspecs/common/linux.conf \
@@ -206,11 +212,17 @@ DIST          = /home/Qt/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		Timer.h \
 		ByteArray.h \
 		Test.h \
-		AddingTest.h ../main.cpp \
+		SubTest.h \
+		MulTest.h \
+		DevTest.h \
+		AddTest.h ../main.cpp \
 		../Timer.cpp \
 		../ByteArray.cpp \
 		../Test.cpp \
-		../AddingTest.cpp
+		../SubTest.cpp \
+		../MulTest.cpp \
+		../DevTest.cpp \
+		../AddTest.cpp
 QMAKE_TARGET  = oiakfp
 DESTDIR       = 
 TARGET        = oiakfp
@@ -560,7 +572,7 @@ main.o: ../main.cpp ../VariableFloat.h \
 		../ByteArray.h \
 		../Timer.h \
 		../Test.h \
-		../AddingTest.h
+		../AddTest.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
 
 Timer.o: ../Timer.cpp ../Timer.h
@@ -573,12 +585,33 @@ Test.o: ../Test.cpp ../Test.h \
 		../Timer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Test.o ../Test.cpp
 
-AddingTest.o: ../AddingTest.cpp ../AddingTest.h \
+SubTest.o: ../SubTest.cpp ../SubTest.h \
 		../Test.h \
 		../Timer.h \
 		../VariableFloat.h \
 		../ByteArray.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o AddingTest.o ../AddingTest.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SubTest.o ../SubTest.cpp
+
+MulTest.o: ../MulTest.cpp ../MulTest.h \
+		../Test.h \
+		../Timer.h \
+		../VariableFloat.h \
+		../ByteArray.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MulTest.o ../MulTest.cpp
+
+DevTest.o: ../DevTest.cpp ../DevTest.h \
+		../Test.h \
+		../Timer.h \
+		../VariableFloat.h \
+		../ByteArray.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o DevTest.o ../DevTest.cpp
+
+AddTest.o: ../AddTest.cpp ../AddTest.h \
+		../Test.h \
+		../Timer.h \
+		../VariableFloat.h \
+		../ByteArray.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o AddTest.o ../AddTest.cpp
 
 ####### Install
 

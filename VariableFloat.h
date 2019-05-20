@@ -816,8 +816,8 @@ template<int fraction, int exponent>
 void VariableFloat<fraction, exponent>::setInfinity(bool setSign)
 {
     sign = setSign;
-    for (int i = 0; i < exponentSize; ++i) exponentContainer[i] = 255;
-    for (int i = 0; i < fractionSize; ++i) fractionContainer[i] = 0;
+    for (unsigned int i = 0; i < exponentSize; ++i) exponentContainer[i] = 255;
+    for (unsigned int i = 0; i < fractionSize; ++i) fractionContainer[i] = 0;
 }
 
 template<int fraction, int exponent>

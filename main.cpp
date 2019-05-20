@@ -3,7 +3,8 @@
 #include "VariableFloat.h"
 #include "Timer.h"
 #include "Test.h"
-#include "AddingTest.h"
+#include "AddTest.h"
+#include "SubTest.h"
 
 void divideTest()
 {
@@ -60,12 +61,18 @@ int main()
                                                VariableFloat<23, 8>(1.5f),
                                                VariableFloat<23, 8>(2.5f),
                                                VariableFloat<23, 8>(1.125f),
-                                               VariableFloat<23, 8>(2.750)
+                                               VariableFloat<23, 8>(2.750f)
                                               };
 
     Test t;
-    AddingTest<23,8> add(data);
+    AddTest<23,8> add(data);
     Test::TestResult result = t.createTest(add, 3);
+    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
+    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+
+    SubTest<23,8> sub(data);
+    result = t.createTest(sub, 3);
     std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
     std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
     std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;

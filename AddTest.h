@@ -6,7 +6,7 @@
 #include "VariableFloat.h"
 
 template<int fraction, int exponent>
-class AddingTest : public UnitTimeTest
+class AddTest : public UnitTimeTest
 {
 protected:
     int testNb;
@@ -16,7 +16,7 @@ protected:
     VariableFloat<fraction, exponent>* currentB;
 
 public:
-    AddingTest(VariableFloat<fraction, exponent> *d) : testNb(0), data(d) {}
+    AddTest(VariableFloat<fraction, exponent> *d) : testNb(0), data(d) {}
 
     virtual void runTest(){
         //currentA = currentA+currentB;
