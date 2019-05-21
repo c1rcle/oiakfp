@@ -91,9 +91,9 @@ int main()
     result = t.createTest(dev, 3);
     std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
     std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
-    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;*/
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl; */
 
-    VariableFloat<23, 8> g(1024.123f);
-    std::cout << g / VariableFloat<23, 8>(0.123) << std::endl;
+    VariableFloat<23, 8> g(12.678f);
+    std::cout << VariableFloat<23, 8>::sqrt(g) << std::endl;
     return 0;
 }

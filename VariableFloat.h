@@ -60,8 +60,8 @@ private:
 
     /// Private constructor for initializing containers.
     VariableFloat();
-public:
 
+public:
     /// Creates a bias vector for specified bit exponent bit count.
     /// \param customExponent - exponent bit count.
     /// \return Bias vector for specified bit count.
@@ -107,7 +107,10 @@ public:
     /// \param operand - reference to VariableFloat object with same template parameters.
     void operator/=(const VariableFloat<fraction, exponent> &operand) { *this = *this / operand; }
 
-    //static VariableFloat<fraction, exponent> sqrt(VariableFloat number) - TODO (maybe).
+    /// Computes a square root of a given number.
+    /// \param number - number to find the square root of.
+    /// \return Square root of 'number'.
+    static VariableFloat<fraction, exponent> sqrt(const VariableFloat<fraction, exponent> &number);
 
     /// Prints contents of containers in hex format.
     /// \param str - output stream.
@@ -222,8 +225,8 @@ VariableFloat<fraction,exponent>::VariableFloat()
 
     shiftCount--;
     ByteArray::shiftVectorRight(maxExponent, shiftCount);
-    ByteArray::setBit(maxExponent, exponent - 1, false);
-    ByteArray::setBit(minExponent, exponent - 1, true);
+    ByteArray::setBit(maxExponent, exponentSize * 8 - 1, false);
+    ByteArray::setBit(minExponent, exponentSize * 8 - 1, true);
 }
 
 template<int fraction, int exponent>
@@ -573,6 +576,79 @@ VariableFloat<fraction, exponent> operator / (const VariableFloat<fraction, expo
     returnNumber.setFractionContainer(resultMantissa);
     return returnNumber;
 }
+
+template<int fraction, int exponent>
+VariableFloat<fraction, exponent> VariableFloat<fraction, exponent>::sqrt(const VariableFloat<fraction, exponent> &number)
+{
+    VariableFloat<fraction, exponent> returnNumber(0.0f);
+
+    //Check for zero, infinity or NaN.
+    if (number.isZero()) return returnNumber;
+    else if (number.isPositiveInfinity())
+    {
+        returnNumber.setInfinity(false);
+        return returnNumber;
+    }
+    else if (number.isNegativeInfinity() || number.getSign())
+    {
+        returnNumber.setNan();
+        return returnNumber;
+    }
+    else if (number.isNan())
+    {
+        returnNumber.setNan();
+        return returnNumber;
+    }
+
+    //Copy required containers.
+    auto resultExponent = number.getExponentContainer();
+    auto resultMantissa = number.getFractionContainer();
+
+    //Adjust final exponent.
+    ByteArray::subtractBytes(resultExponent, number.getBias());
+    //If exponent is not even subtract 1.
+    int bitCount = resultExponent.size() * 8;
+    if (ByteArray::getBit(resultExponent, bitCount - 1))
+    {
+        ByteArray::setBit(resultExponent, bitCount - 1, false);
+        ByteArray::shiftVectorRight(resultExponent, 1);
+    }
+    else ByteArray::shiftVectorRight(resultExponent, 1);
+    ByteArray::addBytes(resultExponent, number.getBias());
+
+    //Add hidden '1'.
+    resultMantissa.push_back(0);
+    ByteArray::shiftVectorRight(resultMantissa, 1);
+    ByteArray::setBit(resultMantissa, 0, true);
+
+    //Compute square root of resultFraction.
+    ByteArray::squareRootBytes(resultMantissa, fraction + 5);
+
+    //Normalize mantissa and remove leading '1'.
+    int index = ByteArray::findHighestOrderOnePosition(resultMantissa);
+    ByteArray::shiftVectorLeft(resultMantissa, index + 1);
+
+    //Adjust result exponent.
+    auto indexBytes = ByteArray::getBytesFromInt(index, resultExponent.size());
+    bool overflow = ByteArray::subtractBytes(resultExponent, indexBytes);
+
+    //Check for over or underflow.
+    if (overflow)
+    {
+        returnNumber.setInfinity(false);
+        return returnNumber;
+    }
+    else if (ByteArray::compare(resultExponent, number.getMinExponent()) == -1)
+    {
+        return returnNumber;
+    }
+
+    //Save the result.
+    returnNumber.setExponentContainer(resultExponent);
+    returnNumber.setFractionContainer(resultMantissa);
+    return returnNumber;
+}
+
 
 template<int fraction, int exponent>
 std::ostream& operator<<(std::ostream &str, const VariableFloat<fraction, exponent> &obj)

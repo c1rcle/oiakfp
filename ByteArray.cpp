@@ -154,13 +154,9 @@ bool ByteArray::subtractBytes(std::vector<u_char> &first, const std::vector<u_ch
 
 int ByteArray::compare(const std::vector<u_char> &first, const std::vector<u_char> &second)
 {
-    //TODO - clean function cause it has unused local variables.
-    //auto * s = (u_char*) &second;
     std::vector<u_char> res = first;
-
-    //bool carry =
-    subtractBytes(res, second);
-    return checkIfZero(res);
+    if (subtractBytes(res, second)) return -1;
+    else return checkIfZero(res) ? 0 : 1;
 }
 
 bool ByteArray::checkIfZero(const std::vector<u_char> &first)
@@ -269,6 +265,48 @@ void ByteArray::divideBytes(std::vector<u_char> &first, const std::vector<u_char
         quotient = partialProduct;
         shiftVectorLeft(quotient, 1);
         for (int k = 0; k < quotient.size(); ++k) partialProduct[k] = 0;
+    }
+    first = result;
+}
+
+void ByteArray::squareRootBytes(std::vector<u_char> &first, unsigned int precision)
+{
+    int byteCount = (precision - 1) / 8 + 1;
+    int bitCount = byteCount * 8;
+    auto result = std::vector<u_char>(byteCount, 0);
+
+    auto q = std::vector<u_char>(byteCount, 0);
+    auto r = std::vector<u_char>(byteCount, 0);
+    ByteArray::setBit(r, bitCount - 2, ByteArray::getBit(first, 0));
+    ByteArray::setBit(r, bitCount - 1, ByteArray::getBit(first, 1));
+
+    for (int i = 0; i < precision; ++i)
+    {
+        bool x = compare(q, r) == -1;
+        auto partial = std::vector<u_char>(byteCount, 0);
+        if (x)
+        {
+            partial[byteCount - 1] = 0x01;
+            ByteArray::addBytes(partial, q);
+        }
+
+        ByteArray::setBit(result, i, x);
+
+        if (i != 0)
+        {
+            ByteArray::setBit(q, bitCount - 2, x);
+            ByteArray::shiftVectorLeft(q, 1);
+        }
+        else
+        {
+            ByteArray::setBit(q, bitCount - 1, x);
+            ByteArray::shiftVectorLeft(q, 2);
+        }
+        ByteArray::subtractBytes(r, partial);
+
+        ByteArray::shiftVectorLeft(r, 2);
+        ByteArray::setBit(r, bitCount - 2, ByteArray::getBit(first, 2 * i + 2));
+        ByteArray::setBit(r, bitCount - 1, ByteArray::getBit(first, 2 * i + 3));
     }
     first = result;
 }

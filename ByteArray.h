@@ -111,6 +111,11 @@ public:
     /// \param precision - division bit precision.
     static void divideBytes(std::vector<u_char> &first, const std::vector<u_char> &second, unsigned int precision);
 
+    /// Computes a square root of number given as an array of bytes with known point index.
+    /// \param first - square root operation operand (vector).
+    /// \param precision - square root precision.
+    static void squareRootBytes(std::vector<u_char> &first, unsigned int precision);
+
     /// Finds the position of highest order '1' in a byte container.
     /// \param first - container to find that position in.
     /// \return Index of highest order '1'.
