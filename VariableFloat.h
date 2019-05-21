@@ -605,15 +605,39 @@ VariableFloat<fraction, exponent> VariableFloat<fraction, exponent>::sqrt(const 
     auto resultMantissa = number.getFractionContainer();
 
     //Adjust final exponent.
-    ByteArray::subtractBytes(resultExponent, number.getBias());
+    bool exponentNegative = ByteArray::subtractBytes(resultExponent, number.getBias());
+    bool exponentModified = false;
     //If exponent is not even subtract 1.
     int bitCount = resultExponent.size() * 8;
-    if (ByteArray::getBit(resultExponent, bitCount - 1))
+    if (exponentNegative)
     {
-        ByteArray::setBit(resultExponent, bitCount - 1, false);
+        //Negative and uneven.
+        if (ByteArray::getBit(resultExponent, bitCount - 1))
+        {
+            ByteArray::negateBytes(resultExponent);
+            ByteArray::addBytes(resultExponent, ByteArray::getBytesFromInt(1, resultExponent.size()));
+            ByteArray::shiftVectorRight(resultExponent, 1);
+            ByteArray::negateBytes(resultExponent);
+            exponentModified = true;
+        }
+        //Negative and even.
+        else
+        {
+            ByteArray::negateBytes(resultExponent);
+            ByteArray::shiftVectorRight(resultExponent, 1);
+            ByteArray::negateBytes(resultExponent);
+        }
+    }
+    else
+    {
+        //Positive and uneven.
+        if (ByteArray::getBit(resultExponent, bitCount - 1))
+        {
+            ByteArray::subtractBytes(resultExponent, ByteArray::getBytesFromInt(1, resultExponent.size()));
+            exponentModified = true;
+        }
         ByteArray::shiftVectorRight(resultExponent, 1);
     }
-    else ByteArray::shiftVectorRight(resultExponent, 1);
     ByteArray::addBytes(resultExponent, number.getBias());
 
     //Add hidden '1'.
@@ -622,7 +646,13 @@ VariableFloat<fraction, exponent> VariableFloat<fraction, exponent>::sqrt(const 
     ByteArray::setBit(resultMantissa, 0, true);
 
     //Compute square root of resultFraction.
-    ByteArray::squareRootBytes(resultMantissa, fraction + 5);
+    int precision = fraction + 5;
+    if (!exponentModified)
+    {
+        precision++;
+        ByteArray::shiftVectorRight(resultMantissa, 1);
+    }
+    ByteArray::squareRootBytes(resultMantissa, precision);
 
     //Normalize mantissa and remove leading '1'.
     int index = ByteArray::findHighestOrderOnePosition(resultMantissa);
@@ -734,7 +764,6 @@ template<int fraction, int exponent>
 int VariableFloat<fraction, exponent>::checkForOverflow(std::vector<u_char> &currentExponent)
 {
     std::vector<u_char> temp = std::vector<u_char>(currentExponent);
-    ByteArray::subtractBytes(temp, biasContainer);
     if (ByteArray::compare(temp, maxExponent) == 1) return 1;
     else if (ByteArray::compare(temp, minExponent) == -1) return -1;
     return 0;
