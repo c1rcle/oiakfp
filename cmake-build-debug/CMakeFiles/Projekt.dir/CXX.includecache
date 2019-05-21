@@ -42,6 +42,10 @@ test/MulTest.h
 test/DivTest.h
 /home/c1rcle/Politechnika/OiAK/OiakFp/test/DivTest.h
 
+/home/c1rcle/Politechnika/OiAK/OiakFp/test/AddTest.cpp
+AddTest.h
+/home/c1rcle/Politechnika/OiAK/OiakFp/test/AddTest.h
+
 /home/c1rcle/Politechnika/OiAK/OiakFp/test/AddTest.h
 Test.h
 /home/c1rcle/Politechnika/OiAK/OiakFp/test/Test.h
@@ -49,6 +53,10 @@ vector
 -
 ../VariableFloat.h
 /home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h
+
+/home/c1rcle/Politechnika/OiAK/OiakFp/test/DivTest.cpp
+DivTest.h
+/home/c1rcle/Politechnika/OiAK/OiakFp/test/DivTest.h
 
 /home/c1rcle/Politechnika/OiAK/OiakFp/test/DivTest.h
 Test.h
@@ -58,6 +66,10 @@ vector
 ../VariableFloat.h
 /home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h
 
+/home/c1rcle/Politechnika/OiAK/OiakFp/test/MulTest.cpp
+MulTest.h
+/home/c1rcle/Politechnika/OiAK/OiakFp/test/MulTest.h
+
 /home/c1rcle/Politechnika/OiAK/OiakFp/test/MulTest.h
 Test.h
 /home/c1rcle/Politechnika/OiAK/OiakFp/test/Test.h
@@ -65,6 +77,10 @@ vector
 -
 ../VariableFloat.h
 /home/c1rcle/Politechnika/OiAK/OiakFp/VariableFloat.h
+
+/home/c1rcle/Politechnika/OiAK/OiakFp/test/SubTest.cpp
+SubTest.h
+/home/c1rcle/Politechnika/OiAK/OiakFp/test/SubTest.h
 
 /home/c1rcle/Politechnika/OiAK/OiakFp/test/SubTest.h
 Test.h
