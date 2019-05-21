@@ -89,23 +89,23 @@ public:
     /// Assignment operator declaration.
     /// \param number - number that should be assigned to 'this'.
     /// \return Class object reference.
-    const VariableFloat<fraction, exponent>& operator=(const VariableFloat<fraction, exponent> &number);
+    VariableFloat<fraction, exponent> &operator=(const VariableFloat<fraction, exponent> &number);
 
     /// Adds 'operand' to current object.
     /// \param operand - reference to VariableFloat object with same template parameters.
-    void operator+=(const VariableFloat<fraction, exponent> &operand);
+    void operator+=(const VariableFloat<fraction, exponent> &operand) { *this = *this + operand; }
 
     /// Subtracts 'operand' from current object.
     /// \param operand - reference to VariableFloat object with same template parameters.
-    void operator-=(const VariableFloat<fraction, exponent> &operand);
+    void operator-=(const VariableFloat<fraction, exponent> &operand) { *this = *this - operand; }
 
     /// Multiplies current object by 'operand'.
     /// \param operand - reference to VariableFloat object with same template parameters.
-    void operator*=(const VariableFloat<fraction, exponent> &operand);
+    void operator*=(const VariableFloat<fraction, exponent> &operand) { *this = *this * operand; }
 
     /// Divides current object by 'operand'.
     /// \param operand - reference to VariableFloat object with same template parameters.
-    void operator/=(const VariableFloat<fraction, exponent> &operand);
+    void operator/=(const VariableFloat<fraction, exponent> &operand) { *this = *this / operand; }
 
     //static VariableFloat<fraction, exponent> sqrt(VariableFloat number) - TODO (maybe).
 
