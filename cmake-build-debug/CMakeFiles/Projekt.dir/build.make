@@ -83,19 +83,109 @@ CMakeFiles/Projekt.dir/ByteArray.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Projekt.dir/ByteArray.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/c1rcle/Politechnika/OiAK/OiakFp/ByteArray.cpp -o CMakeFiles/Projekt.dir/ByteArray.cpp.s
 
+CMakeFiles/Projekt.dir/util/Timer.cpp.o: CMakeFiles/Projekt.dir/flags.make
+CMakeFiles/Projekt.dir/util/Timer.cpp.o: ../util/Timer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Projekt.dir/util/Timer.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Projekt.dir/util/Timer.cpp.o -c /home/c1rcle/Politechnika/OiAK/OiakFp/util/Timer.cpp
+
+CMakeFiles/Projekt.dir/util/Timer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Projekt.dir/util/Timer.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/c1rcle/Politechnika/OiAK/OiakFp/util/Timer.cpp > CMakeFiles/Projekt.dir/util/Timer.cpp.i
+
+CMakeFiles/Projekt.dir/util/Timer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Projekt.dir/util/Timer.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/c1rcle/Politechnika/OiAK/OiakFp/util/Timer.cpp -o CMakeFiles/Projekt.dir/util/Timer.cpp.s
+
+CMakeFiles/Projekt.dir/test/AddTest.cpp.o: CMakeFiles/Projekt.dir/flags.make
+CMakeFiles/Projekt.dir/test/AddTest.cpp.o: ../test/AddTest.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Projekt.dir/test/AddTest.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Projekt.dir/test/AddTest.cpp.o -c /home/c1rcle/Politechnika/OiAK/OiakFp/test/AddTest.cpp
+
+CMakeFiles/Projekt.dir/test/AddTest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Projekt.dir/test/AddTest.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/c1rcle/Politechnika/OiAK/OiakFp/test/AddTest.cpp > CMakeFiles/Projekt.dir/test/AddTest.cpp.i
+
+CMakeFiles/Projekt.dir/test/AddTest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Projekt.dir/test/AddTest.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/c1rcle/Politechnika/OiAK/OiakFp/test/AddTest.cpp -o CMakeFiles/Projekt.dir/test/AddTest.cpp.s
+
+CMakeFiles/Projekt.dir/test/SubTest.cpp.o: CMakeFiles/Projekt.dir/flags.make
+CMakeFiles/Projekt.dir/test/SubTest.cpp.o: ../test/SubTest.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Projekt.dir/test/SubTest.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Projekt.dir/test/SubTest.cpp.o -c /home/c1rcle/Politechnika/OiAK/OiakFp/test/SubTest.cpp
+
+CMakeFiles/Projekt.dir/test/SubTest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Projekt.dir/test/SubTest.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/c1rcle/Politechnika/OiAK/OiakFp/test/SubTest.cpp > CMakeFiles/Projekt.dir/test/SubTest.cpp.i
+
+CMakeFiles/Projekt.dir/test/SubTest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Projekt.dir/test/SubTest.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/c1rcle/Politechnika/OiAK/OiakFp/test/SubTest.cpp -o CMakeFiles/Projekt.dir/test/SubTest.cpp.s
+
+CMakeFiles/Projekt.dir/test/MulTest.cpp.o: CMakeFiles/Projekt.dir/flags.make
+CMakeFiles/Projekt.dir/test/MulTest.cpp.o: ../test/MulTest.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Projekt.dir/test/MulTest.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Projekt.dir/test/MulTest.cpp.o -c /home/c1rcle/Politechnika/OiAK/OiakFp/test/MulTest.cpp
+
+CMakeFiles/Projekt.dir/test/MulTest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Projekt.dir/test/MulTest.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/c1rcle/Politechnika/OiAK/OiakFp/test/MulTest.cpp > CMakeFiles/Projekt.dir/test/MulTest.cpp.i
+
+CMakeFiles/Projekt.dir/test/MulTest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Projekt.dir/test/MulTest.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/c1rcle/Politechnika/OiAK/OiakFp/test/MulTest.cpp -o CMakeFiles/Projekt.dir/test/MulTest.cpp.s
+
+CMakeFiles/Projekt.dir/test/DivTest.cpp.o: CMakeFiles/Projekt.dir/flags.make
+CMakeFiles/Projekt.dir/test/DivTest.cpp.o: ../test/DivTest.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Projekt.dir/test/DivTest.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Projekt.dir/test/DivTest.cpp.o -c /home/c1rcle/Politechnika/OiAK/OiakFp/test/DivTest.cpp
+
+CMakeFiles/Projekt.dir/test/DivTest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Projekt.dir/test/DivTest.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/c1rcle/Politechnika/OiAK/OiakFp/test/DivTest.cpp > CMakeFiles/Projekt.dir/test/DivTest.cpp.i
+
+CMakeFiles/Projekt.dir/test/DivTest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Projekt.dir/test/DivTest.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/c1rcle/Politechnika/OiAK/OiakFp/test/DivTest.cpp -o CMakeFiles/Projekt.dir/test/DivTest.cpp.s
+
+CMakeFiles/Projekt.dir/test/Test.cpp.o: CMakeFiles/Projekt.dir/flags.make
+CMakeFiles/Projekt.dir/test/Test.cpp.o: ../test/Test.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Projekt.dir/test/Test.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Projekt.dir/test/Test.cpp.o -c /home/c1rcle/Politechnika/OiAK/OiakFp/test/Test.cpp
+
+CMakeFiles/Projekt.dir/test/Test.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Projekt.dir/test/Test.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/c1rcle/Politechnika/OiAK/OiakFp/test/Test.cpp > CMakeFiles/Projekt.dir/test/Test.cpp.i
+
+CMakeFiles/Projekt.dir/test/Test.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Projekt.dir/test/Test.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/c1rcle/Politechnika/OiAK/OiakFp/test/Test.cpp -o CMakeFiles/Projekt.dir/test/Test.cpp.s
+
 # Object files for target Projekt
 Projekt_OBJECTS = \
 "CMakeFiles/Projekt.dir/main.cpp.o" \
-"CMakeFiles/Projekt.dir/ByteArray.cpp.o"
+"CMakeFiles/Projekt.dir/ByteArray.cpp.o" \
+"CMakeFiles/Projekt.dir/util/Timer.cpp.o" \
+"CMakeFiles/Projekt.dir/test/AddTest.cpp.o" \
+"CMakeFiles/Projekt.dir/test/SubTest.cpp.o" \
+"CMakeFiles/Projekt.dir/test/MulTest.cpp.o" \
+"CMakeFiles/Projekt.dir/test/DivTest.cpp.o" \
+"CMakeFiles/Projekt.dir/test/Test.cpp.o"
 
 # External object files for target Projekt
 Projekt_EXTERNAL_OBJECTS =
 
 Projekt: CMakeFiles/Projekt.dir/main.cpp.o
 Projekt: CMakeFiles/Projekt.dir/ByteArray.cpp.o
+Projekt: CMakeFiles/Projekt.dir/util/Timer.cpp.o
+Projekt: CMakeFiles/Projekt.dir/test/AddTest.cpp.o
+Projekt: CMakeFiles/Projekt.dir/test/SubTest.cpp.o
+Projekt: CMakeFiles/Projekt.dir/test/MulTest.cpp.o
+Projekt: CMakeFiles/Projekt.dir/test/DivTest.cpp.o
+Projekt: CMakeFiles/Projekt.dir/test/Test.cpp.o
 Projekt: CMakeFiles/Projekt.dir/build.make
 Projekt: CMakeFiles/Projekt.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable Projekt"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable Projekt"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Projekt.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

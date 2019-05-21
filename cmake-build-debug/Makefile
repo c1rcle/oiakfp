@@ -177,6 +177,168 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+test/AddTest.o: test/AddTest.cpp.o
+
+.PHONY : test/AddTest.o
+
+# target to build an object file
+test/AddTest.cpp.o:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/AddTest.cpp.o
+.PHONY : test/AddTest.cpp.o
+
+test/AddTest.i: test/AddTest.cpp.i
+
+.PHONY : test/AddTest.i
+
+# target to preprocess a source file
+test/AddTest.cpp.i:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/AddTest.cpp.i
+.PHONY : test/AddTest.cpp.i
+
+test/AddTest.s: test/AddTest.cpp.s
+
+.PHONY : test/AddTest.s
+
+# target to generate assembly for a file
+test/AddTest.cpp.s:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/AddTest.cpp.s
+.PHONY : test/AddTest.cpp.s
+
+test/DivTest.o: test/DivTest.cpp.o
+
+.PHONY : test/DivTest.o
+
+# target to build an object file
+test/DivTest.cpp.o:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/DivTest.cpp.o
+.PHONY : test/DivTest.cpp.o
+
+test/DivTest.i: test/DivTest.cpp.i
+
+.PHONY : test/DivTest.i
+
+# target to preprocess a source file
+test/DivTest.cpp.i:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/DivTest.cpp.i
+.PHONY : test/DivTest.cpp.i
+
+test/DivTest.s: test/DivTest.cpp.s
+
+.PHONY : test/DivTest.s
+
+# target to generate assembly for a file
+test/DivTest.cpp.s:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/DivTest.cpp.s
+.PHONY : test/DivTest.cpp.s
+
+test/MulTest.o: test/MulTest.cpp.o
+
+.PHONY : test/MulTest.o
+
+# target to build an object file
+test/MulTest.cpp.o:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/MulTest.cpp.o
+.PHONY : test/MulTest.cpp.o
+
+test/MulTest.i: test/MulTest.cpp.i
+
+.PHONY : test/MulTest.i
+
+# target to preprocess a source file
+test/MulTest.cpp.i:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/MulTest.cpp.i
+.PHONY : test/MulTest.cpp.i
+
+test/MulTest.s: test/MulTest.cpp.s
+
+.PHONY : test/MulTest.s
+
+# target to generate assembly for a file
+test/MulTest.cpp.s:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/MulTest.cpp.s
+.PHONY : test/MulTest.cpp.s
+
+test/SubTest.o: test/SubTest.cpp.o
+
+.PHONY : test/SubTest.o
+
+# target to build an object file
+test/SubTest.cpp.o:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/SubTest.cpp.o
+.PHONY : test/SubTest.cpp.o
+
+test/SubTest.i: test/SubTest.cpp.i
+
+.PHONY : test/SubTest.i
+
+# target to preprocess a source file
+test/SubTest.cpp.i:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/SubTest.cpp.i
+.PHONY : test/SubTest.cpp.i
+
+test/SubTest.s: test/SubTest.cpp.s
+
+.PHONY : test/SubTest.s
+
+# target to generate assembly for a file
+test/SubTest.cpp.s:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/SubTest.cpp.s
+.PHONY : test/SubTest.cpp.s
+
+test/Test.o: test/Test.cpp.o
+
+.PHONY : test/Test.o
+
+# target to build an object file
+test/Test.cpp.o:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/Test.cpp.o
+.PHONY : test/Test.cpp.o
+
+test/Test.i: test/Test.cpp.i
+
+.PHONY : test/Test.i
+
+# target to preprocess a source file
+test/Test.cpp.i:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/Test.cpp.i
+.PHONY : test/Test.cpp.i
+
+test/Test.s: test/Test.cpp.s
+
+.PHONY : test/Test.s
+
+# target to generate assembly for a file
+test/Test.cpp.s:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/test/Test.cpp.s
+.PHONY : test/Test.cpp.s
+
+util/Timer.o: util/Timer.cpp.o
+
+.PHONY : util/Timer.o
+
+# target to build an object file
+util/Timer.cpp.o:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/util/Timer.cpp.o
+.PHONY : util/Timer.cpp.o
+
+util/Timer.i: util/Timer.cpp.i
+
+.PHONY : util/Timer.i
+
+# target to preprocess a source file
+util/Timer.cpp.i:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/util/Timer.cpp.i
+.PHONY : util/Timer.cpp.i
+
+util/Timer.s: util/Timer.cpp.s
+
+.PHONY : util/Timer.s
+
+# target to generate assembly for a file
+util/Timer.cpp.s:
+	$(MAKE) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/util/Timer.cpp.s
+.PHONY : util/Timer.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +354,24 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... test/AddTest.o"
+	@echo "... test/AddTest.i"
+	@echo "... test/AddTest.s"
+	@echo "... test/DivTest.o"
+	@echo "... test/DivTest.i"
+	@echo "... test/DivTest.s"
+	@echo "... test/MulTest.o"
+	@echo "... test/MulTest.i"
+	@echo "... test/MulTest.s"
+	@echo "... test/SubTest.o"
+	@echo "... test/SubTest.i"
+	@echo "... test/SubTest.s"
+	@echo "... test/Test.o"
+	@echo "... test/Test.i"
+	@echo "... test/Test.s"
+	@echo "... util/Timer.o"
+	@echo "... util/Timer.i"
+	@echo "... util/Timer.s"
 .PHONY : help
 
 

@@ -5,20 +5,20 @@ CONFIG -= qt
 
 HEADERS += \
     VariableFloat.h \
-    Timer.h \
+    util/Timer.h \
     ByteArray.h \
-    Test.h \
-    SubTest.h \
-    MulTest.h \
-    DevTest.h \
-    AddTest.h
+    test/Test.h \
+    test/SubTest.h \
+    test/MulTest.h \
+    test/DevTest.h \
+    test/AddTest.h
 
 SOURCES += \
     main.cpp \
-    Timer.cpp \
+    util/Timer.cpp \
     ByteArray.cpp \
-    Test.cpp \
-    SubTest.cpp \
-    MulTest.cpp \
-    DevTest.cpp \
-    AddTest.cpp
+    test/Test.cpp \
+    test/SubTest.cpp \
+    test/MulTest.cpp \
+    test/DevTest.cpp \
+    test/AddTest.cpp
