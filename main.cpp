@@ -132,11 +132,18 @@ int main()
     result = t.createTest(dev, 3);
     std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
     std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl; */
+
+    VariableFloat<23, 8> g(12.678f);
+    std::cout << VariableFloat<23, 8>::sqrt(g) << std::endl;
+
     std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
 
     VariableFloat<23, 8> g(false, "03", "9570A4");
     VariableFloat<23, 8> h(false, "02", "C851EC");
 
     std::cout << g / h << std::endl;*/
+
     return 0;
 }
