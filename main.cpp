@@ -62,6 +62,10 @@ void sqrtTestCombo(){
     int populationSize = 40;
     std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
 
+
+    std::cerr<<"Pierwiastek"<<std::endl;
+    std::cerr<<"Zmienna mantsa staly wykladnik"<<std::endl;
+
     sqrtUnitTest(20,8);
     sqrtUnitTest(30,8);
     sqrtUnitTest(40,8);
@@ -110,6 +114,18 @@ void sqrtTestCombo(){
     sqrtUnitTest(470,8);
     sqrtUnitTest(480,8);
     sqrtUnitTest(490,8);
+
+    std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
+    populationSize = 10;
+
+    sqrtUnitTest(200,8);
+    sqrtUnitTest(200,16);
+    sqrtUnitTest(200,24);
+    sqrtUnitTest(200,32);
+    sqrtUnitTest(200,40);
+    sqrtUnitTest(200,48);
+    sqrtUnitTest(200,56);
+    sqrtUnitTest(200,64);
 }
 
 void addTestCombo(){
@@ -170,7 +186,7 @@ void addTestCombo(){
     addUnitTest(490,8);
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
-    populationSize = 5;
+    populationSize = 10;
 
     addUnitTest(200,8);
     addUnitTest(200,16);
@@ -274,7 +290,7 @@ void subTestCombo(){
 
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
-    populationSize = 5;
+    populationSize = 10;
 
     subUnitTest(200,8);
     subUnitTest(200,16);
@@ -346,7 +362,7 @@ void mulTestCombo(){
 
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
-    populationSize = 5;
+    populationSize = 10;
 
     mulUnitTest(200,8);
     mulUnitTest(200,16);
@@ -418,7 +434,7 @@ void divTestCombo(){
 
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
-    populationSize = 5;
+    populationSize = 10;
 
     divUnitTest(200,8);
     divUnitTest(200,16);
@@ -434,7 +450,11 @@ int main()
 {
     srand(time(NULL));
 
+    addTestCombo();
+    subTestCombo();
     mulTestCombo();
+    divTestCombo();
+    sqrtTestCombo();
 
 
     //int populationSize = 2;
