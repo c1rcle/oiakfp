@@ -56,26 +56,67 @@ void addTest(){
     std::cout<<buf<<std::endl;
 }
 
+
+template<int fraction, int exponent>
+Test::TestResult runTest(UnitTimeTest& testObj, VariableFloat<fraction, exponent> data[], int size){
+
+    Test t;
+
+    //each test takes two variable float
+    Test::TestResult result = t.createTest(testObj, size/2);
+
+    result.exponent = exponent;
+    result.fraction = fraction;
+
+    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
+    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
+    std::cout<<"sredni czas wykonania           : "<<std::fixed<<result.avgTimePerTest<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+
+    result.toCsv(std::cerr);
+
+    return result;
+}
+
 int main()
 {
-    /*
-    VariableFloat<23, 8> data[] = {
-            VariableFloat<23, 8>(1.0f),
-            VariableFloat<23, 8>(2.0f),
+    srand(time(NULL));
+
+
+    /*VariableFloat<23, 8> data[] = {
+            VariableFloat<23, 8>(0.1254f),
+            VariableFloat<23, 8>(0.7503f),
             VariableFloat<23, 8>(1.5f),
             VariableFloat<23, 8>(2.5f),
             VariableFloat<23, 8>(1.125f),
             VariableFloat<23, 8>(2.750f)
-    };
+    };*/
 
-    Test t;
-    AddTest<23,8> add(data);
-    Test::TestResult result = t.createTest(add, 3);
-    std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
-    std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
-    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+    //generate population
+    int populationSize = 40;
+    std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
+    //std::vector<int> fractions = {23,52,75,104,150};
+    //std::vector<int> exponent = {8,16,24,32};
 
-    SubTest<23,8> sub(data);
+    //create floats from population
+    VariableFloat<23, 8> data1[populationSize];
+    AddTest<23,8> add1(data1);
+    fillArray(data1, populationSize, randomFloats);
+    runTest(add1, data1, populationSize);
+
+    //create floats from population
+    VariableFloat<52, 11> data2[populationSize];
+    AddTest<52,11> add2(data2);
+    fillArray(data2, populationSize, randomFloats);
+    runTest(add2, data2, populationSize);
+
+    //create floats from population
+    VariableFloat<104, 18> data3[populationSize];
+    AddTest<104,18> add3(data3);
+    fillArray(data3, populationSize, randomFloats);
+    runTest(add3, data3, populationSize);
+
+    /*SubTest<23,8> sub(data);
     result = t.createTest(sub, 3);
     std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
     std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
@@ -91,11 +132,11 @@ int main()
     result = t.createTest(dev, 3);
     std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
     std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
-    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;*/
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
 
     VariableFloat<23, 8> g(false, "03", "9570A4");
     VariableFloat<23, 8> h(false, "02", "C851EC");
 
-    std::cout << g / h << std::endl;
+    std::cout << g / h << std::endl;*/
     return 0;
 }

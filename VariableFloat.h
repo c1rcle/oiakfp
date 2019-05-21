@@ -14,10 +14,10 @@ class VariableFloat
 {
 private:
     //Float and double constants.
-    const u_int DOUBLE_EXPONENT = 11;
-    const u_int DOUBLE_FRACTION = 52;
-    const u_int FLOAT_EXPONENT = 8;
-    const u_int FLOAT_FRACTION = 23;
+    static const u_int DOUBLE_EXPONENT = 11;
+    static const u_int DOUBLE_FRACTION = 52;
+    static const u_int FLOAT_EXPONENT = 8;
+    static const u_int FLOAT_FRACTION = 23;
 
     /// Bias vector.
     std::vector<u_char> biasContainer;
@@ -53,9 +53,10 @@ private:
     /// \return Reference to a modified byte container.
     std::vector<u_char> &roundFraction(std::vector<u_char> &currentFraction);
 
-    /// Private constructor for initializing containers.
-    VariableFloat();
 public:
+    /// Private constructor for initializing containers. no args constructor has to been
+    /// public because of use cases in arrays, vectors
+    VariableFloat();
 
     /// Checks whether current exponent will lead to an overflow or underflow.
     /// \param currentExponent - current exponent byte container.
@@ -89,7 +90,7 @@ public:
     /// Assignment operator declaration.
     /// \param number - number that should be assigned to 'this'.
     /// \return Class object reference.
-    const VariableFloat<fraction, exponent>& operator=(const VariableFloat<fraction, exponent> &number);
+    //const VariableFloat<fraction, exponent>& operator=(const VariableFloat<fraction, exponent> &number);
 
     /// Adds 'operand' to current object.
     /// \param operand - reference to VariableFloat object with same template parameters.
@@ -201,6 +202,7 @@ public:
     /// Returns object's string representation.
     /// \return Object's string representation.
     std::string toBinary() const;
+
 };
 
 template<int fraction, int exponent>
@@ -237,18 +239,6 @@ VariableFloat<fraction, exponent>::VariableFloat(const VariableFloat<fraction, e
     for (auto byte : number.minExponent) minExponent.push_back(byte);
 }
 
-template<int fraction, int exponent>
-const VariableFloat<fraction, exponent> &VariableFloat<fraction, exponent>::operator=(const VariableFloat<fraction, exponent> &number)
-{
-    sign = number.sign;
-    for (auto byte : number.exponentContainer) exponentContainer.push_back(byte);
-    for (auto byte : number.fractionContainer) fractionContainer.push_back(byte);
-    for (auto byte : number.biasContainer) biasContainer.push_back(byte);
-    for (auto byte : number.maxExponent) maxExponent.push_back(byte);
-    for (auto byte : number.minExponent) minExponent.push_back(byte);
-
-    return *this;
-}
 
 template<int fraction, int exponent>
 VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
@@ -330,6 +320,7 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
 
     bool sameSigns = n1.getSign() == n2.getSign();
 
+
     //|n1| > |n2|
     ret.setSign(n1.getSign());
     std::vector<u_char> sub = n1.getExponentContainer();
@@ -350,6 +341,11 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
         ByteArray::subtractBytes(sub, n1.getExponentContainer());
     }
 
+    //std::cout<<"epx 1    : "<<retExponent<<std::endl;
+    //std::cout<<"epx delta: "<<sub<<std::endl;
+    //std::cout<<"frac 1: "<<higherFrac<<std::endl;
+    //std::cout<<"frac 2: "<<lowerFrac<<std::endl;
+
     //Add hidden '1'.
     higherFrac.push_back(0);
     ByteArray::shiftVectorRight(higherFrac, 1);
@@ -358,6 +354,10 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     lowerFrac.push_back(0);
     ByteArray::shiftVectorRight(lowerFrac, 1);
     ByteArray::setBit(lowerFrac, 0, true);
+
+    //std::cout<<"(1) frac 1: "<<higherFrac<<std::endl;
+    //std::cout<<"(1) frac 2: "<<lowerFrac<<std::endl;
+
 
     //Shift fraction for lower number.
     while (!ByteArray::checkIfZero(sub))
