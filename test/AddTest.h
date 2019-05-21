@@ -22,10 +22,11 @@ public:
     void runTest() override
     {
         //currentA = currentA+currentB;
-        std::cout<<"test "<<testNb<<":   "<<currentA->toBinary()<<std::endl;
-        std::cout<<"test "<<testNb<<": + "<<currentB->toBinary()<<std::endl;
-        std::cout<<"test "<<testNb<<": = "<<(*currentA+*currentB).toBinary()<<std::endl;
-        std::cout<<std::endl;
+        VariableFloat<fraction, exponent> buf(*currentA+*currentB);
+        //std::cout<<"test "<<testNb<<":   "<<*currentA<<std::endl;
+        //std::cout<<"test "<<testNb<<": + "<<*currentB<<std::endl;
+        //std::cout<<"test "<<testNb<<": = "<<*currentA<<std::endl;
+        //std::cout<<std::endl;
     }
 
     void runBeforeTest() override
