@@ -8,7 +8,7 @@
 /// \tparam fraction
 /// \tparam exponent
 template<int fraction, int exponent>
-class MulTest : public UnitTimeTest
+class SqrtTest : public UnitTimeTest
 {
 protected:
     int testNb;
@@ -19,22 +19,19 @@ protected:
 public:
     ///
     /// \param d
-    explicit MulTest(VariableFloat<fraction, exponent> *d) : testNb(0), data(d) {}
+    explicit SqrtTest(VariableFloat<fraction, exponent> *d) : testNb(0), data(d) {}
 
     void runTest() override
     {
-        ((*currentA)*(*currentB));
         //currentA = currentA+currentB;
-        //std::cout<<"test "<<testNb<<":   "<<currentA->toBinary()<<std::endl;
-        //std::cout<<"test "<<testNb<<": * "<<currentB->toBinary()<<std::endl;
-        //std::cout<<"test "<<testNb<<": = "<<((*currentA)*(*currentB)).toBinary()<<std::endl;
+        VariableFloat<fraction, exponent>::sqrt(*currentA);
+        //std::cout<<"test "<<testNb<<": "<<<<std::endl;
         //std::cout<<std::endl;
     }
 
     void runBeforeTest() override
     {
         currentA = &(data[2*testNb]);
-        currentB = &(data[2*testNb+1]);
     }
 
     void runAfterTest() override

@@ -23,11 +23,12 @@ public:
 
     void runTest() override
     {
+        ((*currentA)-(*currentB));
         //currentA = currentA+currentB;
-        std::cout<<"test "<<testNb<<":   "<<currentA->toBinary()<<std::endl;
-        std::cout<<"test "<<testNb<<": - "<<currentB->toBinary()<<std::endl;
-        std::cout<<"test "<<testNb<<": = "<<((*currentA)-(*currentB)).toBinary()<<std::endl;
-        std::cout<<std::endl;
+        //std::cout<<"test "<<testNb<<":   "<<currentA->toBinary()<<std::endl;
+        //std::cout<<"test "<<testNb<<": - "<<currentB->toBinary()<<std::endl;
+        //std::cout<<"test "<<testNb<<": = "<<((*currentA)-(*currentB)).toBinary()<<std::endl;
+        //std::cout<<std::endl;
     }
 
     void runBeforeTest() override
