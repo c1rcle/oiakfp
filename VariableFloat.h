@@ -48,22 +48,21 @@ private:
     /// \return Vector of bytes corresponding to string's value.
     std::vector<u_char> hexStringToBytes(const std::string &input);
 
+    /// Checks whether current exponent will lead to an overflow or underflow.
+    /// \param currentExponent - current exponent byte container.
+    /// \return 1 if overflow, -1 if underflow, otherwise 0.
+    int checkForOverflow(std::vector<u_char> &currentExponent);
+
     /// Rounds the fraction using 'round to nearest' method.
     /// \param currentFraction - current fraction byte container.
     /// \return Reference to a modified byte container.
     std::vector<u_char> &roundFraction(std::vector<u_char> &currentFraction);
 
 public:
-    /// Private constructor for initializing containers. no args constructor has to been
-    /// public because of use cases in arrays, vectors
+    /// (One day) Private constructor for initializing containers.
+    /// Made public because of usages in arrays, vectors.
     VariableFloat();
 
-    /// Checks whether current exponent will lead to an overflow or underflow.
-    /// \param currentExponent - current exponent byte container.
-    /// \return 1 if overflow, -1 if underflow, otherwise 0.
-    int checkForOverflow(std::vector<u_char> &currentExponent);
-
-public:
     /// Creates a bias vector for specified bit exponent bit count.
     /// \param customExponent - exponent bit count.
     /// \return Bias vector for specified bit count.
