@@ -44,6 +44,10 @@ public:
     /// \return Vector of bytes that represents an unsigned four-byte integer.
     static std::vector<u_char> getBytesFromInt(unsigned int value, unsigned int size = 4);
 
+    /// Negates the contents of a byte (U2 representation).
+    /// \param first - vector to negate.
+    static void negateBytes(std::vector<u_char> &first);
+
     /// Adds bytes from two containers together (result stored in first).
     /// \param first - first addition operand (vector).
     /// \param second - second addition operand (vector).

@@ -96,6 +96,42 @@
 		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/main.cpp">
 			<Option target="Projekt"/>
 		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/AddTest.cpp">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/AddTest.h">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/DivTest.cpp">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/DivTest.h">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/MulTest.cpp">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/MulTest.h">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/SubTest.cpp">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/SubTest.h">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/Test.cpp">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/test/Test.h">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/util/Timer.cpp">
+			<Option target="Projekt"/>
+		</Unit>
+		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/util/Timer.h">
+			<Option target="Projekt"/>
+		</Unit>
 		<Unit filename="/home/c1rcle/Politechnika/OiAK/OiakFp/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

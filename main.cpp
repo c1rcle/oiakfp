@@ -1,12 +1,12 @@
 #include <iostream>
 #include <iomanip>
 #include "VariableFloat.h"
-#include "Timer.h"
-#include "Test.h"
-#include "AddTest.h"
-#include "SubTest.h"
-#include "MulTest.h"
-#include "DevTest.h"
+#include "util/Timer.h"
+#include "test/Test.h"
+#include "test/AddTest.h"
+#include "test/SubTest.h"
+#include "test/MulTest.h"
+#include "test/DivTest.h"
 
 void divideTest()
 {
@@ -58,13 +58,15 @@ void addTest(){
 
 int main()
 {
-    VariableFloat<23, 8> data []= {VariableFloat<23, 8>(1.0f),
-                                               VariableFloat<23, 8>(2.0f),
-                                               VariableFloat<23, 8>(1.5f),
-                                               VariableFloat<23, 8>(2.5f),
-                                               VariableFloat<23, 8>(1.125f),
-                                               VariableFloat<23, 8>(2.750f)
-                                              };
+    /*
+    VariableFloat<23, 8> data[] = {
+            VariableFloat<23, 8>(1.0f),
+            VariableFloat<23, 8>(2.0f),
+            VariableFloat<23, 8>(1.5f),
+            VariableFloat<23, 8>(2.5f),
+            VariableFloat<23, 8>(1.125f),
+            VariableFloat<23, 8>(2.750f)
+    };
 
     Test t;
     AddTest<23,8> add(data);
@@ -85,52 +87,15 @@ int main()
     std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
     std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
 
-    DevTest<23,8> dev(data);
+    DivTest<23,8> dev(data);
     result = t.createTest(dev, 3);
     std::cout<<"ilosc testow                    : "<<std::fixed<<result.testCount<<std::endl;
     std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
-    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
+    std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;*/
 
-    //std::cout<<(data[1]+data[0]).toBinary()<<std::endl;
+    VariableFloat<23, 8> g(false, "03", "9570A4");
+    VariableFloat<23, 8> h(false, "02", "C851EC");
 
-    //divideTest();
-
-    /*
-    std::vector<u_char> vec = {0xFF, 0x0F, 0xF0, 0x00};
-    std::cout<<ByteArray::toBinaryString(vec, 10)<<std::endl;
-*/
-    /*VariableFloat<52, 11> first(1.0f);
-    VariableFloat<52, 11> second(2.0f);
-
-    std::cout << "   " << first << std::endl;
-    std::cout << "+  " << second << std::endl;
-    std::cout << "=  "  << first + second << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;*/
-/*
-    //VariableFloat<23, 8> g(false, "01", "21");
-    //VariableFloat<23, 8> h(false, "02", "20");
-    //    std::cout << g + h<< std::endl;
-
-    //VariableFloat<23, 8> g(4.5f);
-    //VariableFloat<23, 8> h(2.2578125f);
-
-    //VariableFloat<23, 8> g(2.53f);
-    //VariableFloat<23, 8> h(4.67f);
-    VariableFloat<23, 8> g(true, "06", "F0");   //1.0 -> 10 = 2
-    VariableFloat<23, 8> h(false, "04", "00"); //1.1 -> 110 = 6
-
-
-    std::cout << "   " << g << std::endl;
-    std::cout << "*  " << h << std::endl;
-    std::cout << "=  " << g + h << std::endl;
-    std::cout << std::endl;
-
-    std::cout << "std:    " << g << std::endl;
-    std::cout << "binary: " << g.toBinary() <<std::endl; */
-    VariableFloat<23, 8> g(12.456f);
-    VariableFloat<23, 8> h(2.5f);
-
-    std::cout << g + h << std::endl;
+    std::cout << g / h << std::endl;
     return 0;
 }
