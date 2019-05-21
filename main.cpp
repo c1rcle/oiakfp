@@ -35,55 +35,6 @@
                            runTest(add, data, populationSize); }
 
 
-void divideTest()
-{
-    std::vector<u_char> first = {0xA4, 0x57};
-    std::vector<u_char> second = {0xC0, 0x12};
-    ByteArray::divideBytes(first, second, 20);
-    std::cout << first << std::endl;
-}
-
-void shiftTest()
-{
-    std::vector<u_char> bytes = {0xFF,0xFF,0xFF,0xFF};
-    for(unsigned int i = 0; i <= bytes.size() * 8; ++i)
-    {
-        std::vector<u_char> buf = bytes;
-        ByteArray::shiftVectorLeft(buf, i);
-        std::cout<<buf<<std::endl;
-    }
-}
-
-void shiftTest2()
-{
-    //0000 0001 0010 0001
-    //0000 0010 0100 0010
-    std::vector<u_char> b = {0x1, 0x21};
-    ByteArray::shiftVectorLeft(b, 1);
-    std::cout<<b<<std::endl;
-}
-
-void checkIfZeroTest()
-{
-    std::vector<u_char> buf = {0x0,0x0,0x0};
-    std::cout << ByteArray::checkIfZero(buf) << std::endl;
-}
-
-void multiplyTest(){
-    std::vector<u_char> buf = {0xff,0xff,0xff,0xff};
-    std::vector<u_char> buf2 = {0xff, 0xff};
-    ByteArray::multiplyBytes(buf, buf2);
-    std::cout<<buf<<std::endl;
-}
-
-void addTest(){
-    std::vector<u_char> buf = {0x0, 0x0, 0xfe, 0xff, 0xff, 0x1};
-    std::vector<u_char> buf2 = {0x0, 0xfe, 0xff, 0xff, 0x1, 0x0};
-    ByteArray::addBytesEqualSize(buf, buf2);
-    std::cout<<buf<<std::endl;
-}
-
-
 template<int fraction, int exponent>
 Test::TestResult runTest(UnitTimeTest& testObj, VariableFloat<fraction, exponent> data[], int size){
 
@@ -105,6 +56,7 @@ Test::TestResult runTest(UnitTimeTest& testObj, VariableFloat<fraction, exponent
     return result;
 }
 
+<<<<<<< HEAD
 void sqrtTestCombo(){
 
     //generate population
@@ -164,9 +116,17 @@ void sqrtTestCombo(){
 void addTestCombo(){
 
     //generate population
+=======
+int main()
+{
+    srand(time(nullptr));
+
+    //Generate population.
+>>>>>>> 99a03bbbe10bab63b003797e955d3d38fcad4c17
     int populationSize = 40;
     std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
 
+<<<<<<< HEAD
     std::cerr<<"Dodawanie"<<std::endl;
     std::cerr<<"Zmienna mantsa staly wykladnik"<<std::endl;
 
@@ -219,6 +179,23 @@ void addTestCombo(){
     addUnitTest(480,8);
     addUnitTest(490,8);
 
+=======
+    //Create floating point numbers from population.
+    VariableFloat<23, 8> data1[populationSize];
+    AddTest<23,8> add1(data1);
+    fillArray(data1, populationSize, randomFloats);
+    runTest(add1, data1, populationSize);
+
+    VariableFloat<52, 11> data2[populationSize];
+    AddTest<52,11> add2(data2);
+    fillArray(data2, populationSize, randomFloats);
+    runTest(add2, data2, populationSize);
+
+    VariableFloat<104, 18> data3[populationSize];
+    AddTest<104,18> add3(data3);
+    fillArray(data3, populationSize, randomFloats);
+    runTest(add3, data3, populationSize);
+>>>>>>> 99a03bbbe10bab63b003797e955d3d38fcad4c17
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
     populationSize = 5;
@@ -501,8 +478,8 @@ int main()
     fillArray(data3, populationSize, randomFloats);
     runTest(add3, data3, populationSize);
 
-    VariableFloat<23, 8> g(12.678f);
-    std::cout << VariableFloat<23, 8>::sqrt(g) << std::endl;
+    VariableFloat<53, 11> g(0.047);
+    std::cout << VariableFloat<53, 11>::sqrt(g) << std::endl;
 
     //std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
 
