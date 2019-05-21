@@ -1,9 +1,16 @@
 #include "ByteArray.h"
 
-void ByteArray::putBytes(const u_char * source, u_int size, std::vector<u_char> &destination)
+void ByteArray::putBytesExponent(const u_char * source, u_int size, std::vector<u_char> &destination)
 {
     for (unsigned int i = 0; i < size; ++i)
         destination.insert(destination.begin(), source[i]);
+}
+
+void ByteArray::putBytesFraction(const u_char * source, u_int size, u_int count, std::vector<u_char> &destination)
+{
+    int difference = size - count;
+    for ( int i = size - 1; i >= difference; --i)
+        destination.push_back(source[i]);
 }
 
 void ByteArray::setBit(std::vector<u_char> &array, u_int position, bool value)

@@ -10,11 +10,18 @@ public:
     /// ByteArray static class default constructor.
     ByteArray() = default;
 
-    /// Copies bytes to a container.
+    /// Copies bytes to a fraction container.
     /// \param source - source byte array.
     /// \param size - array element count.
+    /// \param count - number of bytes to be copied.
     /// \param destination - destination vector.
-    static void putBytes(const u_char * source, u_int size, std::vector<u_char> &destination);
+    static void putBytesFraction(const u_char * source, u_int size, u_int count, std::vector<u_char> &destination);
+
+    /// Copies bytes to a exponent container.
+    /// \param source - source byte array.
+    /// \param size - number of bytes to be copied.
+    /// \param destination - destination vector.
+    static void putBytesExponent(const u_char * source, u_int size, std::vector<u_char> &destination);
 
     /// Sets specified bit value.
     /// \param array - byte array which single bit will be changed.

@@ -93,10 +93,7 @@ int main()
     std::cout<<"czas calosciowy testow          : "<<std::fixed<<result.fullTime<<std::endl;
     std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;*/
 
-    VariableFloat<23, 8> g(0.7503f);
-    std::cout << g << std::endl;
-    VariableFloat<23, 8> h(0.0053f);
-
-    std::cout << g + h << std::endl;
+    VariableFloat<23, 8> g(1024.123f);
+    std::cout << g / VariableFloat<23, 8>(0.123) << std::endl;
     return 0;
 }
