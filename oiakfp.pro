@@ -10,8 +10,8 @@ HEADERS += \
     test/Test.h \
     test/SubTest.h \
     test/MulTest.h \
-    test/DevTest.h \
-    test/AddTest.h
+    test/AddTest.h \
+    test/DivTest.h
 
 SOURCES += \
     main.cpp \
@@ -20,5 +20,5 @@ SOURCES += \
     test/Test.cpp \
     test/SubTest.cpp \
     test/MulTest.cpp \
-    test/DevTest.cpp \
-    test/AddTest.cpp
+    test/AddTest.cpp \
+    test/DivTest.cpp

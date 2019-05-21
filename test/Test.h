@@ -1,6 +1,9 @@
 #pragma once
 
 #include "../util/Timer.h"
+#include "../VariableFloat.h"
+
+#include "stdio.h"
 
 ///
 class UnitTimeTest
@@ -28,8 +31,16 @@ public:
     public:
         double fullTime;
         double fullTimeOfTests;
+        double avgTimePerTest;
         int testCount;
+        int fraction;
+        int exponent;
+
+        void toCsv(std::ostream& str){
+            str<<std::fixed<<fraction<<", "<<exponent<<", "<<fullTime<<","<<fullTimeOfTests<<","<<avgTimePerTest<<","<<testCount<<"\n";
+        }
     };
+
 
     ///
     Test() = default;
@@ -38,32 +49,35 @@ public:
     /// \param unitTest
     /// \param testCount
     /// \return
-    TestResult createTest(UnitTimeTest& unitTest, int testCount)
-    {
-        TestResult ret{};
-        ret.testCount = testCount;
-        double timeOfTests = 0;
-        Timer fullTime;
+    TestResult createTest(UnitTimeTest& unitTest, int testCount);
 
-        fullTime.start();
+    static std::vector<float> generateRandomFloats(int size, int max, int min, int point){
+        std::vector<float> ret;
 
-        for(int i=0;i<testCount;++i)
-        {
-            unitTest.runBeforeTest();
-
-            Timer tm;
-            tm.start();
-
-            unitTest.runTest();
-
-            tm.stop();
-            timeOfTests += tm.elapsed();
-            unitTest.runAfterTest();
+        for(int i=0;i<size;++i){
+            float buf = (rand()%(max-min)) + min;
+            buf /= point;
+            ret.push_back(buf);
         }
 
-        fullTime.stop();
-        ret.fullTime = fullTime.elapsed();
-        ret.fullTimeOfTests += timeOfTests;
         return ret;
     }
 };
+
+
+
+/**
+ * @brief fillArray fills floats created by default constructor with random data in range of
+ *        <max/point, min/point>
+ * @param array pointer to Variable float array
+ * @param size size of array
+ * @param max
+ * @param min
+ * @param point is the decimal point position in random generated number
+ */
+template<int fraction, int exponent>
+void fillArray(VariableFloat<fraction, exponent> array[], int size, const std::vector<float> data)
+{
+    for(int i=0;i<size && i<data.size();++i)
+        array[i] = VariableFloat<fraction, exponent>(data[i]);
+}
