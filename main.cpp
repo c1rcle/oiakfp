@@ -56,7 +56,6 @@ Test::TestResult runTest(UnitTimeTest& testObj, VariableFloat<fraction, exponent
     return result;
 }
 
-<<<<<<< HEAD
 void sqrtTestCombo(){
 
     //generate population
@@ -115,18 +114,9 @@ void sqrtTestCombo(){
 
 void addTestCombo(){
 
-    //generate population
-=======
-int main()
-{
-    srand(time(nullptr));
-
-    //Generate population.
->>>>>>> 99a03bbbe10bab63b003797e955d3d38fcad4c17
     int populationSize = 40;
     std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
 
-<<<<<<< HEAD
     std::cerr<<"Dodawanie"<<std::endl;
     std::cerr<<"Zmienna mantsa staly wykladnik"<<std::endl;
 
@@ -178,24 +168,6 @@ int main()
     addUnitTest(470,8);
     addUnitTest(480,8);
     addUnitTest(490,8);
-
-=======
-    //Create floating point numbers from population.
-    VariableFloat<23, 8> data1[populationSize];
-    AddTest<23,8> add1(data1);
-    fillArray(data1, populationSize, randomFloats);
-    runTest(add1, data1, populationSize);
-
-    VariableFloat<52, 11> data2[populationSize];
-    AddTest<52,11> add2(data2);
-    fillArray(data2, populationSize, randomFloats);
-    runTest(add2, data2, populationSize);
-
-    VariableFloat<104, 18> data3[populationSize];
-    AddTest<104,18> add3(data3);
-    fillArray(data3, populationSize, randomFloats);
-    runTest(add3, data3, populationSize);
->>>>>>> 99a03bbbe10bab63b003797e955d3d38fcad4c17
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
     populationSize = 5;
