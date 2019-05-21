@@ -48,22 +48,21 @@ private:
     /// \return Vector of bytes corresponding to string's value.
     std::vector<u_char> hexStringToBytes(const std::string &input);
 
+    /// Checks whether current exponent will lead to an overflow or underflow.
+    /// \param currentExponent - current exponent byte container.
+    /// \return 1 if overflow, -1 if underflow, otherwise 0.
+    int checkForOverflow(std::vector<u_char> &currentExponent);
+
     /// Rounds the fraction using 'round to nearest' method.
     /// \param currentFraction - current fraction byte container.
     /// \return Reference to a modified byte container.
     std::vector<u_char> &roundFraction(std::vector<u_char> &currentFraction);
 
 public:
-    /// Private constructor for initializing containers. no args constructor has to been
-    /// public because of use cases in arrays, vectors
+    /// (One day) Private constructor for initializing containers.
+    /// Made public because of usages in arrays, vectors.
     VariableFloat();
 
-    /// Checks whether current exponent will lead to an overflow or underflow.
-    /// \param currentExponent - current exponent byte container.
-    /// \return 1 if overflow, -1 if underflow, otherwise 0.
-    int checkForOverflow(std::vector<u_char> &currentExponent);
-
-public:
     /// Creates a bias vector for specified bit exponent bit count.
     /// \param customExponent - exponent bit count.
     /// \return Bias vector for specified bit count.
@@ -87,11 +86,6 @@ public:
 
     /// VariableFloat copy constructor.
     VariableFloat(const VariableFloat<fraction, exponent> &number);
-
-    /// Assignment operator declaration.
-    /// \param number - number that should be assigned to 'this'.
-    /// \return Class object reference.
-    //const VariableFloat<fraction, exponent>& operator=(const VariableFloat<fraction, exponent> &number);
 
     /// Adds 'operand' to current object.
     /// \param operand - reference to VariableFloat object with same template parameters.
@@ -243,27 +237,6 @@ VariableFloat<fraction, exponent>::VariableFloat(const VariableFloat<fraction, e
     for (auto byte : number.minExponent) minExponent.push_back(byte);
 }
 
-/*
-template<int fraction, int exponent>
-VariableFloat<fraction, exponent> &VariableFloat<fraction, exponent>::operator=(const VariableFloat<fraction, exponent> &number)
-{
-    //Clear existing values.
-    exponentContainer.clear();
-    fractionContainer.clear();
-    biasContainer.clear();
-    maxExponent.clear();
-    minExponent.clear();
-
-    //Copy containers.
-    sign = number.sign;
-    for (auto byte : number.exponentContainer) exponentContainer.push_back(byte);
-    for (auto byte : number.fractionContainer) fractionContainer.push_back(byte);
-    for (auto byte : number.biasContainer) biasContainer.push_back(byte);
-    for (auto byte : number.maxExponent) maxExponent.push_back(byte);
-    for (auto byte : number.minExponent) minExponent.push_back(byte);
-    return *this;
-}*/
-
 template<int fraction, int exponent>
 VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
 {
@@ -367,11 +340,6 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
         ByteArray::subtractBytes(sub, n1.getExponentContainer());
     }
 
-    //std::cout<<"epx 1    : "<<retExponent<<std::endl;
-    //std::cout<<"epx delta: "<<sub<<std::endl;
-    //std::cout<<"frac 1: "<<higherFrac<<std::endl;
-    //std::cout<<"frac 2: "<<lowerFrac<<std::endl;
-
     //Add hidden '1'.
     higherFrac.push_back(0);
     ByteArray::shiftVectorRight(higherFrac, 1);
@@ -380,10 +348,6 @@ VariableFloat<fraction, exponent> operator + (const VariableFloat<fraction, expo
     lowerFrac.push_back(0);
     ByteArray::shiftVectorRight(lowerFrac, 1);
     ByteArray::setBit(lowerFrac, 0, true);
-
-    //std::cout<<"(1) frac 1: "<<higherFrac<<std::endl;
-    //std::cout<<"(1) frac 2: "<<lowerFrac<<std::endl;
-
 
     //Shift fraction for lower number.
     while (!ByteArray::checkIfZero(sub))
@@ -619,15 +583,39 @@ VariableFloat<fraction, exponent> VariableFloat<fraction, exponent>::sqrt(const 
     auto resultMantissa = number.getFractionContainer();
 
     //Adjust final exponent.
-    ByteArray::subtractBytes(resultExponent, number.getBias());
+    bool exponentNegative = ByteArray::subtractBytes(resultExponent, number.getBias());
+    bool exponentModified = false;
     //If exponent is not even subtract 1.
     int bitCount = resultExponent.size() * 8;
-    if (ByteArray::getBit(resultExponent, bitCount - 1))
+    if (exponentNegative)
     {
-        ByteArray::setBit(resultExponent, bitCount - 1, false);
+        //Negative and uneven.
+        if (ByteArray::getBit(resultExponent, bitCount - 1))
+        {
+            ByteArray::negateBytes(resultExponent);
+            ByteArray::addBytes(resultExponent, ByteArray::getBytesFromInt(1, resultExponent.size()));
+            ByteArray::shiftVectorRight(resultExponent, 1);
+            ByteArray::negateBytes(resultExponent);
+            exponentModified = true;
+        }
+        //Negative and even.
+        else
+        {
+            ByteArray::negateBytes(resultExponent);
+            ByteArray::shiftVectorRight(resultExponent, 1);
+            ByteArray::negateBytes(resultExponent);
+        }
+    }
+    else
+    {
+        //Positive and uneven.
+        if (ByteArray::getBit(resultExponent, bitCount - 1))
+        {
+            ByteArray::subtractBytes(resultExponent, ByteArray::getBytesFromInt(1, resultExponent.size()));
+            exponentModified = true;
+        }
         ByteArray::shiftVectorRight(resultExponent, 1);
     }
-    else ByteArray::shiftVectorRight(resultExponent, 1);
     ByteArray::addBytes(resultExponent, number.getBias());
 
     //Add hidden '1'.
@@ -636,7 +624,13 @@ VariableFloat<fraction, exponent> VariableFloat<fraction, exponent>::sqrt(const 
     ByteArray::setBit(resultMantissa, 0, true);
 
     //Compute square root of resultFraction.
-    ByteArray::squareRootBytes(resultMantissa, fraction + 5);
+    int precision = fraction + 5;
+    if (!exponentModified)
+    {
+        precision++;
+        ByteArray::shiftVectorRight(resultMantissa, 1);
+    }
+    ByteArray::squareRootBytes(resultMantissa, precision);
 
     //Normalize mantissa and remove leading '1'.
     int index = ByteArray::findHighestOrderOnePosition(resultMantissa);
@@ -748,7 +742,6 @@ template<int fraction, int exponent>
 int VariableFloat<fraction, exponent>::checkForOverflow(std::vector<u_char> &currentExponent)
 {
     std::vector<u_char> temp = std::vector<u_char>(currentExponent);
-    ByteArray::subtractBytes(temp, biasContainer);
     if (ByteArray::compare(temp, maxExponent) == 1) return 1;
     else if (ByteArray::compare(temp, minExponent) == -1) return -1;
     return 0;
