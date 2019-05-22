@@ -36,13 +36,12 @@
 
 
 template<int fraction, int exponent>
-Test::TestResult runTest(UnitTimeTest& testObj, VariableFloat<fraction, exponent> data[], int size){
-
+Test::TestResult runTest(UnitTimeTest& testObj, VariableFloat<fraction, exponent> data[], int size)
+{
     Test t;
 
-    //each test takes two variable float
+    //Each test takes two variable float objects.
     Test::TestResult result = t.createTest(testObj, size/2);
-
     result.exponent = exponent;
     result.fraction = fraction;
 
@@ -52,15 +51,18 @@ Test::TestResult runTest(UnitTimeTest& testObj, VariableFloat<fraction, exponent
     std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
 
     result.toCsv(std::cerr);
-
     return result;
 }
 
-void sqrtTestCombo(){
-
-    //generate population
+void sqrtTestCombo()
+{
+    //Generate population.
     int populationSize = 40;
     std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
+
+
+    std::cerr<<"Pierwiastek"<<std::endl;
+    std::cerr<<"Zmienna mantsa staly wykladnik"<<std::endl;
 
     sqrtUnitTest(20,8);
     sqrtUnitTest(30,8);
@@ -110,10 +112,22 @@ void sqrtTestCombo(){
     sqrtUnitTest(470,8);
     sqrtUnitTest(480,8);
     sqrtUnitTest(490,8);
+
+    std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
+    populationSize = 10;
+
+    sqrtUnitTest(200,8);
+    sqrtUnitTest(200,16);
+    sqrtUnitTest(200,24);
+    sqrtUnitTest(200,32);
+    sqrtUnitTest(200,40);
+    sqrtUnitTest(200,48);
+    sqrtUnitTest(200,56);
+    sqrtUnitTest(200,64);
 }
 
-void addTestCombo(){
-
+void addTestCombo()
+{
     int populationSize = 40;
     std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
 
@@ -170,7 +184,7 @@ void addTestCombo(){
     addUnitTest(490,8);
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
-    populationSize = 5;
+    populationSize = 10;
 
     addUnitTest(200,8);
     addUnitTest(200,16);
@@ -180,43 +194,11 @@ void addTestCombo(){
     addUnitTest(200,48);
     addUnitTest(200,56);
     addUnitTest(200,64);
-    /*addUnitTest(200,72);
-    addUnitTest(200,80);
-    addUnitTest(200,96);
-    addUnitTest(200,104);
-    addUnitTest(200,112);
-    addUnitTest(200,120);
-    addUnitTest(200,128);
-    addUnitTest(200,136);
-    addUnitTest(200,144);
-    addUnitTest(200,152);
-    addUnitTest(200,160);*/
-
-    /*addUnitTest(200,168);
-    addUnitTest(200,176);
-    addUnitTest(200,184);
-    addUnitTest(200,192);
-    addUnitTest(200,200);
-    addUnitTest(200,208);
-    addUnitTest(200,216);
-    addUnitTest(200,224);
-    addUnitTest(200,232);
-    addUnitTest(200,240);
-    addUnitTest(200,248);
-    addUnitTest(200,256);
-    addUnitTest(200,264);
-    addUnitTest(200,272);
-    addUnitTest(200,280);
-    addUnitTest(200,288);
-    addUnitTest(200,296);
-    addUnitTest(200,304);
-    addUnitTest(200,312);
-    addUnitTest(200,320);*/
 }
 
-void subTestCombo(){
-
-    //generate population
+void subTestCombo()
+{
+    //Generate population.
     int populationSize = 40;
     std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
 
@@ -274,7 +256,7 @@ void subTestCombo(){
 
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
-    populationSize = 5;
+    populationSize = 10;
 
     subUnitTest(200,8);
     subUnitTest(200,16);
@@ -286,9 +268,9 @@ void subTestCombo(){
     subUnitTest(200,64);
 }
 
-void mulTestCombo(){
-
-    //generate population
+void mulTestCombo()
+{
+    //Generate population.
     int populationSize = 40;
     std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
 
@@ -346,7 +328,7 @@ void mulTestCombo(){
 
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
-    populationSize = 5;
+    populationSize = 10;
 
     mulUnitTest(200,8);
     mulUnitTest(200,16);
@@ -358,9 +340,9 @@ void mulTestCombo(){
     mulUnitTest(200,64);
 }
 
-void divTestCombo(){
-
-    //generate population
+void divTestCombo()
+{
+    //Generate population.
     int populationSize = 40;
     std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
 
@@ -418,7 +400,7 @@ void divTestCombo(){
 
 
     std::cerr<<"Zmienny wykladnik stala mantysa"<<std::endl;
-    populationSize = 5;
+    populationSize = 10;
 
     divUnitTest(200,8);
     divUnitTest(200,16);
@@ -432,34 +414,12 @@ void divTestCombo(){
 
 int main()
 {
-    srand(time(NULL));
-
+    srand(time(nullptr));
+    addTestCombo();
+    subTestCombo();
+    mulTestCombo();
+    divTestCombo();
     sqrtTestCombo();
-
-
-    //int populationSize = 2;
-    //std::vector<float> randomFloats = Test::generateRandomFloats(populationSize, 0xfffffff,0,1000);
-    //addUnitTest(200,64);
-
-    return 0;
-
-
-    //create floats from population
-    /*VariableFloat<104, 18> data3[populationSize];
-    AddTest<104,18> add3(data3);
-    fillArray(data3, populationSize, randomFloats);
-    runTest(add3, data3, populationSize);
-
-    VariableFloat<53, 11> g(0.047);
-    std::cout << VariableFloat<53, 11>::sqrt(g) << std::endl;
-
-    //std::cout<<"czas testow (bez after i before): "<<std::fixed<<result.fullTimeOfTests<<std::endl;
-
-    VariableFloat<23, 8> f(false, "03", "9570A4");
-    VariableFloat<23, 8> h(false, "02", "C851EC");
-
-    std::cout << f / h << std::endl;*/
-
     return 0;
 }
 
