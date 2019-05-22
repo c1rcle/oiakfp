@@ -434,7 +434,7 @@ int main()
 {
     srand(time(NULL));
 
-    mulTestCombo();
+    sqrtTestCombo();
 
 
     //int populationSize = 2;

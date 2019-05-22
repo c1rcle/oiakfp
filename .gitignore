@@ -5,8 +5,11 @@
 *.o
 *.obj
 
-Debug/oiakfp
-cmake-build-debug/Projekt
+# Compilation directories
+Debug/
+cmake-build-debug/
+cmake-build-release/
+
 # Precompiled Headers
 *.gch
 *.pch

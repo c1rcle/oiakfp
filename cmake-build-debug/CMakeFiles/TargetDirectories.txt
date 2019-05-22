@@ -1,3 +1,0 @@
-/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles/Projekt.dir
-/home/c1rcle/Politechnika/OiAK/OiakFp/cmake-build-debug/CMakeFiles/edit_cache.dir
