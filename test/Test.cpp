@@ -9,7 +9,7 @@ Test::TestResult Test::createTest(UnitTimeTest &unitTest, int testCount)
 
     fullTime.start();
 
-    for(int i=0;i<testCount;++i)
+    for (int i = 0; i < testCount; ++i)
     {
         unitTest.runBeforeTest();
 

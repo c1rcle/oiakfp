@@ -360,7 +360,6 @@ std::string ByteArray::toBinaryString(const std::vector<u_char> &first, unsigned
         u_char mask = 0x80;
         for (int j = 7; j >= 0; --j)
         {
-            //std::cout<<j<<", "<<i<<", "<<std::hex<<(unsigned int)mask<<", "<<std::hex<<(unsigned int)first[i]<<", "<<(first[i]&mask)<<std::endl;
             ret += (first[i] & mask) == 0 ? '0' : '1';
             mask = mask >> 1;
         }

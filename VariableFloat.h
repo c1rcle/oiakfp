@@ -257,7 +257,6 @@ VariableFloat<fraction, exponent>::VariableFloat(float number) : VariableFloat()
 
     std::vector<u_char> floatBias = createBiasContainerForExponent(FLOAT_EXPONENT);
     ByteArray::subtractBytes(exponentContainer, floatBias);
-    //TODO compare exponents to determine if they can fit in this representation (limit bit counts?).
     ByteArray::addBytes(exponentContainer, biasContainer);
 
     u_int floatFraction = floatBytes << (FLOAT_EXPONENT + 1);
@@ -287,7 +286,6 @@ VariableFloat<fraction, exponent>::VariableFloat(double number) : VariableFloat(
 
     std::vector<u_char> doubleBias = createBiasContainerForExponent(DOUBLE_EXPONENT);
     ByteArray::subtractBytes(exponentContainer, doubleBias);
-    //TODO compare exponents to determine if they can fit in this representation (limit bit counts?).
     ByteArray::addBytes(exponentContainer, biasContainer);
 
     u_int64_t doubleFraction = doubleBytes << (DOUBLE_EXPONENT + 1);

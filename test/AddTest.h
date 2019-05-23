@@ -4,9 +4,6 @@
 #include <vector>
 #include "../VariableFloat.h"
 
-///
-/// \tparam fraction
-/// \tparam exponent
 template<int fraction, int exponent>
 class AddTest : public UnitTimeTest
 {
@@ -21,12 +18,7 @@ public:
 
     void runTest() override
     {
-        //currentA = currentA+currentB;
         VariableFloat<fraction, exponent> buf(*currentA+*currentB);
-        //std::cout<<"test "<<testNb<<":   "<<*currentA<<std::endl;
-        //std::cout<<"test "<<testNb<<": + "<<*currentB<<std::endl;
-        //std::cout<<"test "<<testNb<<": = "<<*currentA<<std::endl;
-        //std::cout<<std::endl;
     }
 
     void runBeforeTest() override
